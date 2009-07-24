@@ -115,12 +115,8 @@ case "$Script" in *-qt*)     withQTSUPPORT=true;; esac
 #
 # various building stages
 #
-runCONFIG=true
-runMAKE=true
-runMAKEDOC=true
-runINSTALL=true
-runENVPATH=true
-
+unset runCONFIG runMAKE runMAKEDOC runINSTALL runENVPATH
+runDEFAULT=true
 
 # parse options
 while [ "$#" -gt 0 ]
@@ -131,45 +127,33 @@ do
         ;;
     -config)             # stage 1: config only
         runCONFIG=true
-        runMAKE=false
-        runMAKEDOC=false
-        runINSTALL=false
+        unset runDEFAULT
         shift
         ;;
     -make)               # stage 2: make only
-        runCONFIG=false
         runMAKE=true
-        runMAKEDOC=false
-        runINSTALL=false
+        unset runDEFAULT
         shift
         ;;
     -makedoc)            # stage 3: generate html documentation
-        runCONFIG=false
-        runMAKE=false
         runMAKEDOC=true
-        runINSTALL=false
+        unset runDEFAULT
         shift
         ;;
     -install)            # stage 4: install only
-        runCONFIG=false
-        runMAKE=false
-        runMAKEDOC=false
         runINSTALL=true
+        unset runDEFAULT
         shift
         ;;
     -envpath)            # stage 5: change cmake files to use env variables
-        runCONFIG=false
-        runMAKE=false
-        runMAKEDOC=false
-        runINSTALL=false
         runENVPATH=true
+        unset runDEFAULT
         shift
         ;;
     -rebuild)            # shortcut for rebuilding
-        runCONFIG=false
         runMAKE=true
-        runMAKEDOC=false
         runINSTALL=true
+        unset runDEFAULT
         shift
         ;;
     -mpi)
@@ -209,6 +193,16 @@ do
 done
 
 
+if [ "$runDEFAULT" = true ]
+then
+    runCONFIG=true
+    runMAKE=true
+    runMAKEDOC=true
+    runINSTALL=true
+    runENVPATH=true
+fi
+
+
 # Set configure options
 #~~~~~~~~~~~~~~~~~~~~~~
 addVerbosity        # verbose makefiles
@@ -222,11 +216,22 @@ getPaths            # discover where things are or should be put
 
 # Build and install
 # ~~~~~~~~~~~~~~~~~
-[ $runCONFIG  = true ] && configParaView
-[ $runMAKE    = true ] && makeParaView
-[ $runMAKEDOC = true ] && makeDocs
-[ $runINSTALL = true ] && installParaView
-[ $runENVPATH = true ] && fixCMakeFiles
+cat<<SUMMARY
+Build stages selected
+---------------------
+    -config   ${runCONFIG:-false}
+    -make     ${runMAKE:-false}
+    -makedoc  ${runMAKEDOC:-false}
+    -install  ${runINSTALL:-false}
+    -envpath  ${runENVPATH:-false}
+---------------------
+SUMMARY
+
+[ "$runCONFIG"  = true ] && configParaView
+[ "$runMAKE"    = true ] && makeParaView
+[ "$runMAKEDOC" = true ] && makeDocs
+[ "$runINSTALL" = true ] && installParaView
+[ "$runENVPATH" = true ] && fixCMakeFiles
 
 echo "done"
 #------------------------------------------------------------------------------
