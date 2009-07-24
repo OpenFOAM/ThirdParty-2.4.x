@@ -1,4 +1,5 @@
-#---------------------------------*- sh -*-------------------------------------
+#!/bin/sh
+#------------------------------------------------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
@@ -31,39 +32,35 @@
 #------------------------------------------------------------------------------
 
 QT_VERSION=4.3.5
-QT_HOME=${WM_THIRD_PARTY_DIR}/qt-x11-opensource-src-${QT_VERSION}
-QT_ARCH_PATH=${QT_HOME}/platforms/${WM_OPTIONS}
+QT_HOME=$WM_THIRD_PARTY_DIR/qt-x11-opensource-src-$QT_VERSION
+QT_ARCH_PATH=$QT_HOME/platforms/$WM_OPTIONS
 
-if [ ! -d $QT_ARCH_PATH ]
+# run from third-party directory only
+[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit
+. $WM_THIRD_PARTY_DIR/tools/makeThirdPartyFunctions
+
+# get the number of cores to build on
+getNCOMPPROCS
+
+
+if [ -d "$QT_ARCH_PATH" ]
 then
-    cd ${QT_HOME}
+    echo "Already built: Qt-$QT_VERSION"
+else
+(
+    cd $QT_HOME || exit
 
     make distclean
+    rm -rf $QT_ARCH_PATH
 
-    rm -rf ${QT_ARCH_PATH}
-
-    ./configure \
-        --prefix=${QT_ARCH_PATH} \
+    ./configure --prefix=$QT_ARCH_PATH \
         -nomake demos \
-        -nomake examples
+        -nomake examples \
+    && time make -j $WM_NCOMPPROCS \
+    && make install
 
-    if [ -r /proc/cpuinfo ]
-    then
-        WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l)
-        [ $WM_NCOMPPROCS -le 8 ] || WM_NCOMPPROCS=8
-
-        echo "Building on " $WM_NCOMPPROCS " cores"
-
-        time make -j $WM_NCOMPPROCS
-    else
-        time make
-    fi
-
-    make install
-
-    echo "    Finished building Qt-4.3.5."
-else
-    echo "    Qt-4.3.5 already built."
+    echo "Built: Qt-$QT_VERSION"
+)
 fi
 
 # ----------------------------------------------------------------- end-of-file

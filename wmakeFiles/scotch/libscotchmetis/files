@@ -1,3 +1,5 @@
+/* NOTE: make any changes to this file in wmakeFiles/ */
+
 metis_graph_order.c
 metis_graph_order_f.c
 metis_graph_part.c

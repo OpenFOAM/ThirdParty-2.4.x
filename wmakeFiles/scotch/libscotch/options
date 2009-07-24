@@ -1,3 +1,5 @@
+/* NOTE: make any changes to this file in wmakeFiles/ */
+
 EXE_INC = \
     -Drestrict=__restrict -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED \
     -DCOMMON_TIMING_OLD -DSCOTCH_RENAME -I../../include \

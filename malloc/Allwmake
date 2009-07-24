@@ -1,9 +1,12 @@
 #!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
 set -x
 
-wmake libso hoard
+wmake libso hoard-371
 wmake libo fbsdmalloc
 # wmake libo bsdmalloc
 # wmake libo gmalloc
 # wmake libo mmalloc
 # wmake libo g++malloc
+
+# ----------------------------------------------------------------- end-of-file

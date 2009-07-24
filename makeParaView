@@ -32,7 +32,6 @@
 #       paraview source under $WM_THIRD_PARTY_DIR
 #
 #------------------------------------------------------------------------------
-. tools/makeParaViewFunctions
 
 # User options:
 # ~~~~~~~~~~~~~
@@ -61,7 +60,15 @@ QMAKE_PATH=""
 
 #
 # No further editing below this line
-#------------------------------------------------------------------------------
+#
+#-----------------------------------------------------------------------------
+[ -d "$WM_THIRD_PARTY_DIR" ] || {
+    echo "no \$WM_THIRD_PARTY_DIR=$WM_THIRD_PARTY_DIR"
+    exit 1
+}
+
+. $WM_THIRD_PARTY_DIR/tools/makeParaViewFunctions
+#-----------------------------------------------------------------------------
 Script=${0##*/}
 
 usage() {

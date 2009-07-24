@@ -1,3 +1,5 @@
+/* NOTE: make any changes to this file in wmakeFiles/ */
+
 arch.c
 arch_build.c
 arch_cmplt.c

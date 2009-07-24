@@ -1,4 +1,4 @@
-/* Note: make any changes to this file in wmakeFiles/ */
+/* NOTE: make any changes to this file in wmakeFiles/ */
 
 adf = libadf
 $(adf)/ADF_fortran_2_c.c

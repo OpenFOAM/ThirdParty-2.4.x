@@ -59,9 +59,6 @@ SunOS*Gcc*/
 # this also matches symlinks
 /*[-_][0-9]*
 
-# ignore sources directory (tar, zip files)
-/sources/
-
 # ignore all sub-directories
 /*/
 
@@ -77,7 +74,7 @@ SunOS*Gcc*/
 # ignore these extra symlinks
 libccmio
 
-# track this patched version directly
+# track this patched version directly - until metis gets dropped
 !/metis-5.0pre2/libmetis/metislib.h
 
 # end-of-file

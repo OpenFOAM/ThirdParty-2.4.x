@@ -1,5 +1,4 @@
-#!/bin/sh
-#------------------------------------------------------------------------------
+#---------------------------------*- sh -*-------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
@@ -24,27 +23,62 @@
 #     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # Script
-#     cleanThirdParty
+#     makeThirdPartyFunctions
 #
 # Description
-#     Distribution clean script for ThirdParty
+#     Functions for managing the third-party packages
 #
-#     Still somewhat incomplete
 #------------------------------------------------------------------------------
-[ -d "$WM_THIRD_PARTY_DIR" ] || {
-    echo "no \$WM_THIRD_PARTY_DIR=$WM_THIRD_PARTY_DIR"
-    exit 1
+
+
+#
+# get the number of processor cores
+#
+# $# > 0 - verbose
+#
+getNCOMPPROCS()
+{
+    if [ -r /proc/cpuinfo ]
+    then
+        WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l)
+        [ $WM_NCOMPPROCS -le 8 ] || WM_NCOMPPROCS=8
+    else
+        WM_NCOMPPROCS=1
+    fi
+
+    [ $# -gt 0 ] && echo "Building on $WM_NCOMPPROCS cores"
 }
 
-cd $WM_THIRD_PARTY_DIR || exit 1    # run from third-party directory
-set -x
 
-rm -rf gcc-4.3.3/build
-rm -rf gmp-4.2.4/build
-rm -rf mpfr-2.4.1/build
+#
+# copy Make/{files,options} from wmakeFiles/PACKAGE
+#
+# $1 = PACKAGE
+# $2 (optional) TARGET DIRECTORY
+cpMakeFiles() {
+    set +x
 
-( cd metis-5.0pre2 && make distclean )
-( cd openmpi-1.3.3 && make distclean )
-( cd paraview-3.6.1 && make distclean )
+    [ "$#" -eq 1 -o "$#" -eq 2 ] || {
+        echo "cpMakeFiles called with incorrect number of arguments $@"
+        return 1
+    }
+
+    pkg=$1
+    dst=${2:-.}
+
+    wmakeFiles=$WM_THIRD_PARTY_DIR/wmakeFiles/$pkg
+
+    for i in $(cd $wmakeFiles && find . -type f)
+    do
+        d=${i%%/*}   # dirname
+        b=${i##*/}   # basename
+
+        mkdir -p $dst/$d/Make 2>/dev/null
+        [ -e $dst/$d/Make/$b ] || cp $wmakeFiles/$i $dst/$d/Make/$b
+    done
+
+    set -x
+}
+
 
 # ----------------------------------------------------------------- end-of-file

@@ -30,35 +30,38 @@
 #     Get and build CD-adapco's ccmio library
 #
 #------------------------------------------------------------------------------
-set -x
-
 packageDir=libccmio-2.6.1
 
+# run from third-party directory only
+[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit
+. $WM_THIRD_PARTY_DIR/tools/makeThirdPartyFunctions
+
+set -x
+
+# get tar.gz file if required
 if [ ! -d ${packageDir} ]
 then
-   if [ ! -e ${packageDir}.tar.gz ]
-   then
-      wget --no-check-certificate \
-         https://wci.llnl.gov/codes/visit/3rd_party/${packageDir}.tar.gz
-   fi
+    [ -e ${packageDir}.tar.gz ] || \
+        wget --no-check-certificate \
+            https://wci.llnl.gov/codes/visit/3rd_party/${packageDir}.tar.gz
 
-   if [ -e ${packageDir}.tar.gz ]
-   then
-      tar -xzf ${packageDir}.tar.gz
-   else
-      echo "no ${packageDir}.tar.gz to unpack"
-   fi
+
+    if [ -e ${packageDir}.tar.gz ]
+    then
+        tar -xzf ${packageDir}.tar.gz
+    else
+        echo "no ${packageDir}.tar.gz to unpack"
+    fi
 fi
 
-if [ -d ${packageDir} -a ! -d ${packageDir}/Make ]
-then
-   cp -r wmakeFiles/libccmio/Make ${packageDir}/Make
-fi
 
-if [ -d ${packageDir}/Make ]
-then
-   wmake libso ${packageDir}
-fi
+# make libccmio
+(
+    cd $packageDir || exit
+    cpMakeFiles libccmio
+
+    wmake libso
+)
 
 
 # ----------------------------------------------------------------- end-of-file
