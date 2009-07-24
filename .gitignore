@@ -1,0 +1,17 @@
+# Lines that start with '#' are comments.
+
+# ignore everything
+*
+
+# reinstate scripts
+!make*
+!All*
+
+# reinstate tools sub-folder
+!tools
+
+# reinstate wmakeFiles sub-folder
+!wmakeFiles
+
+# end-of-file
+
