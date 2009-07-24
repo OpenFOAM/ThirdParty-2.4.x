@@ -1,0 +1,13 @@
+--- metis-5.0pre2/libmetis/metislib.h	2007-04-06 16:34:23.000000000 +0200
++++ metis-5.0pre2/libmetis/metislib.h	2008-06-04 15:13:01.154593000 +0200
+@@ -43,8 +43,8 @@
+ #define rint(x) ((idxtype)((x)+0.5))  /* MSC does not have rint() function */
+ #endif
+ 
+-
++/* this conditional was only for some older gcc
+ #if defined(COMPILER_GCC)
+ extern char* strdup (const char *);
+ #endif
+-
++*/

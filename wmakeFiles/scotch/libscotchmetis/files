@@ -1,0 +1,6 @@
+metis_graph_order.c
+metis_graph_order_f.c
+metis_graph_part.c
+metis_graph_part_f.c
+
+LIB = $(FOAM_LIBBIN)/libscotchmetis
