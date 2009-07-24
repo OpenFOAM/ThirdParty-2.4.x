@@ -1,0 +1,9 @@
+/* Note: make any changes to this file in wmakeFiles/ */
+
+TYPE_REAL=
+#if defined(SP)
+TYPE_REAL=-DTYPE_REAL
+#endif
+
+EXE_INC = -I../IMlib $(TYPE_REAL)
+LIB_LIBS = -lIMlib

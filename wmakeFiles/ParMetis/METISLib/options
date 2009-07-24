@@ -1,0 +1,6 @@
+/* Note: make any changes to this file in wmakeFiles/ */
+
+include $(RULES)/mplib$(WM_MPLIB)
+
+EXE_INC = $(PFLAGS) $(PINC)
+LIB_LIBS = $(PLIBS)

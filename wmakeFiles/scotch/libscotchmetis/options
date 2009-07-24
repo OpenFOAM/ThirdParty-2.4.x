@@ -1,0 +1,9 @@
+include $(RULES)/mplib$(WM_MPLIB)
+
+EXE_INC = \
+    -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_PTSCOTCH \
+    -DCOMMON_TIMING_OLD -DSCOTCH_RENAME -I../../include -I../libscotch -DSCOTCH_VERSION="\"5.1\"" \
+    -Drestrict=__restrict \
+    $(PFLAGS) $(PINC)
+
+LIB_LIBS = -lz

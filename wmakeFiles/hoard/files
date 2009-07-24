@@ -1,0 +1,5 @@
+/* Note: make any changes to this file in wmakeFiles/ */
+
+src/libhoard.cpp
+
+LIB = $(FOAM_LIBBIN)/libhoard
