@@ -1,0 +1,14 @@
+# Lines that start with '#' are comments.                           
+
+# ignore everything
+*
+
+# reinstate scripts
+!make*
+!All*
+
+# reinstate tools sub-folder
+!tools
+
+# end-of-file
+
