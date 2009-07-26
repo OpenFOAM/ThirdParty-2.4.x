@@ -49,6 +49,26 @@ getNCOMPPROCS()
     [ $# -gt 0 ] && echo "Building on $WM_NCOMPPROCS cores"
 }
 
+# 
+# download file $1 from url $2 into download/ directory
+#
+downloadFile()
+{
+    [ "$#" -eq 2 ] || {
+        echo "downloadFile called with incorrect number of arguments $@"
+        return 1
+    }
+
+    file="$1"
+    url="$2"
+
+    if [ ! -e download/$file ]
+    then
+        mkdir -p download
+        ( cd download && wget --no-check-certificate $url )
+    fi
+}
+
 
 #
 # copy Make/{files,options} from wmakeFiles/PACKAGE

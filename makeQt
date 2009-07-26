@@ -47,6 +47,7 @@ if [ -d "$QT_ARCH_PATH" ]
 then
     echo "Already built: Qt-$QT_VERSION"
 else
+    echo "Starting build: Qt-$QT_VERSION"
 (
     cd $QT_HOME || exit
 
@@ -57,10 +58,12 @@ else
         -nomake demos \
         -nomake examples \
     && time make -j $WM_NCOMPPROCS \
-    && make install
-
-    echo "Built: Qt-$QT_VERSION"
-)
+    && make install \
+    && echo "Built: Qt-$QT_VERSION"
+) || {
+    echo "Error building: Qt-$QT_VERSION"
+    exit
+}
 fi
 
 # ----------------------------------------------------------------- end-of-file

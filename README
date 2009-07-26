@@ -23,8 +23,10 @@
 
 ** Compiler
    + gcc   http://gcc.gnu.org/gcc-4.3/
-   + mpfr  http://www.mpfr.org/
    + gmp   http://gmplib.org/
+           ftp://ftp.gnu.org/gnu/gmp/gmp-4.2.4.tar.bz2
+   + mpfr  http://www.mpfr.org/
+           http://www.mpfr.org/mpfr-current/mpfr-2.4.1.tar.bz2
 
 ** Parallel Processing
    + openmpi     http://www.open-mpi.org/software/ompi/v1.3/downloads/openmpi-1.3.3.tar.bz2
@@ -42,6 +44,8 @@
 
 ** Misc
    + cmake       http://www.cmake.org/files/v2.6/cmake-2.6.4.tar.gz
+   + Qt          http://www.qtsoftware.com/products
+                 ftp://ftp.qtsoftware.com/qt/source/qt-x11-opensource-src-4.3.5.tar.bz2
    + paraview    http://www.paraview.org/files/v3.6/paraview-3.6.1.tar.gz
    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
    + zlib        http://www.zlib.net/zlib-1.2.3.tar.gz

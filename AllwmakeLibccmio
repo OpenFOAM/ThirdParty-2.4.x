@@ -31,6 +31,8 @@
 #
 #------------------------------------------------------------------------------
 packageDir=libccmio-2.6.1
+tarFile=$packageDir.tar.gz
+url="https://wci.llnl.gov/codes/visit/3rd_party/$tarFile"
 
 # run from third-party directory only
 [ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit
@@ -41,16 +43,13 @@ set -x
 # get tar.gz file if required
 if [ ! -d ${packageDir} ]
 then
-    [ -e ${packageDir}.tar.gz ] || \
-        wget --no-check-certificate \
-            https://wci.llnl.gov/codes/visit/3rd_party/${packageDir}.tar.gz
+    downloadFile $tarFile $url
 
-
-    if [ -e ${packageDir}.tar.gz ]
+    if [ -e download/$tarFile ]
     then
-        tar -xzf ${packageDir}.tar.gz
+        tar -xzf download/$tarFile
     else
-        echo "no ${packageDir}.tar.gz to unpack"
+        echo "no download/$tarFile to unpack"
     fi
 fi
 

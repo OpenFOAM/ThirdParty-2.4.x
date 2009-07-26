@@ -30,7 +30,6 @@
 #     Build script for gmp, mpfr and gcc-4.3.? and gcc-4.4.?
 #
 #------------------------------------------------------------------------------
-
 gmpPACKAGE=gmp-4.2.4
 mpfrPACKAGE=mpfr-2.4.1
 gccPACKAGE="$1"
@@ -74,21 +73,25 @@ MPFR_ARCH_PATH=$WM_THIRD_PARTY_DIR/$mpfrPACKAGE/platforms/$WM_ARCH$WM_COMPILER_A
 # Bulid GMP
 #
 if [ -d $GMP_ARCH_PATH ]
-else
+then
     echo "Already built: $gmpPACKAGE"
 else
+    echo "Starting build: $gmpPACKAGE"
 (
     cd $gmpPACKAGE || exit
     make distclean
-    mkdir build
+    rm -rf build
+    mkdir -p build
     cd build
 
     ../configure ABI=$ABI --prefix=$GMP_ARCH_PATH \
     && make -j $WM_NCOMPPROCS \
-    && make install
-
-    echo "Built: $gmpPACKAGE"
-)
+    && make install \
+    && echo "Built: $gmpPACKAGE"
+) || {
+    echo "Error building: $gmpPACKAGE"
+    exit
+}
 fi
 
 export LD_LIBRARY_PATH="$GMP_ARCH_PATH/lib:$LD_LIBRARY_PATH"
@@ -100,33 +103,40 @@ if [ -d $MPFR_ARCH_PATH ]
 then
     echo "Already built: $mpfrPACKAGE"
 else
+    echo "Starting build: $mpfrPACKAGE"
 (
     cd $mpfrPACKAGE || exit
     make distclean
-    mkdir build
+    rm -rf build
+    mkdir -p build
     cd build
 
     ../configure ABI=$ABI --prefix=$MPFR_ARCH_PATH --with-gmp=$GMP_ARCH_PATH \
     && make -j $WM_NCOMPPROCS \
-    && make install
-
-    echo "Built: $mpfrPACKAGE"
-)
+    && make install \
+    && echo "Built: $mpfrPACKAGE"
+) || {
+    echo "Error building: $mpfrPACKAGE"
+    exit
+}
 fi
 
 export LD_LIBRARY_PATH="$MPFR_ARCH_PATH/lib:$LD_LIBRARY_PATH"
 
 #
 # Build GCC
+# might need 32-bit glibc-devel headers to compile
 #
 if [ -d $GCC_ARCH_PATH ]
 then
     echo "Already built: $gccPACKAGE"
 else
+    echo "Starting build: $gccPACKAGE"
 (
     cd $gccPACKAGE || exit
     make distclean
-    mkdir build
+    rm -rf build
+    mkdir -p build
     cd build
 
     ../configure --prefix=$GCC_ARCH_PATH \
@@ -135,10 +145,12 @@ else
         --with-system-zlib \
         --with-gmp=$GMP_ARCH_PATH --with-mpfr=$MPFR_ARCH_PATH \
     && make -j $WM_NCOMPPROCS \
-    && make install
-
-    echo "Built: $gccPACKAGE"
-)
+    && make install \
+    && echo "Built: $gccPACKAGE"
+) || {
+    echo "Error building: $gccPACKAGE"
+    exit
+}
 fi
 
 
