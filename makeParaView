@@ -75,6 +75,7 @@ options:
   -python       with python (if not already enabled)
   -mesa         with mesa (if not already enabled)
   -qt           with extra Qt gui support (if not already enabled)
+  -qtmake PATH  with the Qt version corresponding to the qmake path given
   -verbose      verbose output in Makefiles
   -version VER  specify an alternative version (default: $ParaView_VERSION)
   -help
