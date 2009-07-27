@@ -31,11 +31,8 @@
 #
 #------------------------------------------------------------------------------
 # run from third-party directory only
-[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit
+[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit 1
 . $WM_THIRD_PARTY_DIR/tools/makeThirdPartyFunctions
-
-set -x
-
 
 # export WM settings in a form that GNU configure recognizes
 [ -n "$WM_CC" ]         &&  export CC="$WM_CC"
@@ -44,13 +41,19 @@ set -x
 [ -n "$WM_CXXFLAGS" ]   &&  export CXXFLAGS="$WM_CXXFLAGS"
 [ -n "$WM_LDFLAGS" ]    &&  export LDFLAGS="$WM_LDFLAGS"
 
+echo
+echo ==============================
+echo start ThirdParty Allwmake
+echo ==============================
+echo
+set -x
 
 wmake libso zlib-1.2.3
 
 
 # build malloc
 (
-    cd malloc || exit
+    cd malloc || exit 1
     ( cd hoard-371 && cpMakeFiles hoard )
 
     ./Allwmake
@@ -70,7 +73,7 @@ OPENMPI)
         echo "have $WM_MPLIB static library"
     else
     (
-        cd $MPI_HOME || exit
+        cd $MPI_HOME || exit 1
 
         make distclean
         rm -rf $MPI_ARCH_PATH
@@ -115,7 +118,7 @@ MPICH)
         echo "have $WM_MPLIB static library"
     else
     (
-        cd $MPI_HOME || exit
+        cd $MPI_HOME || exit 1
 
         make distclean
         rm -rf $MPI_ARCH_PATH
@@ -164,7 +167,7 @@ esac
 
 # Build Scotch decomposition
 (
-    cd scotch_5.1 || exit
+    cd scotch_5.1 || exit 1
     cpMakeFiles scotch src
 
     wmake libso src/libscotch
@@ -174,7 +177,7 @@ esac
 
 # Build Metis decomposition
 (
-    cd metis-5.0pre2 || exit
+    cd metis-5.0pre2 || exit 1
     cpMakeFiles metis
 
     wmake libso GKlib
@@ -186,9 +189,9 @@ esac
 if [ -d "$MPI_ARCH_PATH" ]
 then
 (
-    cd ParMetis-3.1 || exit    
-    cpMakeFiles ParMetis 
-    
+    cd ParMetis-3.1 || exit 1
+    cpMakeFiles ParMetis
+
     wmake libso METISLib
     wmake libso ParMETISLib
 )
@@ -197,8 +200,8 @@ fi
 
 # Build ParMGridGen
 (
-    cd ParMGridGen-1.0 || exit
-    cpMakeFiles ParMGridGen 
+    cd ParMGridGen-1.0 || exit 1
+    cpMakeFiles ParMGridGen
 
     wmake libso MGridGen/IMlib
     wmake libso MGridGen/Lib

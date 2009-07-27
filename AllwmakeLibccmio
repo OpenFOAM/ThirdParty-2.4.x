@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 1991-2007 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 1991-2009 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -35,10 +35,8 @@ tarFile=$packageDir.tar.gz
 url="https://wci.llnl.gov/codes/visit/3rd_party/$tarFile"
 
 # run from third-party directory only
-[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit
+[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit 1
 . $WM_THIRD_PARTY_DIR/tools/makeThirdPartyFunctions
-
-set -x
 
 # get tar.gz file if required
 if [ ! -d ${packageDir} ]
@@ -47,16 +45,18 @@ then
 
     if [ -e download/$tarFile ]
     then
+        echo "unpack download/$tarFile"
         tar -xzf download/$tarFile
     else
         echo "no download/$tarFile to unpack"
     fi
 fi
 
+set -x
 
 # make libccmio
 (
-    cd $packageDir || exit
+    cd $packageDir || exit 1
     cpMakeFiles libccmio
 
     wmake libso

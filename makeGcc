@@ -36,7 +36,7 @@ gccPACKAGE="$1"
 
 
 # run from third-party directory only
-[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit
+[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit 1
 . $WM_THIRD_PARTY_DIR/tools/makeThirdPartyFunctions
 
 #------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ then
 else
     echo "Starting build: $gmpPACKAGE"
 (
-    cd $gmpPACKAGE || exit
+    cd $gmpPACKAGE || exit 1
     make distclean
     rm -rf build
     mkdir -p build
@@ -90,7 +90,7 @@ else
     && echo "Built: $gmpPACKAGE"
 ) || {
     echo "Error building: $gmpPACKAGE"
-    exit
+    exit 1
 }
 fi
 
@@ -105,7 +105,7 @@ then
 else
     echo "Starting build: $mpfrPACKAGE"
 (
-    cd $mpfrPACKAGE || exit
+    cd $mpfrPACKAGE || exit 1
     make distclean
     rm -rf build
     mkdir -p build
@@ -117,7 +117,7 @@ else
     && echo "Built: $mpfrPACKAGE"
 ) || {
     echo "Error building: $mpfrPACKAGE"
-    exit
+    exit 1
 }
 fi
 
@@ -133,7 +133,7 @@ then
 else
     echo "Starting build: $gccPACKAGE"
 (
-    cd $gccPACKAGE || exit
+    cd $gccPACKAGE || exit 1
     make distclean
     rm -rf build
     mkdir -p build
@@ -149,7 +149,7 @@ else
     && echo "Built: $gccPACKAGE"
 ) || {
     echo "Error building: $gccPACKAGE"
-    exit
+    exit 1
 }
 fi
 

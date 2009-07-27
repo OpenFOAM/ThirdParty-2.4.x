@@ -65,6 +65,7 @@ downloadFile()
     if [ ! -e download/$file ]
     then
         mkdir -p download
+        echo "downloading $tarFile from $url"
         ( cd download && wget --no-check-certificate $url )
     fi
 }

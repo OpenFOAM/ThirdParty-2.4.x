@@ -36,7 +36,7 @@ QT_HOME=$WM_THIRD_PARTY_DIR/qt-x11-opensource-src-$QT_VERSION
 QT_ARCH_PATH=$QT_HOME/platforms/$WM_OPTIONS
 
 # run from third-party directory only
-[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit
+[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit 1
 . $WM_THIRD_PARTY_DIR/tools/makeThirdPartyFunctions
 
 # get the number of cores to build on
@@ -49,7 +49,7 @@ then
 else
     echo "Starting build: Qt-$QT_VERSION"
 (
-    cd $QT_HOME || exit
+    cd $QT_HOME || exit 1
 
     make distclean
     rm -rf $QT_ARCH_PATH
@@ -62,7 +62,7 @@ else
     && echo "Built: Qt-$QT_VERSION"
 ) || {
     echo "Error building: Qt-$QT_VERSION"
-    exit
+    exit 1
 }
 fi
 
