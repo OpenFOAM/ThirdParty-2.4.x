@@ -189,7 +189,7 @@ addQtSupport()
     fi
 
     # Check qmake can be found
-    if [ `which $qmakeExe` ]
+    if type $qmakeExe >/dev/null 2>&1
     then
         # Check the Qt version selected
         QtVersion=`$qmakeExe -v | grep Using | sed "s/.* version \(.\..\).*/\1/"`
