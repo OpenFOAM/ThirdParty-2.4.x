@@ -104,6 +104,7 @@ else
     echo "Starting build: $gmpPACKAGE"
 (
     cd $gmpPACKAGE || exit 1
+    make distclean
     rm -rf build
     mkdir -p build
     cd build
@@ -131,6 +132,7 @@ else
     echo "Starting build: $mpfrPACKAGE"
 (
     cd $mpfrPACKAGE || exit 1
+    make distclean
     rm -rf build
     mkdir -p build
     cd build
@@ -159,6 +161,7 @@ else
     echo "Starting build: $gccPACKAGE"
 (
     cd $gccPACKAGE || exit 1
+    make distclean
     rm -rf build
     mkdir -p build
     cd build
