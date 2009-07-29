@@ -87,8 +87,7 @@ options:
   -version VER  specify an alternative version (default: $ParaView_VERSION)
   -help
 
-For finer control, the build stages can be also selected individually
-(mutually exclusive)
+For finer control, the build stages can be also selected individually:
   -config
   -make
   -makedoc

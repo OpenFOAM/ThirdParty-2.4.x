@@ -27,13 +27,15 @@
 #     makeGcc
 #
 # Description
-#     Build script for gmp, mpfr and gcc-4.3.? and gcc-4.4.?
+#     Build script for gmp, mpfr and gcc
+#
+# Note
+#     gcc 4.3.2 is known to miscompile GMP 4.3.x on 64-bit machines
 #
 #------------------------------------------------------------------------------
 gmpPACKAGE=gmp-4.2.4
 mpfrPACKAGE=mpfr-2.4.1
-gccPACKAGE="$1"
-
+gccPACKAGE=gcc-4.3.3
 
 # run from third-party directory only
 [ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit 1
@@ -41,24 +43,46 @@ gccPACKAGE="$1"
 
 #------------------------------------------------------------------------------
 usage() {
+    exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} <gcc-4.?.?> ...
+usage: ${0##*/} [gmp-VERSION] [mpfr-VERSION] [gcc-VERSION]
 
-* build gmp, mpfr and gcc-4.3.? and gcc-4.4.?
+* build combinations of gmp, mpfr and gcc
+      $gmpPACKAGE
+      $mpfrPACKAGE
+      $gccPACKAGE
 
 USAGE
     exit 1
 }
 
-[ "$#" -eq 1 ] || usage "gcc version not provided"
 
-case "$1" in
--h | -help)
-    usage
-    ;;
-esac
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    gmp-[4-9]*)
+        gmpPACKAGE="${1%%/}"
+        shift
+        ;;
+    mpfr-[4-9]*)
+        mpfrPACKAGE="${1%%/}"
+        shift
+        ;;
+    gcc-[4-9]*)
+        gccPACKAGE="${1%%/}"
+        shift
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
 
 
 # get the number of cores to build on
@@ -70,8 +94,9 @@ GMP_ARCH_PATH=$WM_THIRD_PARTY_DIR/$gmpPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARC
 MPFR_ARCH_PATH=$WM_THIRD_PARTY_DIR/$mpfrPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
 
 #
-# Bulid GMP
+# Build GMP
 #
+echo "---------------"
 if [ -d $GMP_ARCH_PATH ]
 then
     echo "Already built: $gmpPACKAGE"
@@ -79,7 +104,6 @@ else
     echo "Starting build: $gmpPACKAGE"
 (
     cd $gmpPACKAGE || exit 1
-    make distclean
     rm -rf build
     mkdir -p build
     cd build
@@ -99,6 +123,7 @@ export LD_LIBRARY_PATH="$GMP_ARCH_PATH/lib:$LD_LIBRARY_PATH"
 #
 # Build MPFR
 #
+echo "---------------"
 if [ -d $MPFR_ARCH_PATH ]
 then
     echo "Already built: $mpfrPACKAGE"
@@ -106,7 +131,6 @@ else
     echo "Starting build: $mpfrPACKAGE"
 (
     cd $mpfrPACKAGE || exit 1
-    make distclean
     rm -rf build
     mkdir -p build
     cd build
@@ -127,6 +151,7 @@ export LD_LIBRARY_PATH="$MPFR_ARCH_PATH/lib:$LD_LIBRARY_PATH"
 # Build GCC
 # might need 32-bit glibc-devel headers to compile
 #
+echo "---------------"
 if [ -d $GCC_ARCH_PATH ]
 then
     echo "Already built: $gccPACKAGE"
@@ -134,13 +159,12 @@ else
     echo "Starting build: $gccPACKAGE"
 (
     cd $gccPACKAGE || exit 1
-    make distclean
     rm -rf build
     mkdir -p build
     cd build
 
     ../configure --prefix=$GCC_ARCH_PATH \
-        --enable-languages=c,c++ --with-pkgversion='OpenFOAM' \
+        --enable-languages=c,c++ --with-pkgversion=OpenFOAM \
         --enable-__cxa_atexit --enable-libstdcxx-allocator=new \
         --with-system-zlib \
         --with-gmp=$GMP_ARCH_PATH --with-mpfr=$MPFR_ARCH_PATH \
