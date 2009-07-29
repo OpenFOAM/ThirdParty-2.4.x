@@ -48,9 +48,6 @@ echo ==============================
 echo
 set -x
 
-wmake libso zlib-1.2.3
-
-
 # build malloc
 (
     cd malloc || exit 1
