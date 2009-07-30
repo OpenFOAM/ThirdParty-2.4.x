@@ -24,16 +24,13 @@
 #     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
 # Script
-#     makeQt
+#     makeCmake
 #
 # Description
-#     Build script for Qt-4.3.5
+#     Build script for cmake-2.6.4
 #
 #------------------------------------------------------------------------------
-
-QT_VERSION=4.3.5
-QT_HOME=$WM_THIRD_PARTY_DIR/qt-x11-opensource-src-$QT_VERSION
-QT_ARCH_PATH=$QT_HOME/platforms/$WM_OPTIONS
+cmakePACKAGE=cmake-2.6.4
 
 # run from third-party directory only
 [ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit 1
@@ -42,29 +39,30 @@ QT_ARCH_PATH=$QT_HOME/platforms/$WM_OPTIONS
 # get the number of cores to build on
 getNCOMPPROCS
 
+
+CMAKE_ARCH_PATH=$WM_THIRD_PARTY_DIR/$cmakePACKAGE/platforms/$WM_ARCH
+
 #
-# Build QT
+# Build CMAKE
 #
 echo "---------------"
-if [ -d "$QT_ARCH_PATH" ]
+if [ -d "$CMAKE_ARCH_PATH" ]
 then
-    echo "Already built: Qt-$QT_VERSION"
+    echo "Already built: $cmakePACKAGE"
 else
-    echo "Starting build: Qt-$QT_VERSION"
+    echo "Starting build: $cmakePACKAGE"
 (
-    cd $QT_HOME || exit 1
+    cd $cmakePACKAGE || exit 1
+    rm -rf build
+    mkdir -p build
+    cd build
 
-    make distclean
-    rm -rf $QT_ARCH_PATH
-
-    ./configure --prefix=$QT_ARCH_PATH \
-        -nomake demos \
-        -nomake examples \
+    ../bootstrap --prefix=$CMAKE_ARCH_PATH \
     && time make -j $WM_NCOMPPROCS \
     && make install \
-    && echo "Built: Qt-$QT_VERSION"
+    && echo "Built: $cmakePACKAGE"
 ) || {
-    echo "Error building: Qt-$QT_VERSION"
+    echo "Error building: $cmakePACKAGE"
     exit 1
 }
 fi

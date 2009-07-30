@@ -1,4 +1,5 @@
-#---------------------------------*- sh -*-------------------------------------
+#!/bin/sh
+#------------------------------------------------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
@@ -26,106 +27,157 @@
 #     makeGcc
 #
 # Description
-#     Build script for gmp, mpfr and gcc-4.3.? and gcc-4.4.?
+#     Build script for gmp, mpfr and gcc
+#
+# Note
+#     gcc 4.3.2 is known to miscompile GMP 4.3.x on 64-bit machines
 #
 #------------------------------------------------------------------------------
+gmpPACKAGE=gmp-4.2.4
+mpfrPACKAGE=mpfr-2.4.1
+gccPACKAGE=gcc-4.3.3
+
+# run from third-party directory only
+[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit 1
+. $WM_THIRD_PARTY_DIR/tools/makeThirdPartyFunctions
+
+#------------------------------------------------------------------------------
 usage() {
+    exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} <gcc-4.?.?> ...
+usage: ${0##*/} [gmp-VERSION] [mpfr-VERSION] [gcc-VERSION]
 
-* build gmp, mpfr and gcc-4.3.? and gcc-4.4.?
+* build combinations of gmp, mpfr and gcc
+      $gmpPACKAGE
+      $mpfrPACKAGE
+      $gccPACKAGE
 
 USAGE
     exit 1
 }
 
-if [ $# -ne 1 ]
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    gmp-[4-9]*)
+        gmpPACKAGE="${1%%/}"
+        shift
+        ;;
+    mpfr-[4-9]*)
+        mpfrPACKAGE="${1%%/}"
+        shift
+        ;;
+    gcc-[4-9]*)
+        gccPACKAGE="${1%%/}"
+        shift
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+
+# get the number of cores to build on
+getNCOMPPROCS verbose
+
+
+GCC_ARCH_PATH=$WM_THIRD_PARTY_DIR/$gccPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
+GMP_ARCH_PATH=$WM_THIRD_PARTY_DIR/$gmpPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
+MPFR_ARCH_PATH=$WM_THIRD_PARTY_DIR/$mpfrPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
+
+#
+# Build GMP
+#
+echo "---------------"
+if [ -d $GMP_ARCH_PATH ]
 then
-    usage "gcc version not provided"
-fi
-
-#
-# Set the number of cores to build on
-#
-WM_NCOMPPROCS=1
-
-if [ -r /proc/cpuinfo ]
-then
-    WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l)
-    [ $WM_NCOMPPROCS -le 8 ] || WM_NCOMPPROCS=8
-fi
-
-echo "Building on " $WM_NCOMPPROCS " cores"
-
-GMP_DIR=$WM_THIRD_PARTY_DIR/gmp-4.2.4
-MPFR_DIR=$WM_THIRD_PARTY_DIR/mpfr-2.4.1
-GCC_DIR=$WM_THIRD_PARTY_DIR/$1
-
-GMPROOT=${GMP_DIR}/platforms/$WM_ARCH$WM_COMPILER_ARCH
-MPFRROOT=${MPFR_DIR}/platforms/$WM_ARCH$WM_COMPILER_ARCH
-GCCROOT=${GCC_DIR}/platforms/$WM_ARCH$WM_COMPILER_ARCH
-
-#
-# Bulid GMP
-#
-if [ ! -d $GMPROOT ]
-then
-    (
-        make distclean \
-     ;  mkdir $GMP_DIR/build \
-     && cd $GMP_DIR/build \
-     && ../configure ABI=$ABI --prefix=$GMPROOT \
-     && make -j $WM_NCOMPPROCS \
-     && make install
-    )
-    echo "    Finished building gmp."
+    echo "Already built: $gmpPACKAGE"
 else
-    echo "    gmp already built."
+    echo "Starting build: $gmpPACKAGE"
+(
+    cd $gmpPACKAGE || exit 1
+    make distclean
+    rm -rf build
+    mkdir -p build
+    cd build
+
+    ../configure ABI=$ABI --prefix=$GMP_ARCH_PATH \
+    && make -j $WM_NCOMPPROCS \
+    && make install \
+    && echo "Built: $gmpPACKAGE"
+) || {
+    echo "Error building: $gmpPACKAGE"
+    exit 1
+}
 fi
 
-export LD_LIBRARY_PATH="$GMPROOT/lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$GMP_ARCH_PATH/lib:$LD_LIBRARY_PATH"
 
 #
 # Build MPFR
 #
-if [ ! -d $MPFRROOT ]
+echo "---------------"
+if [ -d $MPFR_ARCH_PATH ]
 then
-    (
-        make distclean \
-     ;  mkdir $MPFR_DIR/build \
-     && cd $MPFR_DIR/build \
-     && ../configure ABI=$ABI --prefix=$MPFRROOT --with-gmp=$GMPROOT \
-     && make -j $WM_NCOMPPROCS  \
-     && make install
-    )
-    echo "    Finished building mpfr."
+    echo "Already built: $mpfrPACKAGE"
 else
-    echo "    mprf already built."
+    echo "Starting build: $mpfrPACKAGE"
+(
+    cd $mpfrPACKAGE || exit 1
+    make distclean
+    rm -rf build
+    mkdir -p build
+    cd build
+
+    ../configure ABI=$ABI --prefix=$MPFR_ARCH_PATH --with-gmp=$GMP_ARCH_PATH \
+    && make -j $WM_NCOMPPROCS \
+    && make install \
+    && echo "Built: $mpfrPACKAGE"
+) || {
+    echo "Error building: $mpfrPACKAGE"
+    exit 1
+}
 fi
 
-export LD_LIBRARY_PATH="$MPFRROOT/lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$MPFR_ARCH_PATH/lib:$LD_LIBRARY_PATH"
 
 #
 # Build GCC
+# might need 32-bit glibc-devel headers to compile
 #
-if [ ! -d $GCCROOT ]
+echo "---------------"
+if [ -d $GCC_ARCH_PATH ]
 then
-    (
-        make distclean \
-     ;  mkdir $GCC_DIR/build \
-     && cd $GCC_DIR/build \
-     && ../configure --enable-languages=c,c++ --with-pkgversion='OpenFOAM' \
-      --enable-__cxa_atexit --enable-libstdcxx-allocator=new \
-      --with-system-zlib --prefix=$GCCROOT \
-      --with-mpfr=$MPFRROOT --with-gmp=$GMPROOT \
-     && make -j $WM_NCOMPPROCS \
-     && make install
-    )
-    echo "    Finished building gcc."
+    echo "Already built: $gccPACKAGE"
 else
-    echo "    gcc already built."
+    echo "Starting build: $gccPACKAGE"
+(
+    cd $gccPACKAGE || exit 1
+    make distclean
+    rm -rf build
+    mkdir -p build
+    cd build
+
+    ../configure --prefix=$GCC_ARCH_PATH \
+        --enable-languages=c,c++ --with-pkgversion=OpenFOAM \
+        --enable-__cxa_atexit --enable-libstdcxx-allocator=new \
+        --with-system-zlib \
+        --with-gmp=$GMP_ARCH_PATH --with-mpfr=$MPFR_ARCH_PATH \
+    && make -j $WM_NCOMPPROCS \
+    && make install \
+    && echo "Built: $gccPACKAGE"
+) || {
+    echo "Error building: $gccPACKAGE"
+    exit 1
+}
 fi
 
 
