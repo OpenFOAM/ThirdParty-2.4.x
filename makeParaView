@@ -28,8 +28,7 @@
 #
 # Description
 #     Make and install paraview
-#     - run from folder above paraview source folder or place the
-#       paraview source under $WM_THIRD_PARTY_DIR
+#     - place the paraview source under $WM_THIRD_PARTY_DIR/paraview-VERSION
 #
 #------------------------------------------------------------------------------
 
@@ -62,12 +61,17 @@ QMAKE_PATH=""
 # No further editing below this line
 #
 #-----------------------------------------------------------------------------
-[ -d "$WM_THIRD_PARTY_DIR" ] || {
-    echo "no \$WM_THIRD_PARTY_DIR=$WM_THIRD_PARTY_DIR"
+# run from third-party directory only
+cd ${0%/*} || exit 1
+if [ "$PWD" != "$WM_THIRD_PARTY_DIR" ]
+then
+    echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
+    echo "    The environment variables are inconsistent with the installation."
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
-}
+fi
+. tools/makeParaViewFunctions
 
-. $WM_THIRD_PARTY_DIR/tools/makeParaViewFunctions
 #-----------------------------------------------------------------------------
 Script=${0##*/}
 
@@ -94,9 +98,8 @@ For finer control, the build stages can be also selected individually:
   -install
   -envpath      alter absolute paths in CMake files to use env variables
 
-Make and install paraview-$ParaView_VERSION
-  - run from folder above the ParaView source folder or place the ParaView
-    source under \$WM_THIRD_PARTY_DIR ($WM_THIRD_PARTY_DIR)
+Make and install paraview-$ParaView_VERSION located under
+  \$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION
 
 USAGE
     exit 1
@@ -226,6 +229,8 @@ Build stages selected
     -envpath  ${runENVPATH:-false}
 ---------------------
 SUMMARY
+
+exit 100;
 
 [ "$runCONFIG"  = true ] && configParaView
 [ "$runMAKE"    = true ] && makeParaView
