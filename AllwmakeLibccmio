@@ -35,9 +35,7 @@ tarFile=$packageDir.tar.gz
 url="https://wci.llnl.gov/codes/visit/3rd_party/$tarFile"
 
 # run from third-party directory only
-[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit 1
-. $WM_THIRD_PARTY_DIR/tools/makeThirdPartyFunctions
-
+cd ${0%/*} || exit 1
 if [ "$PWD" != "$WM_THIRD_PARTY_DIR" ]
 then
     echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
@@ -45,6 +43,7 @@ then
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 fi
+. tools/makeThirdPartyFunctions
 
 
 # get tar.gz file if required
