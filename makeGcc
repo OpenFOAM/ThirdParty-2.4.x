@@ -37,6 +37,7 @@ gmpPACKAGE=gmp-4.2.4
 mpfrPACKAGE=mpfr-2.4.1
 gccPACKAGE=gcc-4.3.3
 
+#------------------------------------------------------------------------------
 # run from this third-party directory only
 wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
@@ -45,8 +46,8 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     exit 1
 }
 . tools/makeThirdPartyFunctions
-
 #------------------------------------------------------------------------------
+
 usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
@@ -91,8 +92,7 @@ done
 
 
 # get the number of cores to build on
-getNCOMPPROCS verbose
-
+getNCOMPPROCS
 
 GCC_ARCH_PATH=$WM_THIRD_PARTY_DIR/$gccPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
 GMP_ARCH_PATH=$WM_THIRD_PARTY_DIR/$gmpPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH

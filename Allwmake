@@ -39,6 +39,7 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     exit 1
 }
 . tools/makeThirdPartyFunctions
+#------------------------------------------------------------------------------
 
 
 # export WM settings in a form that GNU configure recognizes

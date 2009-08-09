@@ -30,11 +30,10 @@
 #     Build script for Qt-4.3.5
 #
 #------------------------------------------------------------------------------
+qtVERSION=4.3.5
+qtPACKAGE=qt-x11-opensource-src-$qtVERSION
 
-QT_VERSION=4.3.5
-QT_HOME=$WM_THIRD_PARTY_DIR/qt-x11-opensource-src-$QT_VERSION
-QT_ARCH_PATH=$QT_HOME/platforms/$WM_OPTIONS
-
+#------------------------------------------------------------------------------
 # run from this third-party directory only
 wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
@@ -43,9 +42,12 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     exit 1
 }
 . tools/makeThirdPartyFunctions
+#------------------------------------------------------------------------------
 
 # get the number of cores to build on
 getNCOMPPROCS
+
+QT_ARCH_PATH=$WM_THIRD_PARTY_DIR/$qtPACKAGE/platforms/$WM_OPTIONS
 
 #
 # Build QT
@@ -53,11 +55,11 @@ getNCOMPPROCS
 echo "---------------"
 if [ -d "$QT_ARCH_PATH" ]
 then
-    echo "Already built: Qt-$QT_VERSION"
+    echo "Already built: Qt-$qtVERSION"
 else
-    echo "Starting build: Qt-$QT_VERSION"
+    echo "Starting build: Qt-$qtVERSION"
 (
-    cd $QT_HOME || exit 1
+    cd $qtPACKAGE || exit 1
 
     make distclean
     rm -rf $QT_ARCH_PATH
@@ -67,9 +69,9 @@ else
         -nomake examples \
     && time make -j $WM_NCOMPPROCS \
     && make install \
-    && echo "Built: Qt-$QT_VERSION"
+    && echo "Built: Qt-$qtVERSION"
 ) || {
-    echo "Error building: Qt-$QT_VERSION"
+    echo "Error building: Qt-$qtVERSION"
     exit 1
 }
 fi
