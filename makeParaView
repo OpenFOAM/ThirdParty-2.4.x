@@ -31,8 +31,18 @@
 #     - place the paraview source under $WM_THIRD_PARTY_DIR/paraview-VERSION
 #
 #------------------------------------------------------------------------------
-
-# User options:
+# run from third-party directory only
+cd ${0%/*} || exit 1
+wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
+    echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
+    echo "    The environment variables are inconsistent with the installation."
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+. tools/makeParaViewFunctions
+#------------------------------------------------------------------------------
+#
+# USER OPTIONS:
 # ~~~~~~~~~~~~~
 
 # MPI support:
@@ -58,20 +68,8 @@ withQTSUPPORT=true
 QMAKE_PATH=""
 
 #
-# No further editing below this line
+# NO FURTHER EDITING BELOW THIS LINE
 #
-#-----------------------------------------------------------------------------
-# run from third-party directory only
-cd ${0%/*} || exit 1
-if [ "$PWD" != "$WM_THIRD_PARTY_DIR" ]
-then
-    echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
-    echo "    The environment variables are inconsistent with the installation."
-    echo "    Check the OpenFOAM entries in your dot-files and source them."
-    exit 1
-fi
-. tools/makeParaViewFunctions
-
 #-----------------------------------------------------------------------------
 Script=${0##*/}
 
@@ -81,25 +79,36 @@ usage() {
 
 usage: $Script [OPTION]
 options:
-  -rebuild      for repeated builds (-make -install) *use with caution*
-  -mpi          with mpi (if not already enabled)
-  -python       with python (if not already enabled)
-  -mesa         with mesa (if not already enabled)
-  -qt           with extra Qt gui support (if not already enabled)
-  -qmake  PATH  with the Qt version corresponding to the qmake path given
-  -verbose      verbose output in Makefiles
-  -version VER  specify an alternative version (default: $ParaView_VERSION)
+  -rebuild          for repeated builds (-make -install) *use with caution*
+  -mesa             with mesa (if not already enabled)
+  -mpi              with mpi (if not already enabled)
+  -python           with python (if not already enabled)
+  -qt               with extra Qt gui support (if not already enabled)
+  -qmake PATH       with the Qt version corresponding to the qmake path given
+  -verbose          verbose output in Makefiles
+  -version VER      specify an alternative version (current value: $ParaView_VERSION)
+  -mesa-include DIR
+                    location of mesa headers (current value: ${MESA_INCLUDE:-none})
+  -mesa-lib PATH    path to mesa library     (current value: ${MESA_LIBRARY:-none})
+  -python-lib PATH  path to python library   (current value: ${PYTHON_LIBRARY:-none})
   -help
 
-For finer control, the build stages can be also selected individually:
-  -config
-  -make
-  -makedoc
-  -install
-  -envpath      alter absolute paths in CMake files to use env variables
+For finer control, the build stages can be selected or deselected individually:
+  -config    -no-config
+  -make      -no-make
+  -makedoc   -no-makedoc
+  -install   -no-install
+  -envpath   -no-envpath
 
-Make and install paraview-$ParaView_VERSION located under
-  \$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION
+The -no-FEATURE option can be disable these features (if not already disabled):
+  mesa mpi python qt
+
+The -envpath alters absolute paths in CMake files to use the corresponding
+environment variables.
+
+* Make and install paraview-$ParaView_VERSION located under
+      \$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION
+  ->  \$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION/platforms/$WM_ARCH$WM_COMPILER
 
 USAGE
     exit 1
@@ -110,10 +119,11 @@ USAGE
 #
 # add options based on script name:
 #
+case "$Script" in *-mesa*)   withMESA=true;; esac
 case "$Script" in *-mpi*)    withMPI=true;; esac
 case "$Script" in *-python*) withPYTHON=true;; esac
-case "$Script" in *-mesa*)   withMESA=true;; esac
 case "$Script" in *-qt*)     withQTSUPPORT=true;; esac
+
 
 #
 # various building stages
@@ -133,9 +143,17 @@ do
         unset runDEFAULT
         shift
         ;;
+    -no-config)
+        runCONFIG=false
+        shift
+        ;;
     -make)               # stage 2: make only
         runMAKE=true
         unset runDEFAULT
+        shift
+        ;;
+    -no-make)
+        runMAKE=false
         shift
         ;;
     -makedoc)            # stage 3: generate html documentation
@@ -143,14 +161,26 @@ do
         unset runDEFAULT
         shift
         ;;
+    -no-makedoc)
+        runMAKEDOC=false
+        shift
+        ;;
     -install)            # stage 4: install only
         runINSTALL=true
         unset runDEFAULT
         shift
         ;;
+    -no-install)
+        runINSTALL=false
+        shift
+        ;;
     -envpath)            # stage 5: change cmake files to use env variables
         runENVPATH=true
         unset runDEFAULT
+        shift
+        ;;
+    -no-envpath)
+        runENVPATH=false
         shift
         ;;
     -rebuild)            # shortcut for rebuilding
@@ -159,20 +189,51 @@ do
         unset runDEFAULT
         shift
         ;;
+    -mesa)
+        withMESA=true
+        shift
+        ;;
+    -no-mesa)
+        withMESA=false
+        shift
+        ;;
+    -mesa-include)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        MESA_INCLUDE="$2"
+        shift 2
+        ;;
+    -mesa-lib)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        MESA_LIBRARY="$2"
+        shift 2
+        ;;
     -mpi)
         withMPI=true
+        shift
+        ;;
+    -no-mpi)
+        withMPI=false
         shift
         ;;
     -python)
         withPYTHON=true
         shift
         ;;
-    -mesa)
-        withMESA=true
+    -no-python)
+        withPYTHON=false
         shift
+        ;;
+    -python-lib)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        PYTHON_LIBRARY="$2"
+        shift 2
         ;;
     -qt)
         withQTSUPPORT=true
+        shift
+        ;;
+    -no-qt)
+        withQTSUPPORT=false
         shift
         ;;
     -qmake)
@@ -198,11 +259,11 @@ done
 
 if [ "$runDEFAULT" = true ]
 then
-    runCONFIG=true
-    runMAKE=true
-    runMAKEDOC=true
-    runINSTALL=true
-    runENVPATH=true
+    : ${runCONFIG:=true}
+    : ${runMAKE:=true}
+    : ${runMAKEDOC:=true}
+    : ${runINSTALL:=true}
+    : ${runENVPATH:=true}
 fi
 
 
@@ -228,6 +289,12 @@ Build stages selected
     -install  ${runINSTALL:-false}
     -envpath  ${runENVPATH:-false}
 ---------------------
+Features selected
+    mesa      ${withMESA:-false}
+    mpi       ${withMPI:-false}
+    python    ${withPYTHON:-false}
+    qt        ${withQTSUPPORT:-false}
+---------------------
 SUMMARY
 
 [ "$runCONFIG"  = true ] && configParaView
@@ -236,5 +303,6 @@ SUMMARY
 [ "$runINSTALL" = true ] && installParaView
 [ "$runENVPATH" = true ] && fixCMakeFiles
 
-echo "done"
+echo
+echo Done
 #------------------------------------------------------------------------------

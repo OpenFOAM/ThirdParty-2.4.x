@@ -34,16 +34,17 @@ packageDir=libccmio-2.6.1
 tarFile=$packageDir.tar.gz
 url="https://wci.llnl.gov/codes/visit/3rd_party/$tarFile"
 
+#------------------------------------------------------------------------------
 # run from third-party directory only
 cd ${0%/*} || exit 1
-if [ "$PWD" != "$WM_THIRD_PARTY_DIR" ]
-then
+wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
     echo "    The environment variables are inconsistent with the installation."
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
-fi
+}
 . tools/makeThirdPartyFunctions
+#------------------------------------------------------------------------------
 
 
 # get tar.gz file if required
