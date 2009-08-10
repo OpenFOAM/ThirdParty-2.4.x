@@ -230,8 +230,6 @@ Build stages selected
 ---------------------
 SUMMARY
 
-exit 100;
-
 [ "$runCONFIG"  = true ] && configParaView
 [ "$runMAKE"    = true ] && makeParaView
 [ "$runMAKEDOC" = true ] && makeDocs
