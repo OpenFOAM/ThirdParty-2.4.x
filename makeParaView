@@ -61,7 +61,7 @@ withMESA=false
 MESA_INCLUDE="/usr/include/GL"
 MESA_LIBRARY="/usr/lib64/libOSMesa.so"
 
-# extra QT gui support (useful for re-using the installation for engrid)
+# extra QT gui support (useful for some third party apps)
 withQTSUPPORT=true
 
 # Set the path to the Qt-4.3.? qmake if the system Qt is other than this version
