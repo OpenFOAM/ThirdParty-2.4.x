@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -u
 #------------------------------------------------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
@@ -83,6 +83,15 @@ do
         ;;
     esac
 done
+
+
+if [ "$WM_ARCH_OPTION" = 32 ]; then
+    ABI=32
+elif [ "$WM_ARCH_OPTION" = 64 ]; then
+    ABI=64
+else
+    usage "Please set WM_ARCH_OPTION to either 32 or 64'$*'"
+fi
 
 
 # get the number of cores to build on
