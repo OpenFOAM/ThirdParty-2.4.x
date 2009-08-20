@@ -37,11 +37,17 @@ gmpPACKAGE=gmp-4.2.4
 mpfrPACKAGE=mpfr-2.4.1
 gccPACKAGE=gcc-4.3.3
 
-# run from third-party directory only
-[ -d "$WM_THIRD_PARTY_DIR" ] && cd $WM_THIRD_PARTY_DIR || exit 1
-. $WM_THIRD_PARTY_DIR/tools/makeThirdPartyFunctions
-
 #------------------------------------------------------------------------------
+# run from this third-party directory only
+wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
+    echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
+    echo "    The environment variables are inconsistent with the installation."
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+. tools/makeThirdPartyFunctions
+#------------------------------------------------------------------------------
+
 usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
@@ -95,8 +101,7 @@ fi
 
 
 # get the number of cores to build on
-getNCOMPPROCS verbose
-
+getNCOMPPROCS
 
 GCC_ARCH_PATH=$WM_THIRD_PARTY_DIR/$gccPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
 GMP_ARCH_PATH=$WM_THIRD_PARTY_DIR/$gmpPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
