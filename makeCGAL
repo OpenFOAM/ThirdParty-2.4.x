@@ -41,7 +41,7 @@ cmake \
     -DBoost_VERSION=$BOOST_VERSION_NO \
     ${CGAL_SRC}
 
-make
+make -j $WM_NCOMPPROCS
 
 echo "\${CGAL_SRC}/src/CGAL/assertions.cpp" > ${CGAL_SRC}/src/CGAL/files
 echo "\${CGAL_SRC}/src/CGAL/MP_Float.cpp" >> ${CGAL_SRC}/src/CGAL/files
