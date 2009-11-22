@@ -33,9 +33,9 @@
 #     gcc 4.3.2 is known to miscompile GMP 4.3.x on 64-bit machines
 #
 #------------------------------------------------------------------------------
-gmpPACKAGE=gmp-4.2.4
+gmpPACKAGE=gmp-4.3.1
 mpfrPACKAGE=mpfr-2.4.1
-gccPACKAGE=gcc-4.3.3
+gccPACKAGE=gcc-4.4.2
 
 #------------------------------------------------------------------------------
 # run from this third-party directory only
