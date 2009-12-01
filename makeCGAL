@@ -1,0 +1,54 @@
+#!/bin/sh
+set -u
+
+BOOST_ARCH_PATH=${BOOST_ROOT}/platforms/${WM_OPTIONS}
+
+cd ${BOOST_ROOT}
+
+rm -rf ${BOOST_ARCH_PATH}
+
+./bootstrap.sh \
+    --with-libraries=thread \
+    --libdir=$BOOST_ARCH_PATH/lib \
+    --includedir=$BOOST_ROOT/include
+
+if [ -r /proc/cpuinfo ]
+then
+    WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l)
+    [ $WM_NCOMPPROCS -le 8 ] || WM_NCOMPPROCS=8
+
+    time ./bjam -j $WM_NCOMPPROCS install
+else
+    time ./bjam install
+fi
+
+echo "Done boost"
+
+cd ${CGAL_SRC}
+
+BOOST_VERSION_NO=`grep "#define BOOST_VERSION " \
+    ${BOOST_ROOT}/include/boost-${BOOST_LIB_VERSION}/boost/version.hpp \
+    | cut -d " " -f 3`
+
+cmake \
+    -DGMP_INCLUDE_DIR=${WM_THIRD_PARTY_DIR}/gmp-4.2.4 \
+    -DGMP_LIBRARIES_DIR=${WM_THIRD_PARTY_DIR}/gmp-4.2.4/platforms/${WM_ARCH}${WM_COMPILER_ARCH}/lib \
+    -DGMP_LIBRARIES=${WM_THIRD_PARTY_DIR}/gmp-4.2.4/platforms/${WM_ARCH}${WM_COMPILER_ARCH}/lib/libgmp.so \
+    -DMPFR_INCLUDE_DIR=${WM_THIRD_PARTY_DIR}/mpfr-2.4.1 \
+    -DMPFR_LIBRARIES_DIR=${WM_THIRD_PARTY_DIR}/mpfr-2.4.1/platforms/${WM_ARCH}${WM_COMPILER_ARCH}/lib \
+    -DMPFR_LIBRARIES=${WM_THIRD_PARTY_DIR}/mpfr-2.4.1/platforms/${WM_ARCH}${WM_COMPILER_ARCH}/lib/libmpfr.so \
+    -DBoost_INCLUDE_DIR=${BOOST_ROOT}/include/boost-${BOOST_LIB_VERSION} \
+    -DBoost_LIBRARY_DIRS=$BOOST_ARCH_PATH/lib \
+    -DBoost_THREAD_LIBRARY=$BOOST_ARCH_PATH/lib/libboost_thread-${BOOST_COMPILER}-mt-${BOOST_LIB_VERSION}.so \
+    -DBoost_THREAD_LIBRARY_RELEASE=$BOOST_ARCH_PATH/lib/libboost_thread-${BOOST_COMPILER}-mt-${BOOST_LIB_VERSION}.so \
+    -DBoost_VERSION=$BOOST_VERSION_NO \
+    ${CGAL_SRC}
+
+make
+
+echo "\${CGAL_SRC}/src/CGAL/assertions.cpp" > ${CGAL_SRC}/src/CGAL/files
+echo "\${CGAL_SRC}/src/CGAL/MP_Float.cpp" >> ${CGAL_SRC}/src/CGAL/files
+echo "\${CGAL_SRC}/src/CGAL/Random.cpp" >> ${CGAL_SRC}/src/CGAL/files
+echo "\${CGAL_SRC}/src/CGAL/io.cpp" >> ${CGAL_SRC}/src/CGAL/files
+
+echo "Done CGAL"
