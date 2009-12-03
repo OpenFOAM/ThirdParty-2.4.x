@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -u
+
 BOOST_ARCH_PATH=${BOOST_ROOT}/platforms/${WM_OPTIONS}
 
 cd ${BOOST_ROOT}

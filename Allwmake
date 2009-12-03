@@ -197,8 +197,14 @@ then
     cd ParMetis-3.1 || exit 1
     cpMakeFiles ParMetis
 
-    wmake libso METISLib
-    wmake libso ParMETISLib
+    # ParMetis has dependency to mpi version so
+    # include mpi in build directory so .o files
+    # are kept separate
+    (
+        WM_OPTIONS=${WM_OPTIONS}$WM_MPLIB;
+        wmake libso METISLib;
+        wmake libso ParMETISLib
+    )
 )
 fi
 
@@ -211,6 +217,16 @@ fi
     wmake libso MGridGen/IMlib
     wmake libso MGridGen/Lib
 )
+
+
+# Build Tecio
+(
+    cd tecio || exit 1
+    cpMakeFiles tecio tecsrc
+
+    wmake libso tecsrc
+)
+
 
 
 set +x
