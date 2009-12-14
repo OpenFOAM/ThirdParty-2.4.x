@@ -201,7 +201,7 @@ then
     # include mpi in build directory so .o files
     # are kept separate
     (
-        WM_OPTIONS=${WM_OPTIONS}$WM_MPLIB;
+        WM_OPTIONS=${WM_OPTIONS}$WM_MPLIB
         wmake libso METISLib
         wmake libso ParMETISLib
     )
