@@ -170,15 +170,33 @@ MPICH)
 esac
 
 
-# Build Scotch decomposition
+# Build Scotch decomposition library
 (
     cd scotch_5.1 || exit 1
-    cpMakeFiles scotch src
 
-    wmake libso src/libscotch
-#    wmake libso src/libscotchmetis
+    if [ -r $FOAM_LIBBIN/libscotch.so -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
+    then
+        echo "have scotch shared libraries"
+    else
+        cd src || exit 1
+        (make scotch && cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN/ )
+    fi
 )
+# Build PTScotch decomposition library
+if [ "$WM_MPLIB" ]
+then
+(
+    cd scotch_5.1 || exit 1
 
+    if [ -r $FOAM_MPI_LIBBIN/libptscotch.so -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
+    then
+        echo "have ptscotch shared libraries"
+    else
+        cd src || exit 1
+        (make ptscotch && cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN/ )
+    fi
+)
+fi
 
 # Build Metis decomposition
 (
