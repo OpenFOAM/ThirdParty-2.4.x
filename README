@@ -2,7 +2,7 @@
 #
 #+TITLE:               OpenFOAM Third-Party packages 1.6
 #+AUTHOR:                      OpenCFD Ltd.
-#+DATE:                        November 2009
+#+DATE:                        January 2010
 #+LINK:                  http://www.opencfd.co.uk
 #+OPTIONS: author:nil ^:{}
 
@@ -49,6 +49,7 @@
    + paraview    http://www.paraview.org/files/v3.6/paraview-3.6.1.tar.gz
    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
    + zlib        http://www.zlib.net/zlib-1.2.3.tar.gz
-   + tecio       http://www.tecplot.com
+   + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
+   + coco-cpp    http://github.com/olesenm/coco-cpp
 
 # --------------------------------------------------------------------------
