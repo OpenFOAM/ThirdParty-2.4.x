@@ -228,8 +228,8 @@ getPaths()
         exit 1
     }
 
-    # set the major version "<digits>.<digits>"
-    ParaView_MAJOR_VERSION=$(echo $ParaView_VERSION | \
+    # the major version is "<digits>.<digits>"
+    ParaView_MAJOR=$(echo $ParaView_VERSION | \
         sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*$/\1/')
 
     # ParaView_DIR=$ParaView_INST_DIR/platforms/$WM_ARCH$WM_COMPILER$OBJ_ADD
@@ -254,7 +254,7 @@ configParaView()
     cd $ParaView_DIR
 
     echo "----"
-    echo "Configuring paraview-$ParaView_VERSION (major version: $ParaView_MAJOR_VERSION)"
+    echo "Configuring paraview-$ParaView_VERSION (major version: $ParaView_MAJOR)"
     echo "    MPI    support : ${withMPI:-false}"
     echo "    Python support : ${withPYTHON:-false}"
     echo "    MESA   support : ${withMESA:-false}"
@@ -300,10 +300,10 @@ makeParaView()
     fi
     echo "    Done make"
 
-    echo "    For quicker development, linking lib/paraview-$ParaView_MAJOR_VERSION/ -> bin/"
-    rm -rf lib/paraview-$ParaView_MAJOR_VERSION
+    echo "    For quicker development, linking lib/paraview-$ParaView_MAJOR/ -> bin/"
+    rm -rf lib/paraview-$ParaView_MAJOR
     mkdir lib 2>/dev/null
-    ( cd lib && ln -s ../bin paraview-$ParaView_MAJOR_VERSION )
+    ( cd lib && ln -s ../bin paraview-$ParaView_MAJOR )
 }
 
 
@@ -393,10 +393,10 @@ installParaView()
     echo "disabled 'make install' for now, just use links"
 
     # about.txt may be missing
-    paraviewLibDir="$ParaView_DIR/lib/paraview-$ParaView_MAJOR_VERSION"
+    paraviewLibDir="$ParaView_DIR/lib/paraview-$ParaView_MAJOR"
     if [ -d "$paraviewLibDir" -a ! -e "$paraviewLibDir/about.txt" ]
     then
-        echo "paraview-$ParaView_MAJOR_VERSION installed - $(date)" > $paraviewLibDir/about.txt
+        echo "paraview-$ParaView_MAJOR installed - $(date)" > $paraviewLibDir/about.txt
     fi
 
 cat<< INFO
@@ -406,7 +406,7 @@ cat<< INFO
 
         export ParaView_INST_DIR=$ParaView_INST_DIR
         export ParaView_DIR=$ParaView_DIR
-        export PV_PLUGIN_PATH=$FOAM_LIBBIN
+        export PV_PLUGIN_PATH=\$FOAM_LIBBIN/paraview
         export PATH=\$ParaView_DIR/bin:\$PATH
     ---
 INFO
