@@ -2,7 +2,7 @@
 #
 #+TITLE:               OpenFOAM Third-Party packages 1.6
 #+AUTHOR:                      OpenCFD Ltd.
-#+DATE:                        November 2009
+#+DATE:                        January 2010
 #+LINK:                  http://www.opencfd.co.uk
 #+OPTIONS: author:nil ^:{}
 
@@ -24,9 +24,9 @@
 ** Compiler
    + gcc   http://gcc.gnu.org/releases.html
    + gmp   http://gmplib.org/
-           ftp://ftp.gnu.org/gnu/gmp/gmp-4.2.4.tar.bz2
+           ftp://ftp.gnu.org/gnu/gmp/gmp-5.0.0.tar.bz2
    + mpfr  http://www.mpfr.org/
-           http://www.mpfr.org/mpfr-current/mpfr-2.4.1.tar.bz2
+           http://www.mpfr.org/mpfr-current/mpfr-2.4.2.tar.bz2
 
 ** Parallel Processing
    + openmpi     http://www.open-mpi.org/software/ompi/v1.3/downloads/openmpi-1.3.4.tar.bz2
@@ -49,6 +49,7 @@
    + paraview    http://www.paraview.org/files/v3.6/paraview-3.6.1.tar.gz
    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
    + zlib        http://www.zlib.net/zlib-1.2.3.tar.gz
-   + tecio       http://www.tecplot.com
+   + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
+   + coco-cpp    http://github.com/olesenm/coco-cpp
 
 # --------------------------------------------------------------------------

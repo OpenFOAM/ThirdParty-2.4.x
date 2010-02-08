@@ -1,10 +1,94 @@
-#!/bin/sh
+#!/bin/sh -u
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2009-2010 OpenCFD Ltd.
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software; you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by the
+#     Free Software Foundation; either version 2 of the License, or (at your
+#     option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM; if not, write to the Free Software Foundation,
+#     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+#
+# Script
+#     makeCGAL
+#
+# Description
+#     Build script for CGAL
+#
+#------------------------------------------------------------------------------
+gmpPACKAGE=gmp-5.0.0
+mpfrPACKAGE=mpfr-2.4.2
 
-set -u
+#------------------------------------------------------------------------------
+# run from this third-party directory only
+wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
+    echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
+    echo "    The environment variables are inconsistent with the installation."
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
+. tools/makeThirdPartyFunctions
+#------------------------------------------------------------------------------
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [gmp-VERSION] [mpfr-VERSION]
+
+* build CGAL with
+      $gmpPACKAGE
+      $mpfrPACKAGE
+
+USAGE
+    exit 1
+}
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    gmp-[4-9]*)
+        gmpPACKAGE="${1%%/}"
+        shift
+        ;;
+    mpfr-[4-9]*)
+        mpfrPACKAGE="${1%%/}"
+        shift
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+
+#------------------------------------------------------------------------------
 
 BOOST_ARCH_PATH=${BOOST_ROOT}/platforms/${WM_OPTIONS}
 
-cd ${BOOST_ROOT}
+[ -n "${BOOST_ROOT}" ] && cd ${BOOST_ROOT} || {
+    echo "Error: no boost $BOOST_ROOT"
+    exit 1
+}
 
 rm -rf ${BOOST_ARCH_PATH}
 
@@ -13,29 +97,32 @@ rm -rf ${BOOST_ARCH_PATH}
     --libdir=$BOOST_ARCH_PATH/lib \
     --includedir=$BOOST_ROOT/include
 
-if [ -r /proc/cpuinfo ]
-then
-    WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l)
-    [ $WM_NCOMPPROCS -le 8 ] || WM_NCOMPPROCS=8
 
-    time ./bjam -j $WM_NCOMPPROCS install
-else
-    time ./bjam install
-fi
+# get the number of cores to build on
+getNCOMPPROCS
 
+GMP_ARCH_PATH=$WM_THIRD_PARTY_DIR/$gmpPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
+MPFR_ARCH_PATH=$WM_THIRD_PARTY_DIR/$mpfrPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
+
+
+time ./bjam -j $WM_NCOMPPROCS install
 echo "Done boost"
 
-cd ${CGAL_SRC}
+
+[ -n "${CGAL_SRC}" ] && cd ${CGAL_SRC} || {
+    echo "Error: no cgal $CGAL_SRC"
+    exit 1
+}
 
 BOOST_VERSION_NO=`grep "#define BOOST_VERSION " ${BOOST_ROOT}/include/boost/version.hpp | cut -d " " -f 3`
 
 cmake \
-    -DGMP_INCLUDE_DIR=${WM_THIRD_PARTY_DIR}/gmp-4.2.4 \
-    -DGMP_LIBRARIES_DIR=${WM_THIRD_PARTY_DIR}/gmp-4.2.4/platforms/${WM_ARCH}${WM_COMPILER_ARCH}/lib \
-    -DGMP_LIBRARIES=${WM_THIRD_PARTY_DIR}/gmp-4.2.4/platforms/${WM_ARCH}${WM_COMPILER_ARCH}/lib/libgmp.so \
-    -DMPFR_INCLUDE_DIR=${WM_THIRD_PARTY_DIR}/mpfr-2.4.1 \
-    -DMPFR_LIBRARIES_DIR=${WM_THIRD_PARTY_DIR}/mpfr-2.4.1/platforms/${WM_ARCH}${WM_COMPILER_ARCH}/lib \
-    -DMPFR_LIBRARIES=${WM_THIRD_PARTY_DIR}/mpfr-2.4.1/platforms/${WM_ARCH}${WM_COMPILER_ARCH}/lib/libmpfr.so \
+    -DGMP_INCLUDE_DIR=$WM_THIRD_PARTY_DIR/$gmpPACKAGE \
+    -DGMP_LIBRARIES_DIR=$GMP_ARCH_PATH/lib \
+    -DGMP_LIBRARIES=$GMP_ARCH_PATH/lib/libgmp.so \
+    -DMPFR_INCLUDE_DIR=$WM_THIRD_PARTY_DIR/mpfrPACKAGE \
+    -DMPFR_LIBRARIES_DIR=$MPFR_ARCH_PATH/lib \
+    -DMPFR_LIBRARIES=$MPFR_ARCH_PATH/lib/libmpfr.so \
     -DBoost_INCLUDE_DIR=${BOOST_ROOT}/include \
     -DBoost_LIBRARY_DIRS=$BOOST_ARCH_PATH/lib \
     -DBoost_THREAD_LIBRARY=$BOOST_ARCH_PATH/lib/libboost_thread.so \
@@ -45,9 +132,12 @@ cmake \
 
 make -j $WM_NCOMPPROCS
 
+# create 'files'
 echo "\${CGAL_SRC}/src/CGAL/assertions.cpp" > ${CGAL_SRC}/src/CGAL/files
 echo "\${CGAL_SRC}/src/CGAL/MP_Float.cpp" >> ${CGAL_SRC}/src/CGAL/files
 echo "\${CGAL_SRC}/src/CGAL/Random.cpp" >> ${CGAL_SRC}/src/CGAL/files
 echo "\${CGAL_SRC}/src/CGAL/io.cpp" >> ${CGAL_SRC}/src/CGAL/files
 
 echo "Done CGAL"
+
+# ----------------------------------------------------------------- end-of-file

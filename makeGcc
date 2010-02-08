@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 1991-2009 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -33,9 +33,9 @@
 #     gcc 4.3.2 is known to miscompile GMP 4.3.x on 64-bit machines
 #
 #------------------------------------------------------------------------------
-gmpPACKAGE=gmp-4.3.1
-mpfrPACKAGE=mpfr-2.4.1
-gccPACKAGE=gcc-4.4.2
+gmpPACKAGE=gmp-5.0.0
+mpfrPACKAGE=mpfr-2.4.2
+gccPACKAGE=gcc-4.4.3
 
 #------------------------------------------------------------------------------
 # run from this third-party directory only
@@ -91,13 +91,15 @@ do
 done
 
 
-if [ "$WM_ARCH_OPTION" = 32 ]; then
-    ABI=32
-elif [ "$WM_ARCH_OPTION" = 64 ]; then
-    ABI=64
-else
+# set 32 or 64 bit ABI
+case "$WM_ARCH_OPTION" in
+32 | 64)
+    ABI=$WM_ARCH_OPTION
+    ;;
+*)
     usage "Please set WM_ARCH_OPTION to either 32 or 64'$*'"
-fi
+    ;;
+esac
 
 
 # get the number of cores to build on
@@ -123,7 +125,8 @@ else
     mkdir -p build
     cd build
 
-    ../configure ABI=$ABI --prefix=$GMP_ARCH_PATH \
+    ../configure ABI=$ABI \
+        --prefix=$GMP_ARCH_PATH \
     && make -j $WM_NCOMPPROCS \
     && make install \
     && echo "Built: $gmpPACKAGE"
@@ -151,7 +154,9 @@ else
     mkdir -p build
     cd build
 
-    ../configure ABI=$ABI --prefix=$MPFR_ARCH_PATH --with-gmp=$GMP_ARCH_PATH \
+    ../configure ABI=$ABI \
+       --prefix=$MPFR_ARCH_PATH \
+       --with-gmp=$GMP_ARCH_PATH \
     && make -j $WM_NCOMPPROCS \
     && make install \
     && echo "Built: $mpfrPACKAGE"
@@ -180,11 +185,15 @@ else
     mkdir -p build
     cd build
 
-    ../configure --prefix=$GCC_ARCH_PATH \
-        --enable-languages=c,c++ --with-pkgversion=OpenFOAM \
-        --enable-__cxa_atexit --enable-libstdcxx-allocator=new \
+    ../configure \
+        --prefix=$GCC_ARCH_PATH \
+        --with-gmp=$GMP_ARCH_PATH \
+        --with-mpfr=$MPFR_ARCH_PATH \
+        --with-pkgversion=OpenFOAM \
+        --enable-languages=c,c++ \
+        --enable-__cxa_atexit \
+        --enable-libstdcxx-allocator=new \
         --with-system-zlib \
-        --with-gmp=$GMP_ARCH_PATH --with-mpfr=$MPFR_ARCH_PATH \
     && make -j $WM_NCOMPPROCS \
     && make install \
     && echo "Built: $gccPACKAGE"

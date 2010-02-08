@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 1991-2009 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -50,14 +50,16 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 [ -n "$WM_LDFLAGS" ]    &&  export LDFLAGS="$WM_LDFLAGS"
 
 echo
-echo ==============================
-echo start ThirdParty Allwmake
-echo ==============================
+echo ========================================
+echo Start ThirdParty Allwmake
+echo ========================================
 echo
-set -x
 
-# build malloc
+echo ========================================
+echo Build malloc
+echo
 (
+    set -x
     cd malloc || exit 1
     ( cd hoard-371 && cpMakeFiles hoard )
 
@@ -65,9 +67,9 @@ set -x
 )
 
 
-#
-# compile specific mpi libraries
-#
+echo ========================================
+echo Compile specific mpi libraries
+echo
 case "$WM_MPLIB" in
 OPENMPI)
     if [ -r $MPI_ARCH_PATH/lib/libmpi.so ]
@@ -78,13 +80,14 @@ OPENMPI)
         echo "have $WM_MPLIB static library"
     else
     (
+        set -x
         cd $MPI_HOME || exit 1
 
         make distclean
         rm -rf $MPI_ARCH_PATH
 
         unset mpiWith
-        # as of version 1.3, enable GridEngine
+        # enable GridEngine if it appears to be in use
         if [ -n "$SGE_ROOT" ]
         then
             mpiWith="$mpiWith --with-sge"
@@ -102,7 +105,9 @@ OPENMPI)
             --disable-mpirun-prefix-by-default \
             --disable-orterun-prefix-by-default \
             --enable-shared --disable-static \
-            --disable-mpi-f77 --disable-mpi-f90 --disable-mpi-cxx \
+            --disable-mpi-f77 \
+            --disable-mpi-f90 \
+            --disable-mpi-cxx \
             --disable-mpi-profile \
             $mpiWith \
             ;
@@ -123,6 +128,7 @@ MPICH)
         echo "have $WM_MPLIB static library"
     else
     (
+        set -x
         cd $MPI_HOME || exit 1
 
         make distclean
@@ -130,6 +136,7 @@ MPICH)
         rm util/machines/machines.*
 
         ./configure \
+            -prefix=$MPI_ARCH_PATH \
             --without-mpe \
             --disable-f77 \
             --disable-f90 \
@@ -140,7 +147,8 @@ MPICH)
             --disable-debug \
             --enable-sharedlib=$MPI_ARCH_PATH/lib \
             --with-device=ch_p4 \
-            -prefix=$MPI_ARCH_PATH
+            ;
+
         make
         make install
         make distclean
@@ -170,36 +178,46 @@ MPICH)
 esac
 
 
-# Build Scotch decomposition library
+echo ========================================
+echo Build Scotch decomposition library
+echo
+if [ -r $FOAM_LIBBIN/libscotch.so -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
+then
+    echo "have scotch shared libraries"
+else
 (
-    cd scotch_5.1 || exit 1
+    set -x
+    cd scotch_5.1/src || exit 1
 
-    if [ -r $FOAM_LIBBIN/libscotch.so -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
-    then
-        echo "have scotch shared libraries"
-    else
-        cd src || exit 1
-        (make scotch && cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN/ )
-    fi
+    make scotch && cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN/
 )
-# Build PTScotch decomposition library
+fi
+
+
+echo ========================================
+echo Build PTScotch decomposition library
+echo
 if [ "$WM_MPLIB" ]
 then
-(
-    cd scotch_5.1 || exit 1
-
     if [ -r $FOAM_MPI_LIBBIN/libptscotch.so -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
     then
         echo "have ptscotch shared libraries"
     else
-        cd src || exit 1
-        (make ptscotch && cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN/ )
+    (
+        set -x
+        cd scotch_5.1/src || exit 1
+
+        make ptscotch && cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN/
+    )
     fi
-)
 fi
 
-# Build Metis decomposition
+
+echo ========================================
+echo Build Metis decomposition
+echo
 (
+    set -x
     cd metis-5.0pre2 || exit 1
     cpMakeFiles metis
 
@@ -208,16 +226,18 @@ fi
 )
 
 
-# Build parMetis. Requires MPI!
 if [ -d "$MPI_ARCH_PATH" ]
 then
+echo ========================================
+echo Build parMetis. Requires MPI.
+echo
 (
+    set -x
     cd ParMetis-3.1 || exit 1
     cpMakeFiles ParMetis
 
-    # ParMetis has dependency to mpi version so
-    # include mpi in build directory so .o files
-    # are kept separate
+    # ParMetis has dependency on the mpi version, thus include
+    # WM_MPLIB in build directory so that .o files are kept separate
     (
         WM_OPTIONS=${WM_OPTIONS}$WM_MPLIB
         wmake libso METISLib
@@ -227,8 +247,11 @@ then
 fi
 
 
-# Build ParMGridGen
+echo ========================================
+echo Build ParMGridGen
+echo
 (
+    set -x
     cd ParMGridGen-1.0 || exit 1
     cpMakeFiles ParMGridGen
 
@@ -237,8 +260,11 @@ fi
 )
 
 
-# Build Tecio
+echo ========================================
+echo Build Tecio
+echo
 (
+    set -x
     cd tecio || exit 1
     cpMakeFiles tecio tecsrc
 
@@ -246,12 +272,31 @@ fi
 )
 
 
-
-set +x
+echo ========================================
+echo Build coco - C++ version
 echo
-echo ==============================
-echo done ThirdParty Allwmake
-echo ==============================
+if [ -r coco-cpp/platforms/$WM_ARCH$WM_COMPILER/bin/coco-cpp ]
+then
+    echo "have coco-cpp binary"
+else
+(
+    set -x
+    cd coco-cpp || exit 1
+
+    ./configure \
+        --prefix=$PWD/platforms \
+        --exec-prefix=$PWD/platforms/$WM_ARCH$WM_COMPILER
+
+    make
+    make install
+    make distclean
+)
+fi
+
+
+echo ========================================
+echo Done ThirdParty Allwmake
+echo ========================================
 echo
 
 # ----------------------------------------------------------------- end-of-file
