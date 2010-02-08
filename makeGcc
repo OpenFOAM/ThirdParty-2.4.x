@@ -127,6 +127,7 @@ else
 
     ../configure ABI=$ABI \
         --prefix=$GMP_ARCH_PATH \
+        --enable-cxx \
     && make -j $WM_NCOMPPROCS \
     && make install \
     && echo "Built: $gmpPACKAGE"

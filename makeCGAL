@@ -117,10 +117,12 @@ echo "Done boost"
 BOOST_VERSION_NO=`grep "#define BOOST_VERSION " ${BOOST_ROOT}/include/boost/version.hpp | cut -d " " -f 3`
 
 cmake \
-    -DGMP_INCLUDE_DIR=$WM_THIRD_PARTY_DIR/$gmpPACKAGE \
+    -DGMPXX_INCLUDE_DIR=$GMP_ARCH_PATH/include \
+    -DGMPXX_LIBRARIES=$GMP_ARCH_PATH/lib/libgmpxx.so \
+    -DGMP_INCLUDE_DIR=$GMP_ARCH_PATH/include \
     -DGMP_LIBRARIES_DIR=$GMP_ARCH_PATH/lib \
     -DGMP_LIBRARIES=$GMP_ARCH_PATH/lib/libgmp.so \
-    -DMPFR_INCLUDE_DIR=$WM_THIRD_PARTY_DIR/$mpfrPACKAGE \
+    -DMPFR_INCLUDE_DIR=$MPFR_ARCH_PATH/include \
     -DMPFR_LIBRARIES_DIR=$MPFR_ARCH_PATH/lib \
     -DMPFR_LIBRARIES=$MPFR_ARCH_PATH/lib/libmpfr.so \
     -DBoost_INCLUDE_DIR=${BOOST_ROOT}/include \

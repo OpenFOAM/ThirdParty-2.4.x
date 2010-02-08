@@ -29,7 +29,7 @@
            http://www.mpfr.org/mpfr-current/mpfr-2.4.2.tar.bz2
 
 ** Parallel Processing
-   + openmpi     http://www.open-mpi.org/software/ompi/v1.3/downloads/openmpi-1.3.4.tar.bz2
+   + openmpi     http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.1.tar.bz2
    + scotch      http://gforge.inria.fr/frs/download.php/22247/scotch_5.1.6.tar.gz
 
 *** Still supported, but to be dropped in future versions
