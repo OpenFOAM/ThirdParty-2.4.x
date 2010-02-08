@@ -70,7 +70,7 @@ do
         gmpPACKAGE="${1%%/}"
         shift
         ;;
-    mpfr-[4-9]*)
+    mpfr-[2-9]*)
         mpfrPACKAGE="${1%%/}"
         shift
         ;;
@@ -120,7 +120,7 @@ cmake \
     -DGMP_INCLUDE_DIR=$WM_THIRD_PARTY_DIR/$gmpPACKAGE \
     -DGMP_LIBRARIES_DIR=$GMP_ARCH_PATH/lib \
     -DGMP_LIBRARIES=$GMP_ARCH_PATH/lib/libgmp.so \
-    -DMPFR_INCLUDE_DIR=$WM_THIRD_PARTY_DIR/mpfrPACKAGE \
+    -DMPFR_INCLUDE_DIR=$WM_THIRD_PARTY_DIR/$mpfrPACKAGE \
     -DMPFR_LIBRARIES_DIR=$MPFR_ARCH_PATH/lib \
     -DMPFR_LIBRARIES=$MPFR_ARCH_PATH/lib/libmpfr.so \
     -DBoost_INCLUDE_DIR=${BOOST_ROOT}/include \
