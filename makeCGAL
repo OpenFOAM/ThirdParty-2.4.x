@@ -103,7 +103,7 @@ getNCOMPPROCS
 
 GMP_ARCH_PATH=$WM_THIRD_PARTY_DIR/$gmpPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
 MPFR_ARCH_PATH=$WM_THIRD_PARTY_DIR/$mpfrPACKAGE/platforms/$WM_ARCH$WM_COMPILER_ARCH
-
+CGAL_ARCH_PATH=$CGAL_SRC/platforms/$WM_ARCH$WM_COMPILER_ARCH
 
 time ./bjam -j $WM_NCOMPPROCS install
 echo "Done boost"
@@ -117,6 +117,7 @@ echo "Done boost"
 BOOST_VERSION_NO=`grep "#define BOOST_VERSION " ${BOOST_ROOT}/include/boost/version.hpp | cut -d " " -f 3`
 
 cmake \
+    -DCMAKE_INSTALL_PREFIX=$CGAL_ARCH_PATH \
     -DGMPXX_INCLUDE_DIR=$GMP_ARCH_PATH/include \
     -DGMPXX_LIBRARIES=$GMP_ARCH_PATH/lib/libgmpxx.so \
     -DGMP_INCLUDE_DIR=$GMP_ARCH_PATH/include \
@@ -133,6 +134,7 @@ cmake \
     ${CGAL_SRC}
 
 make -j $WM_NCOMPPROCS
+# make install
 
 # create 'files'
 echo "\${CGAL_SRC}/src/CGAL/assertions.cpp" > ${CGAL_SRC}/src/CGAL/files
