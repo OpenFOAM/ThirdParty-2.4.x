@@ -27,10 +27,10 @@
 #     makeCmake
 #
 # Description
-#     Build script for cmake-2.6.4
+#     Build script for cmake
 #
 #------------------------------------------------------------------------------
-cmakePACKAGE=cmake-2.6.4
+cmakePACKAGE=cmake-2.8.0
 
 #------------------------------------------------------------------------------
 # run from this third-party directory only
@@ -41,6 +41,41 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     exit 1
 }
 . tools/makeThirdPartyFunctions
+#------------------------------------------------------------------------------
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [cmake-VERSION]
+
+* build cmake
+      $cmakePACKAGE
+
+USAGE
+    exit 1
+}
+
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    cmake-[1-9]*)
+        cmakePACKAGE="${1%%/}"
+        shift
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+
 #------------------------------------------------------------------------------
 
 # get the number of cores to build on
