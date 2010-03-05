@@ -300,10 +300,8 @@ makeParaView()
     fi
     echo "    Done make"
 
-    echo "    For quicker development, linking lib/paraview-$ParaView_MAJOR/ -> bin/"
-    rm -rf lib/paraview-$ParaView_MAJOR
-    mkdir lib 2>/dev/null
-    ( cd lib && ln -s ../bin paraview-$ParaView_MAJOR )
+    # remove lib if it is a link (how we used to handle this)
+    [ -l lib ] && rm lib 2>/dev/null
 }
 
 
@@ -317,7 +315,8 @@ fixHardLinks()
     string=$2
     shift 2
 
-    echo "-- Replacing path hard links for \$$envName"
+    echo "-> Replace $string"
+    echo "   With \$$envName"
 
     for fileSpec
     do
@@ -332,6 +331,7 @@ fixHardLinks()
         done
         echo
     done
+
 }
 
 
@@ -343,6 +343,9 @@ fixHardLinks()
 fixCMakeFiles()
 {
     cd $ParaView_DIR || exit 1  # change to build folder
+
+    echo "Replacing absolute paths with environment variables"
+    echo
 
     # Replace path with env variable: ParaView_DIR
     fixHardLinks ParaView_DIR "$ParaView_DIR" '*.cmake'
@@ -390,7 +393,7 @@ installParaView()
     cd $ParaView_DIR || exit 1  # change to build folder
     echo "    Installing ParaView to $ParaView_DIR"
 
-    echo "disabled 'make install' for now, just use links"
+    make install
 
     # about.txt may be missing
     paraviewLibDir="$ParaView_DIR/lib/paraview-$ParaView_MAJOR"
@@ -406,7 +409,7 @@ cat<< INFO
 
         export ParaView_INST_DIR=$ParaView_INST_DIR
         export ParaView_DIR=$ParaView_DIR
-        export PV_PLUGIN_PATH=\$FOAM_LIBBIN/paraview
+        export PV_PLUGIN_PATH=\$FOAM_LIBBIN/paraview-$ParaView_MAJOR
         export PATH=\$ParaView_DIR/bin:\$PATH
     ---
 INFO
