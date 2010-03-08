@@ -62,7 +62,7 @@ MESA_INCLUDE="/usr/include/GL"
 MESA_LIBRARY="/usr/lib64/libOSMesa.so"
 
 # extra QT gui support (useful for some third party apps)
-withQTSUPPORT=true
+withQT=true
 
 # Set the path to the Qt-4.3.? qmake if the system Qt is other than this version
 QMAKE_PATH=""
@@ -122,7 +122,7 @@ USAGE
 case "$Script" in *-mesa*)   withMESA=true;; esac
 case "$Script" in *-mpi*)    withMPI=true;; esac
 case "$Script" in *-python*) withPYTHON=true;; esac
-case "$Script" in *-qt*)     withQTSUPPORT=true;; esac
+case "$Script" in *-qt*)     withQT=true;; esac
 
 
 #
@@ -229,11 +229,11 @@ do
         shift 2
         ;;
     -qt)
-        withQTSUPPORT=true
+        withQT=true
         shift
         ;;
     -no-qt)
-        withQTSUPPORT=false
+        withQT=false
         shift
         ;;
     -qmake)
@@ -293,7 +293,7 @@ Features selected
     mesa      ${withMESA:-false}
     mpi       ${withMPI:-false}
     python    ${withPYTHON:-false}
-    qt        ${withQTSUPPORT:-false}
+    qt        ${withQT:-false}
 ---------------------
 SUMMARY
 

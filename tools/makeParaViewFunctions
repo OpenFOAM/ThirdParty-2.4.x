@@ -167,7 +167,7 @@ addMesaSupport()
 
 addQtSupport()
 {
-    [ "${withQTSUPPORT:=false}" = true ] || return
+    [ "${withQT:=false}" = true ] || return
 
     addCMakeVariable "PARAVIEW_BUILD_QT_GUI=ON"
 
@@ -258,7 +258,7 @@ configParaView()
     echo "    MPI    support : ${withMPI:-false}"
     echo "    Python support : ${withPYTHON:-false}"
     echo "    MESA   support : ${withMESA:-false}"
-    echo "    Qt dev support : ${withQTSUPPORT:-false}"
+    echo "    Qt dev support : ${withQT:-false}"
     echo "    Source         : $ParaView_INST_DIR"
     echo "    Target         : $ParaView_DIR"
     echo "----"
@@ -300,8 +300,9 @@ makeParaView()
     fi
     echo "    Done make"
 
-    # remove lib if it is a link (how we used to handle this)
-    [ -l lib ] && rm lib 2>/dev/null
+    # remove lib if it is a link
+    # (how this was previously handled before 'make install' worked)
+    [ -L lib ] && rm lib 2>/dev/null
 }
 
 
@@ -331,7 +332,6 @@ fixHardLinks()
         done
         echo
     done
-
 }
 
 
@@ -386,7 +386,7 @@ makeDocs()
 
 
 #
-# actually install the program
+# install the program
 #
 installParaView()
 {
@@ -396,6 +396,7 @@ installParaView()
     make install
 
     # about.txt may be missing
+    # this step may not be required anymore
     paraviewLibDir="$ParaView_DIR/lib/paraview-$ParaView_MAJOR"
     if [ -d "$paraviewLibDir" -a ! -e "$paraviewLibDir/about.txt" ]
     then
@@ -404,13 +405,12 @@ installParaView()
 
 cat<< INFO
     ---
-    Installation complete
+    Installation complete for paraview-$ParaView_VERSION
     Set environment variables:
 
-        export ParaView_INST_DIR=$ParaView_INST_DIR
         export ParaView_DIR=$ParaView_DIR
-        export PV_PLUGIN_PATH=\$FOAM_LIBBIN/paraview-$ParaView_MAJOR
         export PATH=\$ParaView_DIR/bin:\$PATH
+        export PV_PLUGIN_PATH=\$FOAM_LIBBIN/paraview-$ParaView_MAJOR
     ---
 INFO
 }
@@ -418,14 +418,14 @@ INFO
 
 # clear all the variables used before using any of the functions
 unset withMPI withVERBOSE
-unset withQTSUPPORT QMAKE_PATH
-unset withMESA   MESA_INCLUDE   MESA_LIBRARY
-unset withPYTHON PYTHON_INCLUDE PYTHON_LIBRARY
+unset withQT      QMAKE_PATH
+unset withMESA    MESA_INCLUDE    MESA_LIBRARY
+unset withPYTHON  PYTHON_INCLUDE  PYTHON_LIBRARY
 unset CMAKE_VARIABLES
 unset OBJ_ADD
 
 # start with these general settings
-addCMakeVariable  VTK_USE_TK=FALSE
+addCMakeVariable  VTK_USE_TK:BOOL=OFF
 addCMakeVariable  BUILD_SHARED_LIBS:BOOL=ON VTK_USE_RPATH:BOOL=OFF
 addCMakeVariable  CMAKE_BUILD_TYPE:STRING=Release
 
