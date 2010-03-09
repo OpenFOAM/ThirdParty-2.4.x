@@ -81,7 +81,7 @@ done
 # get the number of cores to build on
 getNCOMPPROCS
 
-CMAKE_ARCH_PATH=$WM_THIRD_PARTY_DIR/$cmakePACKAGE/platforms/$WM_ARCH
+CMAKE_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH/$cmakePACKAGE
 
 #
 # Build CMAKE

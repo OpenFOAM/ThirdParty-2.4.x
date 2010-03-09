@@ -47,7 +47,7 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 # get the number of cores to build on
 getNCOMPPROCS
 
-QT_ARCH_PATH=$WM_THIRD_PARTY_DIR/$qtPACKAGE/platforms/$WM_OPTIONS
+QT_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_OPTIONS/$qtPACKAGE
 
 #
 # Build QT

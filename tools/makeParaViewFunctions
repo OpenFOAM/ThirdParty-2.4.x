@@ -50,8 +50,8 @@ setDirs()
         exit 1
     }
 
-    # ParaView_DIR=$ParaView_SOURCE_DIR/platforms/$WM_ARCH$WM_COMPILER$OBJ_ADD
-    ParaView_DIR=$ParaView_SOURCE_DIR/platforms/$WM_ARCH$WM_COMPILER
+    # ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION-$OBJ_ADD
+    ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION
 
     echo "ParaView_DIR=$ParaView_DIR"
 }
@@ -242,7 +242,7 @@ addQtSupport()
             echo "***     Please use the -qmake option to specify the location of a version of Qt >= 4.3 "
             echo "***     e.g."
             echo "***         -qmake /usr/local/Trolltech/Qt-4.3.5/bin/qmake"
-            echo "***         -qmake $WM_THIRD_PARTY_DIR/qt-x11-opensource-src-4.3.5/platforms/$WM_OPTIONS/bin/qmake"
+            echo "***         -qmake $WM_THIRD_PARTY_DIR/platforms/$WM_OPTIONS/qt-x11-opensource-src-4.3.5/bin/qmake"
             exit 1
         fi
     else
@@ -280,7 +280,7 @@ configParaView()
     echo cmake \
         -DCMAKE_INSTALL_PREFIX:PATH=$ParaView_DIR \
         $CMAKE_VARIABLES \
-        ../..
+        ../../../paraview-$ParaView_VERSION
     echo
     echo "----"
     echo
@@ -289,7 +289,7 @@ configParaView()
     cmake \
         -DCMAKE_INSTALL_PREFIX:PATH=$ParaView_DIR \
         $CMAKE_VARIABLES \
-        ../..
+        ../../../paraview-$ParaView_VERSION
 
 }
 
