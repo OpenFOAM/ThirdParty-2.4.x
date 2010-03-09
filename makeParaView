@@ -87,6 +87,7 @@ options:
   -qmake PATH       with the Qt version corresponding to the qmake path given
   -verbose          verbose output in Makefiles
   -version VER      specify an alternative version (current value: $ParaView_VERSION)
+  -major   VER      specify an alternative major version for special builds
   -mesa-include DIR
                     location of mesa headers (current value: ${MESA_INCLUDE:-none})
   -mesa-lib PATH    path to mesa library     (current value: ${MESA_LIBRARY:-none})
@@ -123,6 +124,9 @@ case "$Script" in *-mesa*)   withMESA=true;; esac
 case "$Script" in *-mpi*)    withMPI=true;; esac
 case "$Script" in *-python*) withPYTHON=true;; esac
 case "$Script" in *-qt*)     withQT=true;; esac
+
+# set ParaView_MAJOR based on current value of ParaView_VERSION
+setVersion
 
 
 #
@@ -247,7 +251,12 @@ do
         ;;
     -version)
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        export ParaView_VERSION=$2
+        setVersion "$2"
+        shift 2
+        ;;
+    -major)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        export ParaView_MAJOR="$2"
         shift 2
         ;;
     *)
@@ -275,7 +284,7 @@ addPythonSupport    # set Python-specific options
 addMesaSupport      # set MESA-specific options
 addQtSupport        # add extra Qt support
 
-getPaths            # discover where things are or should be put
+setDirs             # where things are or should be put
 
 
 # Build and install
@@ -294,6 +303,10 @@ Features selected
     mpi       ${withMPI:-false}
     python    ${withPYTHON:-false}
     qt        ${withQT:-false}
+---------------------
+Version information
+    version   ${ParaView_VERSION:-unknown}
+    major     ${ParaView_MAJOR:-unknown}
 ---------------------
 SUMMARY
 

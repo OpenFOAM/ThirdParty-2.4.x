@@ -30,10 +30,49 @@
 #
 #------------------------------------------------------------------------------
 
-# ParaView_INST_DIR  : location of the original sources
-# ParaView_DIR       : location of the build (for the ParaViewConfig.cmake)
-#                      and the installed program
+#
+# where things are or should be put
+#   ParaView_VERSION and ParaView_MAJOR should already have been set
+#
+#   ParaView_SOURCE_DIR : location of the original sources
+#   ParaView_DIR        : location of the build (for the ParaViewConfig.cmake)
+#                         and the installed program
+#
+setDirs()
+{
+    ParaView_SOURCE_DIR=$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION
 
+    [ -d "$ParaView_SOURCE_DIR" ] || {
+        echo "did not find paraview-$ParaView_VERSION in these directories:"
+        echo "  WM_THIRD_PARTY_DIR=$WM_THIRD_PARTY_DIR"
+        echo
+        echo "abort build"
+        exit 1
+    }
+
+    # ParaView_DIR=$ParaView_SOURCE_DIR/platforms/$WM_ARCH$WM_COMPILER$OBJ_ADD
+    ParaView_DIR=$ParaView_SOURCE_DIR/platforms/$WM_ARCH$WM_COMPILER
+
+    echo "ParaView_DIR=$ParaView_DIR"
+}
+
+
+#
+# set ParaView_VERSION and adjust ParaView_MAJOR accordingly
+#
+setVersion()
+{
+    [ "$#" -ge 1 ] && ParaView_VERSION="${1##paraview-}"
+
+    # the major version is "<digits>.<digits>"
+    ParaView_MAJOR=$(echo $ParaView_VERSION | \
+        sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*$/\1/')
+
+    export ParaView_VERSION ParaView_MAJOR
+}
+
+
+#------------------------------------------------------------------------------
 
 #
 # set CMake cache variables
@@ -165,6 +204,7 @@ addMesaSupport()
     fi
 }
 
+
 addQtSupport()
 {
     [ "${withQT:=false}" = true ] || return
@@ -213,32 +253,6 @@ addQtSupport()
 
 
 #
-# discover where things are or should be put
-#
-getPaths()
-{
-    # set paraview environment
-    ParaView_INST_DIR=$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION
-
-    [ -d "$ParaView_INST_DIR" ] || {
-        echo "did not find paraview-$ParaView_VERSION in these directories:"
-        echo "  WM_THIRD_PARTY_DIR=$WM_THIRD_PARTY_DIR"
-        echo
-        echo "abort build"
-        exit 1
-    }
-
-    # the major version is "<digits>.<digits>"
-    ParaView_MAJOR=$(echo $ParaView_VERSION | \
-        sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*$/\1/')
-
-    # ParaView_DIR=$ParaView_INST_DIR/platforms/$WM_ARCH$WM_COMPILER$OBJ_ADD
-    ParaView_DIR=$ParaView_INST_DIR/platforms/$WM_ARCH$WM_COMPILER
-    echo "ParaView_DIR=$ParaView_DIR"
-}
-
-
-#
 # configure via cmake, but don't actually build anything
 #
 configParaView()
@@ -259,7 +273,7 @@ configParaView()
     echo "    Python support : ${withPYTHON:-false}"
     echo "    MESA   support : ${withMESA:-false}"
     echo "    Qt dev support : ${withQT:-false}"
-    echo "    Source         : $ParaView_INST_DIR"
+    echo "    Source         : $ParaView_SOURCE_DIR"
     echo "    Target         : $ParaView_DIR"
     echo "----"
     echo
@@ -350,8 +364,8 @@ fixCMakeFiles()
     # Replace path with env variable: ParaView_DIR
     fixHardLinks ParaView_DIR "$ParaView_DIR" '*.cmake'
 
-    # Replace path with env variable: ParaView_INST_DIR
-    fixHardLinks ParaView_INST_DIR "$ParaView_INST_DIR" '*.cmake'
+    # Replace path with env variable: ParaView_SOURCE_DIR
+    fixHardLinks ParaView_SOURCE_DIR "$ParaView_SOURCE_DIR" '*.cmake'
 
     # Replace path with env variable: MPI_ARCH_PATH
     if [ "${withMPI:=false}" = true ]
