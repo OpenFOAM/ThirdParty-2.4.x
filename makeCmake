@@ -33,7 +33,7 @@
 cmakePACKAGE=cmake-2.8.0
 
 #------------------------------------------------------------------------------
-# run from this third-party directory only
+# run from third-party directory only
 wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
     echo "    The environment variables are inconsistent with the installation."
@@ -81,7 +81,7 @@ done
 # get the number of cores to build on
 getNCOMPPROCS
 
-CMAKE_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH/$cmakePACKAGE
+CMAKE_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cmakePACKAGE
 
 #
 # Build CMAKE

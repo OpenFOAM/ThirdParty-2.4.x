@@ -34,7 +34,7 @@ gmpPACKAGE=gmp-5.0.1
 mpfrPACKAGE=mpfr-2.4.2
 
 #------------------------------------------------------------------------------
-# run from this third-party directory only
+# run from third-party directory only
 wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
     echo "    The environment variables are inconsistent with the installation."

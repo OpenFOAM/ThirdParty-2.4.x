@@ -34,7 +34,7 @@ qtVERSION=4.3.5
 qtPACKAGE=qt-x11-opensource-src-$qtVERSION
 
 #------------------------------------------------------------------------------
-# run from this third-party directory only
+# run from third-party directory only
 wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
     echo "    The environment variables are inconsistent with the installation."
