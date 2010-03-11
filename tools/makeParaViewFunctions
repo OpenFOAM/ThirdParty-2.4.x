@@ -321,16 +321,27 @@ makeParaView()
 
 
 #
-# adjust hard-links (internal function)
+# search for dirName string and replace the $ENV{envName}
+# also consider absolute paths
 # Note: use loop with grep to avoid touching too many files
+# (internal function)
 #
 fixHardLinks()
 {
     envName=$1
-    string=$2
+    dirName=$2
     shift 2
 
-    echo "-> Replace $string"
+    echo "-> Replace $dirName"
+
+    # Also consider absolute paths
+    absName=$(cd $dirName 2>/dev/null && /bin/pwd)
+    if [ -n "$absName" -a "$absName" != "$dirName" ]
+    then
+        echo "-> Replace $absName"
+    else
+        absName=false
+    fi
     echo "   With \$$envName"
 
     for fileSpec
@@ -338,10 +349,18 @@ fixHardLinks()
         echo -n "   $fileSpec: "
         for i in $(find . -type f -iname "$fileSpec")
         do
-            if grep -q "$string" $i
+            if grep -q "$dirName" $i
             then
                 echo -n "#"
-                sed -i "s,$string,\$ENV{$envName},g" $i
+                sed -i "s,$dirName,\$ENV{$envName},g" $i
+            fi
+            if [ "$absName" != false ]
+            then
+                if grep -q "$absName" $i
+                then
+                    echo -n "#"
+                    sed -i "s,$absName,\$ENV{$envName},g" $i
+                fi
             fi
         done
         echo
