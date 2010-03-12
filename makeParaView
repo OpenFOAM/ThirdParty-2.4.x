@@ -100,12 +100,17 @@ For finer control, the build stages can be selected or deselected individually:
   -makedoc   -no-makedoc
   -install   -no-install
   -envpath   -no-envpath
+  -clean     -no-clean
 
 The -no-FEATURE option can be disable these features (if not already disabled):
   mesa mpi python qt
 
-The -envpath alters absolute paths in CMake files to use the corresponding
-environment variables.
+The -envpath option alters absolute paths in CMake files to use the
+corresponding environment variables. Useful when relocating a built
+tree locally.
+
+The -clean option removes intermediate compile targets and is useful
+when creating a relocatable install tree.
 
 * Make and install paraview-$ParaView_VERSION located under
       \$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION
@@ -132,7 +137,7 @@ setVersion
 #
 # various building stages
 #
-unset runCONFIG runMAKE runMAKEDOC runINSTALL runENVPATH
+unset runCONFIG runMAKE runMAKEDOC runINSTALL runENVPATH runCLEAN
 runDEFAULT=true
 
 # parse options
@@ -185,6 +190,15 @@ do
         ;;
     -no-envpath)
         runENVPATH=false
+        shift
+        ;;
+    -clean)            # stage N: remove intermediate compile targets
+        runCLEAN=true
+        unset runDEFAULT
+        shift
+        ;;
+    -no-clean)
+        runCLEAN=false
         shift
         ;;
     -rebuild)            # shortcut for rebuilding
@@ -273,6 +287,7 @@ then
     : ${runMAKEDOC:=true}
     : ${runINSTALL:=true}
     : ${runENVPATH:=true}
+    : ${runCLEAN:=false}
 fi
 
 
@@ -297,6 +312,7 @@ Build stages selected
     -makedoc  ${runMAKEDOC:-false}
     -install  ${runINSTALL:-false}
     -envpath  ${runENVPATH:-false}
+    -clean    ${runCLEAN:-false}
 ---------------------
 Features selected
     mesa      ${withMESA:-false}
@@ -315,6 +331,7 @@ SUMMARY
 [ "$runMAKEDOC" = true ] && makeDocs
 [ "$runINSTALL" = true ] && installParaView
 [ "$runENVPATH" = true ] && fixCMakeFiles
+[ "$runCLEAN"   = true ] && cleanDist
 
 echo
 echo Done

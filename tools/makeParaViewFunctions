@@ -407,6 +407,76 @@ fixCMakeFiles()
 
 
 #
+# remove intermediate compile targets and source code copies
+# useful when creating a relocatable install tree.
+#
+# keep these directories/files
+#   - bin/
+#   - doc/
+#   - Documentation/
+#   - include/
+#   - lib/
+#
+# and these files
+#   - install_manifest.txt
+#   - pqClient.adp
+#
+cleanDist()
+{
+    cd $ParaView_DIR || exit 1  # change to build folder
+
+    echo "Removing intermediate compile targets:"
+
+    # must remove ParaViewConfig.cmake so it won't get accidentally found
+    echo "#   top-level ParaViewConfig.cmake and vtkPVConfig.h files ..."
+    rm -f ParaViewConfig.cmake vtkPVConfig.h
+
+    echo "#   top-level Makefile, *.cmake files ..."
+    rm -f Makefile *.cmake CMakeOutput.log
+
+    echo "#   all *.o files ..."
+    find . -type f -name "*.o" -print | while read file
+    do
+        rm $file
+    done
+
+
+    #
+    # Or just do it the other way around:
+    #
+    echo "#   everything that appears implausible ..."
+    for i in *
+    do
+        case $i in
+        # definitely retain these
+        bin | include | lib)
+            ;;
+        # maybe retain these (in some form)
+        doc | Documentation)
+            ;;
+
+        # not sure about these at all
+        install_manifest.txt | pqClient.adp)
+            ;;
+
+        # remove everything else
+        *)
+            if [ -d "$i" ]
+            then
+                rm -rf $i
+            elif [ -f "$i" -o -L "$i" ]
+            then
+                rm -f $i
+            fi
+            ;;
+        esac
+    done
+
+    echo "---------------------"
+}
+
+
+#
 # make html documentation (mostly just for the readers/writers)
 #
 makeDocs()
@@ -427,14 +497,6 @@ installParaView()
     echo "    Installing ParaView to $ParaView_DIR"
 
     make install
-
-    # about.txt may be missing
-    # this step may not be required anymore
-    paraviewLibDir="$ParaView_DIR/lib/paraview-$ParaView_MAJOR"
-    if [ -d "$paraviewLibDir" -a ! -e "$paraviewLibDir/about.txt" ]
-    then
-        echo "paraview-$ParaView_MAJOR installed - $(date)" > $paraviewLibDir/about.txt
-    fi
 
 cat<< INFO
     ---
