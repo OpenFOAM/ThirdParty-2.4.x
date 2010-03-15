@@ -35,8 +35,8 @@
 #   ParaView_VERSION and ParaView_MAJOR should already have been set
 #
 #   ParaView_SOURCE_DIR : location of the original sources
-#   ParaView_DIR        : location of the build (for the ParaViewConfig.cmake)
-#                         and the installed program
+#   ParaView_BINARY_DIR : location of the build
+#   ParaView_DIR        : location of the installed program
 #
 setDirs()
 {
@@ -50,9 +50,15 @@ setDirs()
         exit 1
     }
 
+    # ParaView_BINARY_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER-build/paraview-$ParaView_VERSION-$OBJ_ADD
+    ParaView_BINARY_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER-build/paraview-$ParaView_VERSION
+
     # ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION-$OBJ_ADD
     ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION
 
+    export ParaView_SOURCE_DIR ParaView_BINARY_DIR ParaView_DIR
+
+    echo "ParaView_BINARY_DIR=$ParaView_BINARY_DIR"
     echo "ParaView_DIR=$ParaView_DIR"
 }
 
@@ -258,14 +264,15 @@ addQtSupport()
 configParaView()
 {
     # remove any existing build folder and recreate
-    if [ -d $ParaView_DIR ]
+    if [ -d $ParaView_BINARY_DIR ]
     then
-        echo "removing old build/install directory"
-        rm -rf $ParaView_DIR
+        echo "removing old build directory"
+        echo "    $ParaView_BINARY_DIR"
+        rm -rf $ParaView_BINARY_DIR
     fi
-    mkdir -p $ParaView_DIR
+    mkdir -p $ParaView_BINARY_DIR
 
-    cd $ParaView_DIR
+    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
 
     echo "----"
     echo "Configuring paraview-$ParaView_VERSION (major version: $ParaView_MAJOR)"
@@ -274,13 +281,14 @@ configParaView()
     echo "    MESA   support : ${withMESA:-false}"
     echo "    Qt dev support : ${withQT:-false}"
     echo "    Source         : $ParaView_SOURCE_DIR"
+    echo "    Build          : $ParaView_BINARY_DIR"
     echo "    Target         : $ParaView_DIR"
     echo "----"
     echo
     echo cmake \
         -DCMAKE_INSTALL_PREFIX:PATH=$ParaView_DIR \
         $CMAKE_VARIABLES \
-        ../../../paraview-$ParaView_VERSION
+        $ParaView_SOURCE_DIR
     echo
     echo "----"
     echo
@@ -289,7 +297,7 @@ configParaView()
     cmake \
         -DCMAKE_INSTALL_PREFIX:PATH=$ParaView_DIR \
         $CMAKE_VARIABLES \
-        ../../../paraview-$ParaView_VERSION
+        $ParaView_SOURCE_DIR
 
 }
 
@@ -300,7 +308,7 @@ configParaView()
 #
 makeParaView()
 {
-    cd $ParaView_DIR || exit 1  # change to build folder
+    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
     echo "    Starting make"
 
     if [ -r /proc/cpuinfo ]
@@ -375,10 +383,13 @@ fixHardLinks()
 #
 fixCMakeFiles()
 {
-    cd $ParaView_DIR || exit 1  # change to build folder
+    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
 
     echo "Replacing absolute paths with environment variables"
     echo
+
+    # Replace path with env variable: ParaView_BINARY_DIR
+    fixHardLinks ParaView_BINARY_DIR "$ParaView_BINARY_DIR" '*.cmake'
 
     # Replace path with env variable: ParaView_DIR
     fixHardLinks ParaView_DIR "$ParaView_DIR" '*.cmake'
@@ -423,7 +434,7 @@ fixCMakeFiles()
 #
 cleanDist()
 {
-    cd $ParaView_DIR || exit 1  # change to build folder
+    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
 
     echo "Removing intermediate compile targets:"
 
@@ -481,7 +492,7 @@ cleanDist()
 #
 makeDocs()
 {
-    cd $ParaView_DIR || exit 1  # change to build folder
+    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
     echo "    Creating html documentation"
 
     make HTMLDocumentation
@@ -493,7 +504,7 @@ makeDocs()
 #
 installParaView()
 {
-    cd $ParaView_DIR || exit 1  # change to build folder
+    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
     echo "    Installing ParaView to $ParaView_DIR"
 
     make install
