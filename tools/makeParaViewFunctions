@@ -58,8 +58,11 @@ setDirs()
 
     export ParaView_SOURCE_DIR ParaView_BINARY_DIR ParaView_DIR
 
+    echo
+    echo "ParaView_SOURCE_DIR=$ParaView_SOURCE_DIR"
     echo "ParaView_BINARY_DIR=$ParaView_BINARY_DIR"
     echo "ParaView_DIR=$ParaView_DIR"
+    echo
 }
 
 
@@ -488,18 +491,6 @@ cleanDist()
 
 
 #
-# make html documentation (mostly just for the readers/writers)
-#
-makeDocs()
-{
-    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
-    echo "    Creating html documentation"
-
-    make HTMLDocumentation
-}
-
-
-#
 # install the program
 #
 installParaView()
@@ -537,5 +528,9 @@ addCMakeVariable  CMAKE_BUILD_TYPE:STRING=Release
 
 # include development files in "make install"
 addCMakeVariable  PARAVIEW_INSTALL_DEVELOPMENT:BOOL=ON
+
+# new alternative to "make HTMLDocumentation"
+addCMakeVariable  GENERATE_FILTERS_DOCUMENTATION:BOOL=ON
+
 
 # ----------------------------------------------------------------- end-of-file

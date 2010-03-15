@@ -97,7 +97,6 @@ options:
 For finer control, the build stages can be selected or deselected individually:
   -config    -no-config
   -make      -no-make
-  -makedoc   -no-makedoc
   -install   -no-install
   -envpath   -no-envpath
   -clean     -no-clean
@@ -137,7 +136,7 @@ setVersion
 #
 # various building stages
 #
-unset runCONFIG runMAKE runMAKEDOC runINSTALL runENVPATH runCLEAN
+unset runCONFIG runMAKE runINSTALL runENVPATH runCLEAN
 runDEFAULT=true
 
 # parse options
@@ -165,16 +164,7 @@ do
         runMAKE=false
         shift
         ;;
-    -makedoc)            # stage 3: generate html documentation
-        runMAKEDOC=true
-        unset runDEFAULT
-        shift
-        ;;
-    -no-makedoc)
-        runMAKEDOC=false
-        shift
-        ;;
-    -install)            # stage 4: install only
+    -install)            # stage 3: install only
         runINSTALL=true
         unset runDEFAULT
         shift
@@ -183,7 +173,7 @@ do
         runINSTALL=false
         shift
         ;;
-    -envpath)            # stage 5: change cmake files to use env variables
+    -envpath)            # stage 4: change cmake files to use env variables
         runENVPATH=true
         unset runDEFAULT
         shift
@@ -284,7 +274,6 @@ if [ "$runDEFAULT" = true ]
 then
     : ${runCONFIG:=true}
     : ${runMAKE:=true}
-    : ${runMAKEDOC:=true}
     : ${runINSTALL:=true}
     : ${runENVPATH:=true}
     : ${runCLEAN:=false}
@@ -309,7 +298,6 @@ Build stages selected
 ---------------------
     -config   ${runCONFIG:-false}
     -make     ${runMAKE:-false}
-    -makedoc  ${runMAKEDOC:-false}
     -install  ${runINSTALL:-false}
     -envpath  ${runENVPATH:-false}
     -clean    ${runCLEAN:-false}
@@ -328,7 +316,6 @@ SUMMARY
 
 [ "$runCONFIG"  = true ] && configParaView
 [ "$runMAKE"    = true ] && makeParaView
-[ "$runMAKEDOC" = true ] && makeDocs
 [ "$runINSTALL" = true ] && installParaView
 [ "$runENVPATH" = true ] && fixCMakeFiles
 [ "$runCLEAN"   = true ] && cleanDist
