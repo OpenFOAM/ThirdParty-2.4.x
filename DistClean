@@ -31,12 +31,15 @@
 #
 #------------------------------------------------------------------------------
 # run from third-party directory only
+cd ${0%/*} || exit 1
 wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "Error: Current directory is not \$WM_THIRD_PARTY_DIR"
     echo "    The environment variables are inconsistent with the installation."
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
+. tools/makeThirdPartyFunctions
+#------------------------------------------------------------------------------
 
 set -x
 
@@ -46,6 +49,6 @@ rm -rf mpfr-2*/build
 
 ( cd metis-5.0pre2  && make distclean )
 ( cd openmpi-1.4.1  && make distclean )
-( cd paraview-3.6.1 && make distclean )
+## rm -rf $buildBASE/paraview-$ParaView_VERSION
 
 # ----------------------------------------------------------------- end-of-file

@@ -275,7 +275,8 @@ echo
 echo ========================================
 echo Build coco - C++ version
 echo
-if [ -r platforms/$WM_ARCH$WM_COMPILER/coco-cpp/bin/coco-cpp ]
+prefixDIR=$installBASE/coco-cpp
+if [ -r $prefixDIR/bin/coco-cpp ]
 then
     echo "have coco-cpp binary"
 else
@@ -284,7 +285,7 @@ else
     cd coco-cpp || exit 1
 
     ./configure \
-        --prefix=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/coco-cpp
+        --prefix=$prefixDIR
 
     make
     make install

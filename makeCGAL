@@ -101,8 +101,11 @@ rm -rf ${BOOST_ARCH_PATH}
 # get the number of cores to build on
 getNCOMPPROCS
 
-GMP_ARCH_PATH=$WM_THIRD_PARTY_DIR/$WM_ARCH$WM_COMPILER_ARCH/$gmpPACKAGE/platforms
-MPFR_ARCH_PATH=$WM_THIRD_PARTY_DIR/$WM_ARCH$WM_COMPILER_ARCH/$mpfrPACKAGE/platforms
+# installed without compiler name
+installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH
+
+GMP_ARCH_PATH=$installBASE/$gmpPACKAGE
+MPFR_ARCH_PATH=$installBASE/$mpfrPACKAGE
 CGAL_ARCH_PATH=$CGAL_SRC/platforms/$WM_ARCH$WM_COMPILER_ARCH
 
 time ./bjam -j $WM_NCOMPPROCS install

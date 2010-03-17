@@ -81,13 +81,13 @@ done
 # get the number of cores to build on
 getNCOMPPROCS
 
-CMAKE_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cmakePACKAGE
+prefixDIR=$installBASE/$cmakePACKAGE
 
 #
 # Build CMAKE
 #
 echo "---------------"
-if [ -d "$CMAKE_ARCH_PATH" ]
+if [ -d "$prefixDIR" -a -r "$prefixDIR/bin/cmake" ]
 then
     echo "Already built: $cmakePACKAGE"
 else
@@ -98,7 +98,7 @@ else
     mkdir -p build
     cd build
 
-    ../bootstrap --prefix=$CMAKE_ARCH_PATH \
+    ../bootstrap --prefix=$prefixDIR \
     && time make -j $WM_NCOMPPROCS \
     && make install \
     && echo "Built: $cmakePACKAGE"

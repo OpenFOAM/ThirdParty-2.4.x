@@ -30,6 +30,11 @@
 #
 #------------------------------------------------------------------------------
 
+# define the standard buildBASE and installBASE for the platform
+buildBASE=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER
+installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER
+
+
 #
 # where things are or should be put
 #   ParaView_VERSION and ParaView_MAJOR should already have been set
@@ -50,11 +55,11 @@ setDirs()
         exit 1
     }
 
-    # ParaView_BINARY_DIR=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION-$OBJ_ADD
-    ParaView_BINARY_DIR=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION
+    # ParaView_BINARY_DIR=$buildBASE/paraview-$ParaView_VERSION-$OBJ_ADD
+    ParaView_BINARY_DIR=$buildBASE/paraview-$ParaView_VERSION
 
-    # ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION-$OBJ_ADD
-    ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION
+    # ParaView_DIR=$installBASE/paraview-$ParaView_VERSION-$OBJ_ADD
+    ParaView_DIR=$installBASE/paraview-$ParaView_VERSION
 
     export ParaView_SOURCE_DIR ParaView_BINARY_DIR ParaView_DIR
 
@@ -268,7 +273,7 @@ addQtSupport()
             echo "***     Please use the -qmake option to specify the location of a version of Qt >= 4.3 "
             echo "***     e.g."
             echo "***         -qmake /usr/local/Trolltech/Qt-4.3.5/bin/qmake"
-            echo "***         -qmake $WM_THIRD_PARTY_DIR/platforms/$WM_OPTIONS/qt-x11-opensource-src-4.3.5/bin/qmake"
+            echo "***         -qmake $installBASE/qt-x11-opensource-src-4.3.5/bin/qmake"
             exit 1
         fi
     else
@@ -469,6 +474,7 @@ unset withMESA    MESA_INCLUDE    MESA_LIBRARY
 unset withPYTHON  PYTHON_INCLUDE  PYTHON_LIBRARY
 unset CMAKE_VARIABLES
 unset OBJ_ADD
+
 
 # start with these general settings
 addCMakeVariable  VTK_USE_TK:BOOL=OFF

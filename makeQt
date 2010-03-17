@@ -27,11 +27,11 @@
 #     makeQt
 #
 # Description
-#     Build script for Qt-4.3.5
+#     Build script for qt-x11-opensource-src
 #
 #------------------------------------------------------------------------------
-qtVERSION=4.3.5
-qtPACKAGE=qt-x11-opensource-src-$qtVERSION
+qtVERSION=4.5.3
+qtTYPE=qt-x11-opensource-src
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -44,16 +44,50 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 . tools/makeThirdPartyFunctions
 #------------------------------------------------------------------------------
 
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [VERSION]
+
+* build $qtTYPE, version $qtVERSION
+
+USAGE
+    exit 1
+}
+
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    [1-9]*)
+        qtVERSION="${1%%/}"
+        shift
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+#------------------------------------------------------------------------------
+
 # get the number of cores to build on
 getNCOMPPROCS
 
-QT_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_OPTIONS/$qtPACKAGE
+qtPACKAGE=$qtTYPE-$qtVERSION
+prefixDIR=$installBASE/$qtPACKAGE
 
 #
 # Build QT
 #
 echo "---------------"
-if [ -d "$QT_ARCH_PATH" ]
+if [ -d "$prefixDIR" -a -r "$prefixDIR/bin/qmake" ]
 then
     echo "Already built: Qt-$qtVERSION"
 else
@@ -62,9 +96,9 @@ else
     cd $qtPACKAGE || exit 1
 
     make distclean
-    rm -rf $QT_ARCH_PATH
+    rm -rf $prefixDIR
 
-    ./configure --prefix=$QT_ARCH_PATH \
+    ./configure --prefix=$prefixDIR \
         -nomake demos \
         -nomake examples \
     && time make -j $WM_NCOMPPROCS \
