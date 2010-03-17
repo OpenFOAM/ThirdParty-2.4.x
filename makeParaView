@@ -64,7 +64,7 @@ MESA_LIBRARY="/usr/lib64/libOSMesa.so"
 # extra QT gui support (useful for some third party apps)
 withQT=true
 
-# Set the path to the Qt-4.3.? qmake if the system Qt is other than this version
+# Set the path to the Qt-4.5 (or later) qmake if the system Qt is older
 QMAKE_PATH=""
 
 #
@@ -92,20 +92,20 @@ options:
                     location of mesa headers (current value: ${MESA_INCLUDE:-none})
   -mesa-lib PATH    path to mesa library     (current value: ${MESA_LIBRARY:-none})
   -python-lib PATH  path to python library   (current value: ${PYTHON_LIBRARY:-none})
+  -envpath          alter absolute paths in build CMake files (expert option)
   -help
 
 For finer control, the build stages can be selected or deselected individually:
   -config    -no-config
   -make      -no-make
   -install   -no-install
-  -envpath   -no-envpath
 
 The -no-FEATURE option can be disable these features (if not already disabled):
   mesa mpi python qt
 
-The -envpath option alters absolute paths in CMake files to use the
-corresponding environment variables. Useful when relocating a built
-tree locally.
+The -envpath option for altering absolute paths in CMake files to use the
+corresponding environment variables is mostly only useful when relocating
+a build tree locally.
 
 * Make and install paraview-$ParaView_VERSION located under
       \$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION
@@ -169,18 +169,14 @@ do
         runINSTALL=false
         shift
         ;;
-    -envpath)            # stage 4: change cmake files to use env variables
-        runENVPATH=true
-        unset runDEFAULT
-        shift
-        ;;
-    -no-envpath)
-        runENVPATH=false
-        shift
-        ;;
     -rebuild)            # shortcut for rebuilding
         runMAKE=true
         runINSTALL=true
+        unset runDEFAULT
+        shift
+        ;;
+    -envpath)            # expert opt: change cmake files to use env variables
+        runENVPATH=true
         unset runDEFAULT
         shift
         ;;
@@ -262,7 +258,6 @@ then
     : ${runCONFIG:=true}
     : ${runMAKE:=true}
     : ${runINSTALL:=true}
-    : ${runENVPATH:=true}
 fi
 
 
@@ -287,7 +282,6 @@ Build stages selected
     -config   ${runCONFIG:-false}
     -make     ${runMAKE:-false}
     -install  ${runINSTALL:-false}
-    -envpath  ${runENVPATH:-false}
 ---------------------
 Features selected
     mesa      ${withMESA:-false}
@@ -299,11 +293,15 @@ Version information
     version   ${ParaView_VERSION:-unknown}
     major     ${ParaView_MAJOR:-unknown}
 ---------------------
+Misc information
+    -envpath  ${runENVPATH:-false}
+---------------------
 SUMMARY
 
 [ "$runCONFIG"  = true ] && configParaView
 [ "$runMAKE"    = true ] && makeParaView
 [ "$runINSTALL" = true ] && installParaView
+
 [ "$runENVPATH" = true ] && fixCMakeFiles
 
 echo

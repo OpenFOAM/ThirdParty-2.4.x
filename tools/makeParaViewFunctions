@@ -50,8 +50,8 @@ setDirs()
         exit 1
     }
 
-    # ParaView_BINARY_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER-build/paraview-$ParaView_VERSION-$OBJ_ADD
-    ParaView_BINARY_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER-build/paraview-$ParaView_VERSION
+    # ParaView_BINARY_DIR=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION-$OBJ_ADD
+    ParaView_BINARY_DIR=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION
 
     # ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION-$OBJ_ADD
     ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-$ParaView_VERSION
@@ -349,6 +349,30 @@ makeParaView()
 
 
 #
+# install the program
+#
+installParaView()
+{
+    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
+    echo "    Installing ParaView to $ParaView_DIR"
+
+    make install
+
+cat<< INFO
+    ---
+    Installation complete for paraview-$ParaView_VERSION
+    Set environment variables:
+
+        export ParaView_DIR=$ParaView_DIR
+        export PATH=\$ParaView_DIR/bin:\$PATH
+        export PV_PLUGIN_PATH=\$FOAM_LIBBIN/paraview-$ParaView_MAJOR
+    ---
+INFO
+}
+
+
+#------------------------------------------------------------------------------
+#
 # search for dirName string and replace the $ENV{envName}
 # also consider absolute paths
 # Note: use loop with grep to avoid touching too many files
@@ -395,7 +419,6 @@ fixHardLinks()
     done
 }
 
-
 #
 # replace absolute paths with environment variables
 # This triggers a partial (or even a full) rebuild, but might let us
@@ -437,33 +460,10 @@ fixCMakeFiles()
 }
 
 
-#
-# install the program
-#
-installParaView()
-{
-    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
-    echo "    Installing ParaView to $ParaView_DIR"
-
-    make install
-
-cat<< INFO
-    ---
-    Installation complete for paraview-$ParaView_VERSION
-    Set environment variables:
-
-        export ParaView_DIR=$ParaView_DIR
-        export PATH=\$ParaView_DIR/bin:\$PATH
-        export PV_PLUGIN_PATH=\$FOAM_LIBBIN/paraview-$ParaView_MAJOR
-    ---
-INFO
-}
-
-
 #------------------------------------------------------------------------------
 
 # clear all the variables used before using any of the functions
-unset withMPI withVERBOSE
+unset withMPI  withVERBOSE
 unset withQT      QMAKE_PATH
 unset withMESA    MESA_INCLUDE    MESA_LIBRARY
 unset withPYTHON  PYTHON_INCLUDE  PYTHON_LIBRARY
@@ -472,7 +472,7 @@ unset OBJ_ADD
 
 # start with these general settings
 addCMakeVariable  VTK_USE_TK:BOOL=OFF
-addCMakeVariable  BUILD_SHARED_LIBS:BOOL=ON VTK_USE_RPATH:BOOL=OFF
+addCMakeVariable  BUILD_SHARED_LIBS:BOOL=ON  VTK_USE_RPATH:BOOL=OFF
 addCMakeVariable  CMAKE_BUILD_TYPE:STRING=Release
 
 # include development files in "make install"
@@ -481,5 +481,7 @@ addCMakeVariable  PARAVIEW_INSTALL_DEVELOPMENT:BOOL=ON
 # new alternative to "make HTMLDocumentation"
 addCMakeVariable  GENERATE_FILTERS_DOCUMENTATION:BOOL=ON
 
+# remove dependency on WebKit
+# addCMakeVariable  VTK_QT_USE_WEBKIT:BOOL=OFF
 
 # ----------------------------------------------------------------- end-of-file
