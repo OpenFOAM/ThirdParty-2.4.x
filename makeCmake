@@ -30,7 +30,7 @@
 #     Build script for cmake
 #
 #------------------------------------------------------------------------------
-cmakePACKAGE=cmake-2.8.0
+cmakePACKAGE=cmake-2.8.1
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
