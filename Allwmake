@@ -81,9 +81,9 @@ OPENMPI)
     else
     (
         set -x
-        cd $MPI_HOME || exit 1
+        cd "${MPI_ARCH_PATH##*/}" || exit 1    # change to openmpi-VERSION
 
-        make distclean
+        make distclean 2>/dev/null
         rm -rf $MPI_ARCH_PATH
 
         unset mpiWith
@@ -129,14 +129,14 @@ MPICH)
     else
     (
         set -x
-        cd $MPI_HOME || exit 1
+        cd $MPI_HOME || exit 1    # change to mpich-VERSION
 
-        make distclean
+        make distclean 2>/dev/null
         rm -rf $MPI_ARCH_PATH
         rm util/machines/machines.*
 
         ./configure \
-            -prefix=$MPI_ARCH_PATH \
+            --prefix=$MPI_ARCH_PATH \
             --without-mpe \
             --disable-f77 \
             --disable-f90 \
@@ -283,6 +283,8 @@ else
 (
     set -x
     cd coco-cpp || exit 1
+
+    make distclean 2>/dev/null
 
     ./configure \
         --prefix=$prefixDIR
