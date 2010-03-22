@@ -188,8 +188,10 @@ else
 (
     set -x
     cd scotch_5.1/src || exit 1
+    mkdir -p $FOAM_LIBBIN
 
-    make scotch && mkdir -p $FOAM_LIBBIN && cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN/
+    make scotch && \
+    cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN
 )
 fi
 
@@ -206,8 +208,10 @@ then
     (
         set -x
         cd scotch_5.1/src || exit 1
+        mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
 
-        make ptscotch && mkdir -p $FOAM_LIBBIN && cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN/
+        make ptscotch && \
+        cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
     )
     fi
 fi
