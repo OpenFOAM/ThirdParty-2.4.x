@@ -112,6 +112,9 @@ GCC_ARCH_PATH=$installBASE/$gccPACKAGE
 GMP_ARCH_PATH=$installBASE/$gmpPACKAGE
 MPFR_ARCH_PATH=$installBASE/$mpfrPACKAGE
 
+# name of build directory
+buildDIR=build-$WM_ARCH$WM_COMPILER_ARCH
+
 #
 # Build GMP
 #
@@ -123,10 +126,11 @@ else
     echo "Starting build: $gmpPACKAGE"
 (
     cd $gmpPACKAGE || exit 1
-    make distclean
-    rm -rf build
-    mkdir -p build
-    cd build
+    make distclean 2>/dev/null
+
+    rm -rf $buildDIR
+    mkdir -p $buildDIR
+    cd $buildDIR
 
     ../configure ABI=$ABI \
         --prefix=$GMP_ARCH_PATH \
@@ -153,10 +157,11 @@ else
     echo "Starting build: $mpfrPACKAGE"
 (
     cd $mpfrPACKAGE || exit 1
-    make distclean
-    rm -rf build
-    mkdir -p build
-    cd build
+    make distclean 2>/dev/null
+
+    rm -rf $buildDIR
+    mkdir -p $buildDIR
+    cd $buildDIR
 
     ../configure ABI=$ABI \
        --prefix=$MPFR_ARCH_PATH \
@@ -184,10 +189,11 @@ else
     echo "Starting build: $gccPACKAGE"
 (
     cd $gccPACKAGE || exit 1
-    make distclean
-    rm -rf build
-    mkdir -p build
-    cd build
+    make distclean 2>/dev/null
+
+    rm -rf $buildDIR
+    mkdir -p $buildDIR
+    cd $buildDIR
 
     ../configure \
         --prefix=$GCC_ARCH_PATH \
