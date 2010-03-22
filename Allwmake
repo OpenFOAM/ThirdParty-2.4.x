@@ -194,11 +194,12 @@ else
 fi
 
 
-echo ========================================
-echo Build PTScotch decomposition library
-echo
-if [ "$WM_MPLIB" ]
+if [ -d "$MPI_ARCH_PATH" ]
 then
+    echo "========================================"
+    echo "Build PTScotch decomposition library (requires MPI)"
+    echo
+
     if [ -r $FOAM_MPI_LIBBIN/libptscotch.so -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
     then
         echo "have ptscotch shared libraries"
@@ -224,27 +225,6 @@ echo
     wmake libso GKlib
     wmake libso libmetis
 )
-
-
-if [ -d "$MPI_ARCH_PATH" ]
-then
-echo ========================================
-echo Build parMetis. Requires MPI.
-echo
-(
-    set -x
-    cd ParMetis-3.1 || exit 1
-    cpMakeFiles ParMetis
-
-    # ParMetis has dependency on the mpi version, thus include
-    # WM_MPLIB in build directory so that .o files are kept separate
-    (
-        WM_OPTIONS=${WM_OPTIONS}$WM_MPLIB
-        wmake libso METISLib
-        wmake libso ParMETISLib
-    )
-)
-fi
 
 
 echo ========================================
