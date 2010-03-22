@@ -27,12 +27,11 @@
 #     makeQt
 #
 # Description
-#     Build script for qt-x11-opensource-src
+#     Build script for qt-everywhere-opensource-src
 #
 #------------------------------------------------------------------------------
-qtVERSION=4.5.3
-qtTYPE=qt-x11-opensource-src
-
+qtVERSION=4.6.2
+qtTYPE=qt-everywhere-opensource-src
 #------------------------------------------------------------------------------
 # run from third-party directory only
 wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
@@ -81,7 +80,7 @@ done
 getNCOMPPROCS
 
 qtPACKAGE=$qtTYPE-$qtVERSION
-prefixDIR=$installBASE/$qtPACKAGE
+prefixDIR=$installBASE/qt-$qtVERSION
 
 #
 # Build QT
@@ -95,10 +94,14 @@ else
 (
     cd $qtPACKAGE || exit 1
 
-    make distclean
+    make distclean 2>/dev/null
     rm -rf $prefixDIR
 
-    ./configure --prefix=$prefixDIR \
+    # compile as opensource, accepting LGPL conditions
+    echo "yes" | \
+    ./configure \
+        --prefix=$prefixDIR \
+        -opensource \
         -nomake demos \
         -nomake examples \
     && time make -j $WM_NCOMPPROCS \

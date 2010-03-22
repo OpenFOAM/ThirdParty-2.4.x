@@ -272,8 +272,8 @@ addQtSupport()
             echo "*** Error: Qt version provided < 4.3"
             echo "***     Please use the -qmake option to specify the location of a version of Qt >= 4.3 "
             echo "***     e.g."
-            echo "***         -qmake /usr/local/Trolltech/Qt-4.3.5/bin/qmake"
-            echo "***         -qmake $installBASE/qt-x11-opensource-src-4.3.5/bin/qmake"
+            echo "***         -qmake /usr/local/qt-4.6.2/bin/qmake"
+            echo "***         -qmake $installBASE/qt-4.6.2/bin/qmake"
             exit 1
         fi
     else

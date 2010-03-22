@@ -81,9 +81,9 @@ OPENMPI)
     else
     (
         set -x
-        cd $MPI_HOME || exit 1
+        cd "${MPI_ARCH_PATH##*/}" || exit 1    # change to openmpi-VERSION
 
-        make distclean
+        make distclean 2>/dev/null
         rm -rf $MPI_ARCH_PATH
 
         unset mpiWith
@@ -129,14 +129,14 @@ MPICH)
     else
     (
         set -x
-        cd $MPI_HOME || exit 1
+        cd $MPI_HOME || exit 1    # change to mpich-VERSION
 
-        make distclean
+        make distclean 2>/dev/null
         rm -rf $MPI_ARCH_PATH
         rm util/machines/machines.*
 
         ./configure \
-            -prefix=$MPI_ARCH_PATH \
+            --prefix=$MPI_ARCH_PATH \
             --without-mpe \
             --disable-f77 \
             --disable-f90 \
@@ -188,8 +188,10 @@ else
 (
     set -x
     cd scotch_5.1/src || exit 1
+    mkdir -p $FOAM_LIBBIN
 
-    make scotch && cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN/
+    make scotch && \
+    cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN
 )
 fi
 
@@ -207,8 +209,10 @@ then
     (
         set -x
         cd scotch_5.1/src || exit 1
+        mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
 
-        make ptscotch && cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN/
+        make ptscotch && \
+        cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
     )
     fi
 fi
@@ -263,6 +267,8 @@ else
 (
     set -x
     cd coco-cpp || exit 1
+
+    make distclean 2>/dev/null
 
     ./configure \
         --prefix=$prefixDIR
