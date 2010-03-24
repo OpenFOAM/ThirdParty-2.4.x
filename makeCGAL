@@ -33,6 +33,7 @@
 gmpPACKAGE=gmp-5.0.1
 mpfrPACKAGE=mpfr-2.4.2
 cgalPACKAGE=CGAL-3.5.1
+boostPACKAGE=boost_1_42_0
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -55,6 +56,8 @@ usage: ${0##*/} [gmp-VERSION] [mpfr-VERSION] [CGAL-VERSION]
 * build CGAL with
       $gmpPACKAGE
       $mpfrPACKAGE
+      $cgalPACKAGE
+      $boostPACKAGE
 
 USAGE
     exit 1
@@ -80,6 +83,10 @@ do
         cgalPACKAGE="${1%%/}"
         shift
         ;;
+    boost_[0-9]*)
+        boostPACKAGE="${1%%/}"
+        shift
+        ;;
     *)
         usage "unknown option/argument: '$*'"
         ;;
@@ -95,12 +102,15 @@ getNCOMPPROCS
 #
 # Build Boost
 #
-if [ -d "$BOOST_ROOT" ]
+#   BOOST_SOURCE_DIR : location of the original sources
+
+BOOST_SOURCE_DIR=$WM_THIRD_PARTY_DIR/$boostPACKAGE
+
+if [ -d "$BOOST_SOURCE_DIR" ]
 then
-    boostPACKAGE="${BOOST_ROOT##*/}"
     BOOST_ARCH_PATH=$installBASE/$boostPACKAGE
 
-    boostInc="$BOOST_ROOT/include"
+    boostInc="$BOOST_ARCH_PATH/include"
     boostLib="$BOOST_ARCH_PATH/lib"
 
     echo "---------------"
@@ -110,14 +120,13 @@ then
     else
         echo "Starting build: boost"
     (
-        cd $BOOST_ROOT || exit 1
+        cd $BOOST_SOURCE_DIR || exit 1
 
         rm -rf $BOOST_ARCH_PATH
 
         ./bootstrap.sh \
             --with-libraries=thread \
-            --libdir=$boostLib \
-            --includedir=$boostInc \
+            --prefix=$BOOST_ARCH_PATH \
         && ./bjam -j $WM_NCOMPPROCS install \
         && echo "Built: boost"
     ) || {
