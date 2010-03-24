@@ -51,7 +51,7 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} [gmp-VERSION] [mpfr-VERSION] [CGAL-VERSION]
+usage: ${0##*/} [gmp-VERSION] [mpfr-VERSION] [CGAL-VERSION] [boost-VERSION]
 
 * build CGAL with
       $gmpPACKAGE
@@ -83,7 +83,7 @@ do
         cgalPACKAGE="${1%%/}"
         shift
         ;;
-    boost_[0-9]*)
+    boost-[0-9]* | boost_[0-9]* )
         boostPACKAGE="${1%%/}"
         shift
         ;;
@@ -125,8 +125,8 @@ then
         rm -rf $BOOST_ARCH_PATH
 
         ./bootstrap.sh \
-            --with-libraries=thread \
             --prefix=$BOOST_ARCH_PATH \
+            --with-libraries=thread \
         && ./bjam -j $WM_NCOMPPROCS install \
         && echo "Built: boost"
     ) || {
