@@ -485,7 +485,7 @@ addCMakeVariable  CMAKE_BUILD_TYPE:STRING=Release
 addCMakeVariable  PARAVIEW_INSTALL_DEVELOPMENT:BOOL=ON
 
 # new alternative to "make HTMLDocumentation"
-addCMakeVariable  GENERATE_FILTERS_DOCUMENTATION:BOOL=ON
+addCMakeVariable  PARAVIEW_GENERATE_PROXY_DOCUMENTATION:BOOL=ON
 
 # remove dependency on WebKit
 # addCMakeVariable  VTK_QT_USE_WEBKIT:BOOL=OFF
