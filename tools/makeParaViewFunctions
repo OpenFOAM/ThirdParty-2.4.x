@@ -22,7 +22,7 @@
 #     along with OpenFOAM; if not, write to the Free Software Foundation,
 #     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script
+# File
 #     makeParaViewFunctions
 #
 # Description
@@ -30,10 +30,7 @@
 #
 #------------------------------------------------------------------------------
 
-# define the standard buildBASE and installBASE for the platform
-buildBASE=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER
-installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER
-
+# buildBASE, installBASE defined from tools/makeThirdPartyFunctions
 
 #
 # where things are or should be put
@@ -323,7 +320,6 @@ configParaView()
         -DCMAKE_INSTALL_PREFIX:PATH=$ParaView_DIR \
         $CMAKE_VARIABLES \
         $ParaView_SOURCE_DIR
-
 }
 
 
@@ -335,16 +331,7 @@ makeParaView()
 {
     cd $ParaView_BINARY_DIR || exit 1  # change to build folder
     echo "    Starting make"
-
-    if [ -r /proc/cpuinfo ]
-    then
-        WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l)
-        [ $WM_NCOMPPROCS -le 8 ] || WM_NCOMPPROCS=8
-
-        time make -j $WM_NCOMPPROCS
-    else
-        time make
-    fi
+    time make -j $WM_NCOMPPROCS
     echo "    Done make"
 
     # remove lib if it is a link
@@ -377,97 +364,8 @@ INFO
 
 
 #------------------------------------------------------------------------------
-#
-# search for dirName string and replace the $ENV{envName}
-# also consider absolute paths
-# Note: use loop with grep to avoid touching too many files
-# (internal function)
-#
-fixHardLinks()
-{
-    envName=$1
-    dirName=$2
-    shift 2
 
-    echo "-> Replace $dirName"
-
-    # Also consider absolute paths
-    absName=$(cd $dirName 2>/dev/null && /bin/pwd)
-    if [ -n "$absName" -a "$absName" != "$dirName" ]
-    then
-        echo "-> Replace $absName"
-    else
-        absName=false
-    fi
-    echo "   With \$$envName"
-
-    for fileSpec
-    do
-        echo -n "   $fileSpec: "
-        for i in $(find . -type f -iname "$fileSpec")
-        do
-            if grep -q "$dirName" $i
-            then
-                echo -n "#"
-                sed -i "s,$dirName,\$ENV{$envName},g" $i
-            fi
-            if [ "$absName" != false ]
-            then
-                if grep -q "$absName" $i
-                then
-                    echo -n "#"
-                    sed -i "s,$absName,\$ENV{$envName},g" $i
-                fi
-            fi
-        done
-        echo
-    done
-}
-
-#
-# replace absolute paths with environment variables
-# This triggers a partial (or even a full) rebuild, but might let us
-# find our files later if we relocate the build
-#
-fixCMakeFiles()
-{
-    cd $ParaView_BINARY_DIR || exit 1  # change to build folder
-
-    echo "Replacing absolute paths with environment variables"
-    echo
-
-    # Replace path with env variable: ParaView_BINARY_DIR
-    fixHardLinks ParaView_BINARY_DIR "$ParaView_BINARY_DIR" '*.cmake'
-
-    # Replace path with env variable: ParaView_DIR
-    fixHardLinks ParaView_DIR "$ParaView_DIR" '*.cmake'
-
-    # Replace path with env variable: ParaView_SOURCE_DIR
-    fixHardLinks ParaView_SOURCE_DIR "$ParaView_SOURCE_DIR" '*.cmake'
-
-    # Replace path with env variable: MPI_ARCH_PATH
-    if [ "${withMPI:=false}" = true ]
-    then
-        fixHardLinks MPI_ARCH_PATH "$MPI_ARCH_PATH" '*.cmake'
-    fi
-
-    # Replace path with env variable: CMAKE_HOME
-    if [ -r "$CMAKE_HOME" ]
-    then
-        fixHardLinks CMAKE_HOME "$CMAKE_HOME" '*cmake*'
-    fi
-
-    # Replace path with env variable: WM_COMPILER_DIR
-    # (include cmake.check_cache)
-    # This triggers a complete rebuild (with cmake-2.6.2), but is likely
-    # needed when redistributing files
-    fixHardLinks WM_COMPILER_DIR "$WM_COMPILER_DIR" '*cmake*'
-}
-
-
-#------------------------------------------------------------------------------
-
-# clear all the variables used before using any of the functions
+# clear the referenced variables before using any of the functions
 unset withMPI  withVERBOSE
 unset withQT      QMAKE_PATH
 unset withMESA    MESA_INCLUDE    MESA_LIBRARY

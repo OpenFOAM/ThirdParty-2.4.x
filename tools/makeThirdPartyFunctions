@@ -22,13 +22,13 @@
 #     along with OpenFOAM; if not, write to the Free Software Foundation,
 #     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
-# Script
+# File
 #     makeThirdPartyFunctions
 #
 # Description
 #     Functions for managing the third-party packages
 #
-#     Also define the standard buildBASE and installBASE for the platform
+#     Define the standard buildBASE and installBASE for the platform
 #
 #------------------------------------------------------------------------------
 
@@ -54,6 +54,7 @@ getNCOMPPROCS()
 
     [ $# -gt 0 ] && echo "Building on $WM_NCOMPPROCS cores"
 }
+
 
 #
 # download file $1 from url $2 into download/ directory
@@ -82,7 +83,8 @@ downloadFile()
 #
 # $1 = PACKAGE
 # $2 (optional) TARGET DIRECTORY
-cpMakeFiles() {
+cpMakeFiles()
+{
     set +x
 
     [ "$#" -eq 1 -o "$#" -eq 2 ] || {
