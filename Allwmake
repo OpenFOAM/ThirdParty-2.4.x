@@ -183,6 +183,13 @@ echo
 if [ -r $FOAM_LIBBIN/libscotch.so -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
 then
     echo "have scotch shared libraries"
+elif [ -r scotch_5.1/lib/libptscotch.so -a -r scotch_5.1/lib/libptscotcherrexit.so ]
+then
+(
+    echo "have scotch shared libraries in scotch_5.1/lib"
+    set -x
+    cp scotch_5.1/lib/libscotch.so scotch_5.1/lib/libscotcherrexit.so $FOAM_LIBBIN
+)
 else
 (
     set -x
@@ -204,6 +211,14 @@ then
     if [ -r $FOAM_MPI_LIBBIN/libptscotch.so -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
     then
         echo "have ptscotch shared libraries"
+    elif [ -r scotch_5.1/lib/libptscotch.so -a -r scotch_5.1/lib/libptscotcherrexit.so ]
+    then
+    (
+        echo "have ptscotch shared libraries in scotch_5.1/lib"
+        set -x
+        mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
+        cp scotch_5.1/lib/libptscotch.so scotch_5.1/lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
+    )
     else
     (
         set -x
