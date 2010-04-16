@@ -34,6 +34,7 @@
 #------------------------------------------------------------------------------
 gmpPACKAGE=gmp-5.0.1
 mpfrPACKAGE=mpfr-2.4.2
+mpcPACKAGE=mpc-0.8.1
 gccPACKAGE=gcc-4.4.3
 
 #------------------------------------------------------------------------------
@@ -52,11 +53,12 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} [gmp-VERSION] [mpfr-VERSION] [gcc-VERSION]
+usage: ${0##*/} [gmp-VERSION] [mpfr-VERSION] [mpc-VERSION] [gcc-VERSION]
 
-* build combinations of gmp, mpfr and gcc
+* build combinations of gmp, mpfr, mpc and gcc
       $gmpPACKAGE
       $mpfrPACKAGE
+      $mpcPACKAGE
       $gccPACKAGE
 
 USAGE
@@ -77,6 +79,10 @@ do
         ;;
     mpfr-[2-9]*)
         mpfrPACKAGE="${1%%/}"
+        shift
+        ;;
+    mpc-[0-]*)
+        mpcPACKAGE="${1%%/}"
         shift
         ;;
     gcc-[4-9]*)
@@ -110,9 +116,17 @@ installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH
 GCC_ARCH_PATH=$installBASE/$gccPACKAGE
 GMP_ARCH_PATH=$installBASE/$gmpPACKAGE
 MPFR_ARCH_PATH=$installBASE/$mpfrPACKAGE
+MPC_ARCH_PATH=$installBASE/$mpcPACKAGE
 
 # name of build directory
 buildDIR=build-$WM_ARCH$WM_COMPILER_ARCH
+
+# mpc is not needed for gcc older than 4.5
+case "$gccPACKAGE" in
+gcc-4.[0-4].*)
+   mpcPACKAGE=false
+   ;;
+esac
 
 #
 # Build GMP
@@ -123,6 +137,7 @@ then
     echo "Already built: $gmpPACKAGE"
 else
     echo "Starting build: $gmpPACKAGE"
+    echo
 (
     cd $gmpPACKAGE || exit 1
     make distclean 2>/dev/null
@@ -131,6 +146,7 @@ else
     mkdir -p $buildDIR
     cd $buildDIR
 
+    set -x
     ../configure ABI=$ABI \
         --prefix=$GMP_ARCH_PATH \
         --enable-cxx \
@@ -154,6 +170,7 @@ then
     echo "Already built: $mpfrPACKAGE"
 else
     echo "Starting build: $mpfrPACKAGE"
+    echo
 (
     cd $mpfrPACKAGE || exit 1
     make distclean 2>/dev/null
@@ -162,6 +179,7 @@ else
     mkdir -p $buildDIR
     cd $buildDIR
 
+    set -x
     ../configure ABI=$ABI \
        --prefix=$MPFR_ARCH_PATH \
        --with-gmp=$GMP_ARCH_PATH \
@@ -177,6 +195,48 @@ fi
 export LD_LIBRARY_PATH="$MPFR_ARCH_PATH/lib:$LD_LIBRARY_PATH"
 
 #
+# Build mpc
+#
+echo "---------------"
+if [ -d $MPC_ARCH_PATH ]
+then
+    echo "Already built: $mpcPACKAGE"
+elif [ "$mpcPACKAGE" = false ]
+then
+    echo "Skip building mpc - not needed for older gcc versions"
+else
+    echo "Starting build: $mpcPACKAGE"
+    echo
+(
+    cd $mpcPACKAGE || exit 1
+    make distclean 2>/dev/null
+
+    rm -rf $buildDIR
+    mkdir -p $buildDIR
+    cd $buildDIR
+
+    set -x
+    ../configure ABI=$ABI \
+        --prefix=$MPC_ARCH_PATH \
+        --with-gmp=$GMP_ARCH_PATH \
+        --with-mpfr=$MPFR_ARCH_PATH \
+    && make -j $WM_NCOMPPROCS \
+    && make install \
+    && echo "Built: $mpcPACKAGE"
+) || {
+    echo "Error building: $mpcPACKAGE"
+    exit 1
+}
+fi
+
+
+if [ -d "$MPC_ARCH_PATH" ]
+then
+    export LD_LIBRARY_PATH="$MPC_ARCH_PATH/lib:$LD_LIBRARY_PATH"
+fi
+
+
+#
 # Build GCC
 # might need 32-bit glibc-devel headers to compile
 #
@@ -186,18 +246,24 @@ then
     echo "Already built: $gccPACKAGE"
 else
     echo "Starting build: $gccPACKAGE"
+    echo
 (
     cd $gccPACKAGE || exit 1
     make distclean 2>/dev/null
+
+    unset withMpc
+    [ -d "$MPC_ARCH_PATH" ] && withMpc="--with-mpc=$MPC_ARCH_PATH"
 
     rm -rf $buildDIR
     mkdir -p $buildDIR
     cd $buildDIR
 
+    set -x
     ../configure \
         --prefix=$GCC_ARCH_PATH \
         --with-gmp=$GMP_ARCH_PATH \
         --with-mpfr=$MPFR_ARCH_PATH \
+        $withMpc \
         --with-pkgversion=OpenFOAM \
         --enable-languages=c,c++ \
         --enable-__cxa_atexit \
