@@ -285,6 +285,7 @@ Features selected
 Version information
     version   ${ParaView_VERSION:-unknown}
     major     ${ParaView_MAJOR:-unknown}
+$(checkVersion)
 ---------------------
 SUMMARY
 

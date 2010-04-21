@@ -101,6 +101,39 @@ echoDateStamp()
     )
 }
 
+
+#
+# extract version information from
+#     CMakeLists.txt
+# since the order of the entries is already correct, can use simple sed script
+#
+getVersion()
+{
+    (
+        set -- $(
+            sed -ne 's/^SET(PARAVIEW_VERSION_[A-Z]*\([ 0-9]*\)).*$/\1/p' \
+            $ParaView_SOURCE_DIR/CMakeLists.txt
+        )
+
+        IFS='.'
+        echo "$*"
+    )
+}
+
+#
+# compare version information
+#
+checkVersion()
+{
+    local ver=$(getVersion)
+    if [ "$ParaView_VERSION" != "$ver" ]
+    then
+        echo "MISMATCH!"
+        echo "    specified $ParaView_VERSION"
+        echo "    found     $ver"
+    fi
+}
+
 #
 # set CMake cache variables
 #
