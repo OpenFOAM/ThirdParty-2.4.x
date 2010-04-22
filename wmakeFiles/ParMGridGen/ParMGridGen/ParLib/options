@@ -5,7 +5,8 @@ TYPE_REAL=
 TYPE_REAL=-DTYPE_REAL
 #endif
 
-include $(RULES)/mplib$(WM_MPLIB)
+sinclude $(GENERAL_RULES)/mplib$(WM_MPLIB)
+sinclude $(RULES)/mplib$(WM_MPLIB)
 
 EXE_INC = -I../../MGridGen/IMlib $(PFLAGS) $(PINC) $(TYPE_REAL)
 LIB_LIBS = -lIMlib -lParMETISLib $(PLIBS)

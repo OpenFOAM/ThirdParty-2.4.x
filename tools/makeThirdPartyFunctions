@@ -102,7 +102,10 @@ cpMakeFiles()
         b=${i##*/}   # basename
 
         mkdir -p $dst/$d/Make 2>/dev/null
-        [ -e $dst/$d/Make/$b ] || cp $wmakeFiles/$i $dst/$d/Make/$b
+        if [ $wmakeFiles/$i -nt $dst/$d/Make/$b ]
+        then
+            cp $wmakeFiles/$i $dst/$d/Make/$b
+        fi
     done
 
     set -x
