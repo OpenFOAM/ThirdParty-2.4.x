@@ -81,7 +81,7 @@ do
         mpfrPACKAGE="${1%%/}"
         shift
         ;;
-    mpc-[0-]*)
+    mpc-[0-9]*)
         mpcPACKAGE="${1%%/}"
         shift
         ;;
