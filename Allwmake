@@ -245,6 +245,23 @@ echo
 )
 
 
+# Build parMetis. Requires MPI!
+echo ========================================
+echo Build ParMetis decomposition. Requires MPI.
+echo
+if [ -d "$MPI_ARCH_PATH" ]
+then
+(
+    set -x
+    cd ParMetis-3.1 || exit 1
+    cpMakeFiles ParMetis
+
+    wmake libso METISLib
+    wmake libso ParMETISLib
+)
+fi
+
+
 echo ========================================
 echo Build ParMGridGen
 echo
