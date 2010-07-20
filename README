@@ -1,8 +1,8 @@
 #                            -*- mode: org; -*-
 #
-#+TITLE:               OpenFOAM Third-Party packages 1.6
+#+TITLE:               OpenFOAM Third-Party packages 1.7
 #+AUTHOR:                      OpenCFD Ltd.
-#+DATE:                         April 2010
+#+DATE:                         July 2010
 #+LINK:                  http://www.opencfd.co.uk
 #+OPTIONS: author:nil ^:{}
 
@@ -53,5 +53,7 @@
    + zlib        http://www.zlib.net/zlib-1.2.3.tar.gz
    + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
    + coco-cpp    http://github.com/olesenm/coco-cpp
+   + CGAL        https://gforge.inria.fr/frs/download.php/27222/CGAL-3.6.1.tar.gz
+   + boost       http://sourceforge.net/projects/boost/files/boost/1.43.0/boost_1_43_0.tar.gz/download
 
 # --------------------------------------------------------------------------
