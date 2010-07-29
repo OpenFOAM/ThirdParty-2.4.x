@@ -62,6 +62,8 @@ echo
     cd malloc || exit 1
     ( cd hoard-371 && cpMakeFiles hoard )
 
+    cpMakeFiles fbsdmalloc fbsdmalloc
+
     ./Allwmake
 )
 
@@ -238,7 +240,8 @@ echo
 (
     set -x
     cd metis-5.0pre2 || exit 1
-    cpMakeFiles metis
+    cpMakeFiles metis/GKlib GKlib
+    cpMakeFiles metis/libmetis libmetis
 
     wmake libso GKlib
     wmake libso libmetis
@@ -254,7 +257,9 @@ then
 (
     set -x
     cd ParMetis-3.1 || exit 1
-    cpMakeFiles ParMetis
+
+    cpMakeFiles ParMetis/METISLib METISLib
+    cpMakeFiles ParMetis/ParMETISLib ParMETISLib
 
     wmake libso METISLib
     wmake libso ParMETISLib
@@ -268,7 +273,8 @@ echo
 (
     set -x
     cd ParMGridGen-1.0 || exit 1
-    cpMakeFiles ParMGridGen
+    cpMakeFiles ParMGridGen/MGridGen/IMlib MGridGen/IMlib
+    cpMakeFiles ParMGridGen/MGridGen/Lib MGridGen/Lib
 
     wmake libso MGridGen/IMlib
     wmake libso MGridGen/Lib
