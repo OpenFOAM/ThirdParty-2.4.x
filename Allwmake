@@ -179,23 +179,25 @@ MPICH)
 esac
 
 
+scotchPackage=scotch_5.1
+
 echo ========================================
-echo Build Scotch decomposition library
+echo Build Scotch decomposition library $scotchPackage
 echo
 if [ -r $FOAM_LIBBIN/libscotch.so -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
 then
     echo "have scotch shared libraries"
-elif [ -r scotch_5.1/lib/libptscotch.so -a -r scotch_5.1/lib/libptscotcherrexit.so ]
+elif [ -r $scotchPackage/lib/libptscotch.so -a -r $scotchPackage/lib/libptscotcherrexit.so ]
 then
 (
-    echo "have scotch shared libraries in scotch_5.1/lib"
+    echo "have scotch shared libraries in $scotchPackage/lib"
     set -x
-    cp scotch_5.1/lib/libscotch.so scotch_5.1/lib/libscotcherrexit.so $FOAM_LIBBIN
+    cp $scotchPackage/lib/libscotch.so $scotchPackage/lib/libscotcherrexit.so $FOAM_LIBBIN
 )
 else
 (
     set -x
-    cd scotch_5.1/src || exit 1
+    cd $scotchPackage/src || exit 1
     mkdir -p $FOAM_LIBBIN
 
     make scotch && \
@@ -207,24 +209,24 @@ fi
 if [ -d "$MPI_ARCH_PATH" ]
 then
     echo "========================================"
-    echo "Build PTScotch decomposition library (requires MPI)"
+    echo "Build PTScotch decomposition library $scotchPackage (requires MPI)"
     echo
 
     if [ -r $FOAM_MPI_LIBBIN/libptscotch.so -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
     then
         echo "have ptscotch shared libraries"
-    elif [ -r scotch_5.1/lib/libptscotch.so -a -r scotch_5.1/lib/libptscotcherrexit.so ]
+    elif [ -r $scotchPackage/lib/libptscotch.so -a -r $scotchPackage/lib/libptscotcherrexit.so ]
     then
     (
-        echo "have ptscotch shared libraries in scotch_5.1/lib"
+        echo "have ptscotch shared libraries in $scotchPackage/lib"
         set -x
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
-        cp scotch_5.1/lib/libptscotch.so scotch_5.1/lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
+        cp $scotchPackage/lib/libptscotch.so $scotchPackage/lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
     )
     else
     (
         set -x
-        cd scotch_5.1/src || exit 1
+        cd $scotchPackage/src || exit 1
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
 
         make ptscotch && \
