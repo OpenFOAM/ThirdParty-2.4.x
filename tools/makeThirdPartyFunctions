@@ -93,16 +93,17 @@ cpMakeFiles()
 
     pkg=$1
     dst=${2:-.}
+    echo "cpMakeFiles" $pkg $dst
 
     wmakeFiles=$WM_THIRD_PARTY_DIR/wmakeFiles/$pkg
 
     for i in $(cd $wmakeFiles && find . -type f)
     do
-        d=${i%%/*}   # dirname
+        d=${i%/*}   # dirname
         b=${i##*/}   # basename
 
         mkdir -p $dst/$d/Make 2>/dev/null
-        if [ $wmakeFiles/$i -nt $dst/$d/Make/$b ]
+        if [ ! -e $dst/$d/Make/$b -o $wmakeFiles/$i -nt $dst/$d/Make/$b ]
         then
             cp $wmakeFiles/$i $dst/$d/Make/$b
         fi
