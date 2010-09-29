@@ -127,9 +127,8 @@ setVersion
 getNCOMPPROCS
 
 
-#Hack: do not build documentation for plugins - needed sometimes on low Qt
-#      versions
-#addCMakeVariable PARAVIEW_GENERATE_PROXY_DOCUMENTATION=OFF
+#Hack: do not build documentation for plugins
+addCMakeVariable PARAVIEW_GENERATE_PROXY_DOCUMENTATION=OFF
 
 #
 # various building stages
