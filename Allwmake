@@ -185,7 +185,7 @@ echo
 if [ -r $FOAM_LIBBIN/libscotch.so -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
 then
     echo "have scotch shared libraries"
-elif [ -r scotch_5.1.10a/lib/libptscotch.so -a -r scotch_5.1.10a/lib/libptscotcherrexit.so ]
+elif [ -r scotch_5.1.10a/lib/libscotch.so -a -r scotch_5.1.10a/lib/libscotcherrexit.so ]
 then
 (
     echo "have scotch shared libraries in scotch_5.1.10a/lib"
