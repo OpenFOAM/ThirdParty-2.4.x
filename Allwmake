@@ -190,6 +190,7 @@ then
 (
     echo "have scotch shared libraries in scotch_5.1.10a/lib"
     set -x
+    mkdir -p $FOAM_LIBBIN
     cp scotch_5.1.10a/lib/libscotch.so scotch_5.1.10a/lib/libscotcherrexit.so $FOAM_LIBBIN
 )
 else
