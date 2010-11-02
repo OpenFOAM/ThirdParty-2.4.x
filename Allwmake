@@ -181,6 +181,7 @@ esac
 
 scotchPackage=scotch_5.1
 
+# building scotch is still a bit of a pain
 echo ========================================
 echo Build Scotch decomposition library $scotchPackage
 echo
@@ -204,7 +205,6 @@ else
     cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN
 )
 fi
-
 
 if [ -d "$MPI_ARCH_PATH" ]
 then
@@ -233,6 +233,17 @@ then
         cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
     )
     fi
+fi
+
+
+# verify that scotch includes are also there
+if [ -f $scotchPackage/include/scotch.h ]
+then
+    echo "have scotch include files"
+else
+    echo
+    echo "    WARNING: required scotch include files were not found!"
+    echo
 fi
 
 
