@@ -179,7 +179,7 @@ MPICH)
 esac
 
 
-scotchPackage=scotch_5.1
+scotchPackage=scotch_5.1.10b
 
 # building scotch is still a bit of a pain
 echo ========================================
@@ -188,7 +188,7 @@ echo
 if [ -r $FOAM_LIBBIN/libscotch.so -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
 then
     echo "have scotch shared libraries"
-elif [ -r $scotchPackage/lib/libptscotch.so -a -r $scotchPackage/lib/libptscotcherrexit.so ]
+elif [ -r $scotchPackage/lib/libscotch.so -a -r $scotchPackage/lib/libscotcherrexit.so ]
 then
 (
     echo "have scotch shared libraries in $scotchPackage/lib"
@@ -334,5 +334,6 @@ echo ========================================
 echo Done ThirdParty Allwmake
 echo ========================================
 echo
+
 
 # ----------------------------------------------------------------- end-of-file
