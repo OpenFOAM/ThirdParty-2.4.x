@@ -179,13 +179,22 @@ MPICH)
 esac
 
 
-scotchPackage=scotch_5.1.10b
-SCOTCH_ARCH_PATH=$installBASE/$scotchPackage
+# get SCOTCH_VERSION, SCOTCH_ARCH_PATH
+settings=`$WM_PROJECT_DIR/bin/foamEtcFile apps/scotch/bashrc`
+if [ -f "$settings" ]
+then
+    . $settings
+else
+    echo
+    echo "Error: no apps/scotch/bashrc settings"
+    echo
+fi
 
 # building scotch is still a bit of a pain
 echo ========================================
-echo Build Scotch decomposition library $scotchPackage
-echo
+echo "Build Scotch decomposition library $SCOTCH_VERSION"
+echo "    $SCOTCH_ARCH_PATH"
+
 if [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
   -a -r $FOAM_LIBBIN/libscotch.so \
   -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
@@ -206,9 +215,11 @@ then
 else
 (
     set -x
-    cd $scotchPackage/src || exit 1
+    cd $SCOTCH_VERSION/src || exit 1
     mkdir -p $FOAM_LIBBIN 2>/dev/null
     mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
+
+    make realclean 2>/dev/null
 
     # this needs generalizing
     makeFile=../../wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
@@ -241,7 +252,8 @@ fi
 if [ -d "$MPI_ARCH_PATH" ]
 then
     echo "========================================"
-    echo "Build PTScotch decomposition library $scotchPackage (requires MPI)"
+    echo "Build PTScotch decomposition library $SCOTCH_VERSION (requires MPI)"
+    echo "    $SCOTCH_ARCH_PATH"
     echo
 
     if [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
@@ -266,7 +278,7 @@ then
     else
     (
         set -x
-        cd $scotchPackage/src || exit 1
+        cd $SCOTCH_VERSION/src || exit 1
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
         mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
 
