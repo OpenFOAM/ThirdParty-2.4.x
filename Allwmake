@@ -180,31 +180,49 @@ esac
 
 
 scotchPackage=scotch_5.1.10b
+SCOTCH_ARCH_PATH=$installBASE/$scotchPackage
 
 # building scotch is still a bit of a pain
 echo ========================================
 echo Build Scotch decomposition library $scotchPackage
 echo
-if [ -r $FOAM_LIBBIN/libscotch.so -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
+if [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
+  -a -r $FOAM_LIBBIN/libscotch.so \
+  -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
 then
-    echo "have scotch shared libraries"
-elif [ -r $scotchPackage/lib/libscotch.so -a -r $scotchPackage/lib/libscotcherrexit.so ]
+    echo "have scotch shared libraries and scotch.h"
+elif [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
+    -a -r $SCOTCH_ARCH_PATH/lib/libscotch.so \
+    -a -r $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so ]
 then
 (
-    echo "have scotch shared libraries in $scotchPackage/lib"
+    echo "have scotch.h in $SCOTCH_ARCH_PATH/include"
+    echo "have scotch shared libraries in $SCOTCH_ARCH_PATH/lib"
     set -x
-    cp $scotchPackage/lib/libscotch.so $scotchPackage/lib/libscotcherrexit.so $FOAM_LIBBIN
+    cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
+        $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
+        $FOAM_LIBBIN
 )
 else
 (
     set -x
     cd $scotchPackage/src || exit 1
-    mkdir -p $FOAM_LIBBIN
+    mkdir -p $FOAM_LIBBIN 2>/dev/null
+    mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
 
-    make scotch && \
-    cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN
+    make prefix=$SCOTCH_ARCH_PATH scotch install && \
+    cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
+        $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
+        $FOAM_LIBBIN
 )
 fi
+# verify existence of scotch include
+[ -f $SCOTCH_ARCH_PATH/include/scotch.h ] || {
+    echo
+    echo "    WARNING: required include file 'scotch.h' not found!"
+    echo
+}
+
 
 if [ -d "$MPI_ARCH_PATH" ]
 then
@@ -212,38 +230,44 @@ then
     echo "Build PTScotch decomposition library $scotchPackage (requires MPI)"
     echo
 
-    if [ -r $FOAM_MPI_LIBBIN/libptscotch.so -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
+    if [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
+      -a -r $FOAM_MPI_LIBBIN/libptscotch.so \
+      -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
     then
-        echo "have ptscotch shared libraries"
-    elif [ -r $scotchPackage/lib/libptscotch.so -a -r $scotchPackage/lib/libptscotcherrexit.so ]
+        echo "have ptscotch shared libraries and ptscotch.h"
+    elif [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
+        -a -r $SCOTCH_ARCH_PATH/lib/libptscotch.so \
+        -a -r $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so ]
     then
     (
-        echo "have ptscotch shared libraries in $scotchPackage/lib"
+        echo "have ptscotch.h in $SCOTCH_ARCH_PATH/include"
+        echo "have ptscotch shared libraries in $SCOTCH_ARCH_PATH/lib"
         set -x
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
-        cp $scotchPackage/lib/libptscotch.so $scotchPackage/lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
+
+        cp  $SCOTCH_ARCH_PATH/lib/libptscotch.so \
+            $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so \
+            $FOAM_MPI_LIBBIN
     )
     else
     (
         set -x
         cd $scotchPackage/src || exit 1
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
+        mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
 
-        make ptscotch && \
-        cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
+        make prefix=$SCOTCH_ARCH_PATH ptscotch install && \
+        cp  $SCOTCH_ARCH_PATH/lib/libptscotch.so \
+            $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so \
+            $FOAM_MPI_LIBBIN
     )
     fi
-fi
-
-
-# verify that scotch includes are also there
-if [ -f $scotchPackage/include/scotch.h ]
-then
-    echo "have scotch include files"
-else
-    echo
-    echo "    WARNING: required scotch include files were not found!"
-    echo
+    # verify existence of scotch include
+    [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h ] || {
+        echo
+        echo "    WARNING: required include file 'ptscotch.h' not found!"
+        echo
+    }
 fi
 
 
