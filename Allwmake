@@ -235,7 +235,14 @@ else
         exit 1
     }
 
-    make prefix=$SCOTCH_ARCH_PATH scotch install && \
+    makeArgs="prefix=$SCOTCH_ARCH_PATH"
+    # handle non-gcc compilers
+    if [ "${WM_CC:-gcc}" != "gcc" ]
+    then
+        makeArgs="$makeArgs CC=$WM_CC CCS=$WM_CC"
+    fi
+
+    make $makeArgs scotch install && \
     cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
         $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
         $FOAM_LIBBIN
@@ -287,7 +294,14 @@ then
             exit 1
         }
 
-        make prefix=$SCOTCH_ARCH_PATH ptscotch install && \
+        makeArgs="prefix=$SCOTCH_ARCH_PATH"
+        # handle non-gcc compilers
+        if [ "${WM_CC:-gcc}" != "gcc" ]
+        then
+            makeArgs="$makeArgs CC=$WM_CC CCS=$WM_CC"
+        fi
+
+        make $makeArgs ptscotch install && \
         cp  $SCOTCH_ARCH_PATH/lib/libptscotch.so \
             $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so \
             $FOAM_MPI_LIBBIN
