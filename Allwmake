@@ -210,6 +210,20 @@ else
     mkdir -p $FOAM_LIBBIN 2>/dev/null
     mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
 
+    # this needs generalizing
+    makeFile=../../wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
+
+    if [ -f $makeFile -a ! -f Makefile.inc ]
+    then
+        rm -f Makefile.inc
+        ln -s $makeFile Makefile.inc
+    fi
+
+    [ -f Makefile.inc ] || {
+        echo " Error: scotch needs an appropriate Makefile.inc"
+        exit 1
+    }
+
     make prefix=$SCOTCH_ARCH_PATH scotch install && \
     cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
         $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
@@ -255,6 +269,11 @@ then
         cd $scotchPackage/src || exit 1
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
         mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
+
+        [ -f Makefile.inc ] || {
+            echo " Error: scotch needs an appropriate Makefile.inc"
+            exit 1
+        }
 
         make prefix=$SCOTCH_ARCH_PATH ptscotch install && \
         cp  $SCOTCH_ARCH_PATH/lib/libptscotch.so \
