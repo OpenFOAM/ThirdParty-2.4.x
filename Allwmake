@@ -179,61 +179,142 @@ MPICH)
 esac
 
 
-echo ========================================
-echo Build Scotch decomposition library
-echo
-if [ -r $FOAM_LIBBIN/libscotch.so -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
+# get SCOTCH_VERSION, SCOTCH_ARCH_PATH
+settings=`$WM_PROJECT_DIR/bin/foamEtcFile apps/scotch/bashrc`
+if [ -f "$settings" ]
 then
-    echo "have scotch shared libraries"
-elif [ -r scotch_5.1.10a/lib/libscotch.so -a -r scotch_5.1.10a/lib/libscotcherrexit.so ]
+    . $settings
+else
+    echo
+    echo "Error: no apps/scotch/bashrc settings"
+    echo
+fi
+
+# building scotch is still a bit of a pain
+echo ========================================
+echo "Build Scotch decomposition library $SCOTCH_VERSION"
+echo "    $SCOTCH_ARCH_PATH"
+
+if [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
+  -a -r $FOAM_LIBBIN/libscotch.so \
+  -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
+then
+    echo "have scotch shared libraries and scotch.h"
+elif [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
+    -a -r $SCOTCH_ARCH_PATH/lib/libscotch.so \
+    -a -r $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so ]
 then
 (
-    echo "have scotch shared libraries in scotch_5.1.10a/lib"
+    echo "have scotch.h in $SCOTCH_ARCH_PATH/include"
+    echo "have scotch shared libraries in $SCOTCH_ARCH_PATH/lib"
     set -x
-    mkdir -p $FOAM_LIBBIN
-    cp scotch_5.1.10a/lib/libscotch.so scotch_5.1.10a/lib/libscotcherrexit.so $FOAM_LIBBIN
+    mkdir -p $FOAM_LIBBIN 2>/dev/null
+    cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
+        $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
+        $FOAM_LIBBIN
 )
 else
 (
     set -x
-    cd scotch_5.1.10a/src || exit 1
-    mkdir -p $FOAM_LIBBIN
+    cd $SCOTCH_VERSION/src || exit 1
+    mkdir -p $FOAM_LIBBIN 2>/dev/null
+    mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
 
-    make scotch && \
-    cp ../lib/libscotch.so ../lib/libscotcherrexit.so $FOAM_LIBBIN
+    make realclean 2>/dev/null
+
+    # this needs generalizing
+    makeFile=../../wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
+
+    if [ -f $makeFile -a ! -f Makefile.inc ]
+    then
+        rm -f Makefile.inc
+        ln -s $makeFile Makefile.inc
+    fi
+
+    [ -f Makefile.inc ] || {
+        echo " Error: scotch needs an appropriate Makefile.inc"
+        exit 1
+    }
+
+    makeArgs="prefix=$SCOTCH_ARCH_PATH"
+    # handle non-gcc compilers
+    if [ "${WM_CC:-gcc}" != "gcc" ]
+    then
+        makeArgs="$makeArgs CC=$WM_CC CCS=$WM_CC"
+    fi
+
+    make $makeArgs scotch install && \
+    cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
+        $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
+        $FOAM_LIBBIN
 )
 fi
+# verify existence of scotch include
+[ -f $SCOTCH_ARCH_PATH/include/scotch.h ] || {
+    echo
+    echo "    WARNING: required include file 'scotch.h' not found!"
+    echo
+}
 
 
-case "$WM_MPLIB" in
-*MPI*)
+if [ -d "$MPI_ARCH_PATH" ]
+then
     echo "========================================"
-    echo "Build PTScotch decomposition library (requires MPI)"
+    echo "Build PTScotch decomposition library $SCOTCH_VERSION (requires MPI)"
+    echo "    $SCOTCH_ARCH_PATH"
     echo
 
-    if [ -r $FOAM_MPI_LIBBIN/libptscotch.so -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
+    if [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
+      -a -r $FOAM_MPI_LIBBIN/libptscotch.so \
+      -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
     then
-        echo "have ptscotch shared libraries"
-    elif [ -r scotch_5.1.10a/lib/libptscotch.so -a -r scotch_5.1.10a/lib/libptscotcherrexit.so ]
+        echo "have ptscotch shared libraries and ptscotch.h"
+    elif [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
+        -a -r $SCOTCH_ARCH_PATH/lib/libptscotch.so \
+        -a -r $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so ]
     then
     (
-        echo "have ptscotch shared libraries in scotch_5.1.10a/lib"
+        echo "have ptscotch.h in $SCOTCH_ARCH_PATH/include"
+        echo "have ptscotch shared libraries in $SCOTCH_ARCH_PATH/lib"
         set -x
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
-        cp scotch_5.1.10a/lib/libptscotch.so scotch_5.1.10a/lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
+
+        cp  $SCOTCH_ARCH_PATH/lib/libptscotch.so \
+            $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so \
+            $FOAM_MPI_LIBBIN
     )
     else
     (
         set -x
-        cd scotch_5.1.10a/src || exit 1
+        cd $SCOTCH_VERSION/src || exit 1
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
+        mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
 
-        make ptscotch && \
-        cp ../lib/libptscotch.so ../lib/libptscotcherrexit.so $FOAM_MPI_LIBBIN
+        [ -f Makefile.inc ] || {
+            echo " Error: scotch needs an appropriate Makefile.inc"
+            exit 1
+        }
+
+        makeArgs="prefix=$SCOTCH_ARCH_PATH"
+        # handle non-gcc compilers
+        if [ "${WM_CC:-gcc}" != "gcc" ]
+        then
+            makeArgs="$makeArgs CC=$WM_CC CCS=$WM_CC"
+        fi
+
+        make $makeArgs ptscotch install && \
+        cp  $SCOTCH_ARCH_PATH/lib/libptscotch.so \
+            $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so \
+            $FOAM_MPI_LIBBIN
     )
     fi
-    ;;
-esac
+    # verify existence of scotch include
+    [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h ] || {
+        echo
+        echo "    WARNING: required include file 'ptscotch.h' not found!"
+        echo
+    }
+fi
 
 
 echo ========================================

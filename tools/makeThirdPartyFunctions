@@ -103,6 +103,15 @@ cpMakeFiles()
         b=${i##*/}   # basename
 
         mkdir -p $dst/$d/Make 2>/dev/null
+
+        # NOTE the behaviour of '-nt' can cause problems
+        #
+        # - bash, ksh, /usr/bin/test
+        #   True, if file1 exists and file2 does not
+        #
+        # - dash, zsh (and maybe others)
+        #   False, if file1 or file2 does not exist
+        #
         if [ ! -e $dst/$d/Make/$b -o $wmakeFiles/$i -nt $dst/$d/Make/$b ]
         then
             cp $wmakeFiles/$i $dst/$d/Make/$b

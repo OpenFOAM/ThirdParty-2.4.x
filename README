@@ -32,7 +32,7 @@
 
 ** Parallel Processing
    + openmpi     http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.1.tar.bz2
-   + scotch      http://gforge.inria.fr/frs/download.php/23390/scotch_5.1.7.tar.gz
+   + scotch      https://gforge.inria.fr/frs/download.php/27583/scotch_5.1.10b.tar.gz
 
 *** Still supported, but to be dropped in future versions
     + metis       http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/metis-5.0pre2.tar.gz

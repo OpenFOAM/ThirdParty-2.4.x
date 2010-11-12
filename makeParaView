@@ -77,7 +77,7 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: $Script [OPTION]
+usage: $Script [OPTION] [CMAKE-OPTION]
 options:
   -rebuild          for repeated builds (-make -install) *use with caution*
   -mesa             with mesa (if not already enabled)
@@ -94,13 +94,19 @@ options:
   -python-lib PATH  path to python library   (current value: ${PYTHON_LIBRARY:-none})
   -help
 
+The -no-FEATURE option can be disable these features (if not already disabled):
+  mesa mpi python qt
+
+CMake options start with a capital letter and contain an '='.
+For example,
+    $Script BUILD_TESTING=ON PARAVIEW_GENERATE_PROXY_DOCUMENTATION=OFF
+to add tests and avoid building documentation
+
 For finer control, the build stages can be selected or deselected individually:
   -config    -no-config
   -make      -no-make
   -install   -no-install
 
-The -no-FEATURE option can be disable these features (if not already disabled):
-  mesa mpi python qt
 
 * Make and install paraview-$ParaView_VERSION located under
       \$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION
@@ -130,6 +136,7 @@ getNCOMPPROCS
 #Hack: do not build documentation for plugins
 addCMakeVariable PARAVIEW_GENERATE_PROXY_DOCUMENTATION=OFF
 
+
 #
 # various building stages
 #
@@ -142,6 +149,10 @@ do
     case "$1" in
     -h | -help)
         usage
+        ;;
+    [A-Z]*=*)            # cmake variables
+        addCMakeVariable "$1"
+        shift
         ;;
     -config)             # stage 1: config only
         runCONFIG=true
