@@ -201,19 +201,6 @@ MPFR_ARCH_PATH=$installBASE/$mpfrPACKAGE
     set +x
     cmake \
         -DCMAKE_INSTALL_PREFIX=$CGAL_ARCH_PATH \
-        -DGMP_INCLUDE_DIR=$GMP_ARCH_PATH/include \
-        -DGMP_LIBRARIES_DIR=$GMP_ARCH_PATH/lib \
-        -DGMP_LIBRARIES=$GMP_ARCH_PATH/lib/libgmp.so \
-        -DGMPXX_INCLUDE_DIR=$GMP_ARCH_PATH/include \
-        -DGMPXX_LIBRARIES=$GMP_ARCH_PATH/lib/libgmpxx.so \
-        -DMPFR_INCLUDE_DIR=$MPFR_ARCH_PATH/include \
-        -DMPFR_LIBRARIES_DIR=$MPFR_ARCH_PATH/lib \
-        -DMPFR_LIBRARIES=$MPFR_ARCH_PATH/lib/libmpfr.so \
-        -DBoost_INCLUDE_DIR=$boostInc \
-        -DBoost_LIBRARY_DIRS=$boostLib \
-        -DBoost_THREAD_LIBRARY=$boostLib/libboost_thread.so \
-        -DBoost_THREAD_LIBRARY_RELEASE=$boostLib/libboost_thread.so \
-        -DBoost_VERSION=$BOOST_VERSION_NO \
         $CGAL_SOURCE_DIR \
     && make -j $WM_NCOMPPROCS \
     && make install || exit 1

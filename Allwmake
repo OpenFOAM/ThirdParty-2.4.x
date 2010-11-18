@@ -69,16 +69,18 @@ echo
 
 
 echo ========================================
-echo Compile specific mpi libraries
+echo Build MPI libraries if required
 echo
 case "$WM_MPLIB" in
 OPENMPI)
     if [ -r $MPI_ARCH_PATH/lib/libmpi.so ]
     then
         echo "have $WM_MPLIB shared library"
+        echo
     elif [ -r $MPI_ARCH_PATH/lib/libmpi.a ]
     then
         echo "have $WM_MPLIB static library"
+        echo
     else
     (
         set -x
@@ -124,9 +126,11 @@ MPICH)
     if [ -r $MPI_ARCH_PATH/lib/libmpich.so ]
     then
         echo "have $WM_MPLIB shared library"
+        echo
     elif [ -r $MPI_ARCH_PATH/lib/libmpich.a ]
     then
         echo "have $WM_MPLIB static library"
+        echo
     else
     (
         set -x
@@ -200,6 +204,7 @@ if [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
   -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
 then
     echo "have scotch shared libraries and scotch.h"
+    echo
 elif [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
     -a -r $SCOTCH_ARCH_PATH/lib/libscotch.so \
     -a -r $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so ]
@@ -257,10 +262,11 @@ fi
 }
 
 
-if [ -d "$MPI_ARCH_PATH" ]
+# build ptscotch if MPI (ThirdParty or system) is available
+if [ -d "$MPI_ARCH_PATH" -o "$WM_MPLIB" != "${WM_MPLIB#SYSTEM}" ]
 then
-    echo "========================================"
-    echo "Build PTScotch decomposition library $SCOTCH_VERSION (requires MPI)"
+    echo ========================================
+    echo "Build PTScotch decomposition library $SCOTCH_VERSION (uses MPI)"
     echo "    $SCOTCH_ARCH_PATH"
     echo
 
@@ -269,6 +275,7 @@ then
       -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
     then
         echo "have ptscotch shared libraries and ptscotch.h"
+        echo
     elif [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
         -a -r $SCOTCH_ARCH_PATH/lib/libptscotch.so \
         -a -r $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so ]
@@ -331,18 +338,22 @@ echo
 )
 
 
-# Build parMetis. Requires MPI!
-echo ========================================
-echo Build ParMetis decomposition. Requires MPI.
-echo
-if [ -d "$MPI_ARCH_PATH" ]
+# build ParMetis if MPI (ThirdParty or system) is available
+if [ -d "$MPI_ARCH_PATH" -o "$WM_MPLIB" != "${WM_MPLIB#SYSTEM}" ]
 then
 (
+    echo ========================================
+    echo "Build ParMetis decomposition (uses MPI)"
+    echo
+
     set -x
     cd ParMetis-3.1 || exit 1
 
     cpMakeFiles ParMetis/METISLib METISLib
     cpMakeFiles ParMetis/ParMETISLib ParMETISLib
+
+    # force compilation into qualified directory
+    WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
 
     wmake libso METISLib
     wmake libso ParMETISLib
@@ -399,7 +410,7 @@ else
 )
 fi
 
-
+echo
 echo ========================================
 echo Done ThirdParty Allwmake
 echo ========================================
