@@ -85,13 +85,20 @@ done
 # get the number of cores to build on
 getNCOMPPROCS
 
-# install without compiler name
+# build/install without compiler name
+buildBASE=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER_ARCH
 installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH
 
 LLVM_ARCH_PATH=$installBASE/$llvmPACKAGE
 
-# name of build directory
-buildDIR=build-$WM_ARCH$WM_COMPILER_ARCH
+# name of source directory
+# - may have a llvm/ subdirectory, depending on how the sources were fetched
+#
+sourceDIR=$WM_THIRD_PARTY_DIR/$llvmPACKAGE
+if [ -f $sourceDIR/llvm/configure ]
+then
+    sourceDIR=$sourceDIR/llvm
+fi
 
 #
 # Build LLVM
@@ -104,15 +111,16 @@ else
     echo "Starting build: $llvmPACKAGE"
     echo
 (
-    cd $llvmPACKAGE || exit 1
+    cd $sourceDIR || exit 1
     make distclean 2>/dev/null
 
+    buildDIR=$buildBASE/$llvmPACKAGE
     rm -rf $buildDIR
     mkdir -p $buildDIR
     cd $buildDIR
 
     set -x
-    ../configure \
+    $sourceDIR/configure \
         --prefix=$LLVM_ARCH_PATH \
         --enable-optimized \
     && make -j $WM_NCOMPPROCS \
