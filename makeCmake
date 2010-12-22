@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2008-2010 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -92,12 +92,17 @@ then
 else
     echo "Starting build: $cmakePACKAGE"
 (
-    cd $cmakePACKAGE || exit 1
-    rm -rf build
-    mkdir -p build
-    cd build
+    sourceDIR=$WM_THIRD_PARTY_DIR/$cmakePACKAGE
+    buildDIR=$buildBASE/$cmakePACKAGE
 
-    ../bootstrap --prefix=$prefixDIR \
+    cd $sourceDIR || exit 1
+    make distclean 2>/dev/null
+
+    rm -rf $buildDIR
+    mkdir -p $buildDIR
+    cd $buildDIR
+
+    $sourceDIR/bootstrap --prefix=$prefixDIR \
     && time make -j $WM_NCOMPPROCS \
     && make install \
     && echo "Built: $cmakePACKAGE"
