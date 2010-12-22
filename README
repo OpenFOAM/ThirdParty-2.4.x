@@ -45,7 +45,7 @@
    + fbsdmalloc  http://www.freebsd.org/cgi/cvsweb.cgi/~checkout~/src/lib/libc/stdlib/malloc.c?rev=1.43
 
 ** Misc
-   + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.0.tar.gz
+   + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.3.tar.gz
    + Qt          http://qt.nokia.com/downloads
                  http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.2.tar.gz
    + paraview    http://www.paraview.org/files/v3.6/paraview-3.6.1.tar.gz

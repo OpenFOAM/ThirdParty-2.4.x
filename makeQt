@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2008-2010 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -91,14 +91,22 @@ then
 else
     echo "Starting build: Qt-$qtVERSION"
 (
-    cd $qtPACKAGE || exit 1
+    sourceDIR=$WM_THIRD_PARTY_DIR/$qtPACKAGE
+    buildDIR=$buildBASE/$qtPACKAGE
 
+    cd $sourceDIR || exit 1
     make distclean 2>/dev/null
+
+    rm -rf $buildDIR
+    mkdir -p $buildDIR
+    cd $buildDIR
+
+    # remove old junk
     rm -rf $prefixDIR
 
     # compile as opensource, accepting LGPL conditions
     echo "yes" | \
-    ./configure \
+    $sourceDIR/configure \
         --prefix=$prefixDIR \
         -opensource \
         -nomake demos \
