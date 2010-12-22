@@ -381,7 +381,7 @@ echo
 (
     set -x
     cd tecio || exit 1
-    cpMakeFiles tecio tecsrc
+    cpMakeFiles tecio
 
     wmake libso tecsrc
 )
