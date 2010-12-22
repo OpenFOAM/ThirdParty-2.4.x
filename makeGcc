@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2008-2010 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -110,7 +110,8 @@ esac
 # get the number of cores to build on
 getNCOMPPROCS
 
-# install without compiler name
+# build/install without compiler name
+buildBASE=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER_ARCH
 installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH
 
 GCC_ARCH_PATH=$installBASE/$gccPACKAGE
@@ -139,7 +140,10 @@ else
     echo "Starting build: $gmpPACKAGE"
     echo
 (
-    cd $gmpPACKAGE || exit 1
+    sourceDIR=$WM_THIRD_PARTY_DIR/$gmpPACKAGE
+    buildDIR=$buildBASE/$gmpPACKAGE
+
+    cd $sourceDIR || exit 1
     make distclean 2>/dev/null
 
     rm -rf $buildDIR
@@ -147,7 +151,7 @@ else
     cd $buildDIR
 
     set -x
-    ../configure ABI=$ABI \
+    $sourceDIR/configure ABI=$ABI \
         --prefix=$GMP_ARCH_PATH \
         --enable-cxx \
     && make -j $WM_NCOMPPROCS \
@@ -172,7 +176,10 @@ else
     echo "Starting build: $mpfrPACKAGE"
     echo
 (
-    cd $mpfrPACKAGE || exit 1
+    sourceDIR=$WM_THIRD_PARTY_DIR/$mpfrPACKAGE
+    buildDIR=$buildBASE/$mpfrPACKAGE
+
+    cd $sourceDIR || exit 1
     make distclean 2>/dev/null
 
     rm -rf $buildDIR
@@ -180,7 +187,7 @@ else
     cd $buildDIR
 
     set -x
-    ../configure ABI=$ABI \
+    $sourceDIR/configure ABI=$ABI \
        --prefix=$MPFR_ARCH_PATH \
        --with-gmp=$GMP_ARCH_PATH \
     && make -j $WM_NCOMPPROCS \
@@ -208,7 +215,10 @@ else
     echo "Starting build: $mpcPACKAGE"
     echo
 (
-    cd $mpcPACKAGE || exit 1
+    sourceDIR=$WM_THIRD_PARTY_DIR/$mpcPACKAGE
+    buildDIR=$buildBASE/$mpcPACKAGE
+
+    cd $sourceDIR || exit 1
     make distclean 2>/dev/null
 
     rm -rf $buildDIR
@@ -216,7 +226,7 @@ else
     cd $buildDIR
 
     set -x
-    ../configure ABI=$ABI \
+    $sourceDIR/configure ABI=$ABI \
         --prefix=$MPC_ARCH_PATH \
         --with-gmp=$GMP_ARCH_PATH \
         --with-mpfr=$MPFR_ARCH_PATH \
@@ -248,7 +258,10 @@ else
     echo "Starting build: $gccPACKAGE"
     echo
 (
-    cd $gccPACKAGE || exit 1
+    sourceDIR=$WM_THIRD_PARTY_DIR/$gccPACKAGE
+    buildDIR=$buildBASE/$gccPACKAGE
+
+    cd $sourceDIR || exit 1
     make distclean 2>/dev/null
 
     unset withMpc
@@ -259,7 +272,7 @@ else
     cd $buildDIR
 
     set -x
-    ../configure \
+    $sourceDIR/configure \
         --prefix=$GCC_ARCH_PATH \
         --with-gmp=$GMP_ARCH_PATH \
         --with-mpfr=$MPFR_ARCH_PATH \

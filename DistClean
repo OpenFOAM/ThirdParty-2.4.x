@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2008-2010 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -42,12 +42,20 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 
 set -x
 
-rm -rf gcc-4.*/build
-rm -rf gmp-[45]*/build
-rm -rf mpfr-2*/build
+# gcc and associated libraries:
+rm -rf platforms/build-*/gcc-*
+rm -rf platforms/build-*/gmp-*
+rm -rf platforms/build-*/mpfr-*
+rm -rf platforms/build-*/mpc-*
 
-( cd metis-5.0pre2  && make distclean )
-( cd openmpi-1.4.1  && make distclean )
+# clang:
+rm -rf platforms/build-*/llvm-*
+
+for i in metis-5.0pre2 openmpi-1.4.1 openmpi-1.5.1
+do
+    ( cd $i && make distclean )
+done
+
 ## rm -rf $buildBASE/paraview-$ParaView_VERSION
 
 # ----------------------------------------------------------------- end-of-file
