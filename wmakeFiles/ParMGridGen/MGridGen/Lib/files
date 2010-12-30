@@ -9,4 +9,4 @@ mgridgen.c
 refine.c
 setup.c
 
-LIB = $(FOAM_LIBBIN)/libMGridGen
+LIB = $(FOAM_EXT_LIBBIN)/libMGridGen

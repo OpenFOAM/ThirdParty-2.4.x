@@ -17,5 +17,4 @@ tassert.cpp
 tecxxx.cpp
 TranslatedString.cpp
 
-LIB = $(FOAM_LIBBIN)/libtecio
-
+LIB = $(FOAM_EXT_LIBBIN)/libtecio

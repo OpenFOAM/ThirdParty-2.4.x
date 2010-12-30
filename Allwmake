@@ -37,6 +37,11 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
+[ -n "$FOAM_EXT_LIBBIN" ] || {
+    echo "Error: FOAM_EXT_LIBBIN not set"
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    exit 1
+}
 . tools/makeThirdPartyFunctions
 #------------------------------------------------------------------------------
 
@@ -200,8 +205,8 @@ echo "Build Scotch decomposition library $SCOTCH_VERSION"
 echo "    $SCOTCH_ARCH_PATH"
 
 if [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
-  -a -r $FOAM_LIBBIN/libscotch.so \
-  -a -r $FOAM_LIBBIN/libscotcherrexit.so ]
+  -a -r $FOAM_EXT_LIBBIN/libscotch.so \
+  -a -r $FOAM_EXT_LIBBIN/libscotcherrexit.so ]
 then
     echo "have scotch shared libraries and scotch.h"
     echo
@@ -213,16 +218,16 @@ then
     echo "have scotch.h in $SCOTCH_ARCH_PATH/include"
     echo "have scotch shared libraries in $SCOTCH_ARCH_PATH/lib"
     set -x
-    mkdir -p $FOAM_LIBBIN 2>/dev/null
+    mkdir -p $FOAM_EXT_LIBBIN 2>/dev/null
     cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
         $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
-        $FOAM_LIBBIN
+        $FOAM_EXT_LIBBIN
 )
 else
 (
     set -x
     cd $SCOTCH_VERSION/src || exit 1
-    mkdir -p $FOAM_LIBBIN 2>/dev/null
+    mkdir -p $FOAM_EXT_LIBBIN 2>/dev/null
     mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
 
     make realclean 2>/dev/null
@@ -251,7 +256,7 @@ else
     make $makeArgs scotch install && \
     cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
         $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
-        $FOAM_LIBBIN
+        $FOAM_EXT_LIBBIN
 )
 fi
 # verify existence of scotch include

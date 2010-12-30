@@ -2,4 +2,4 @@
 
 src/libhoard.cpp
 
-LIB = $(FOAM_LIBBIN)/libhoard
+LIB = $(FOAM_EXT_LIBBIN)/libhoard

@@ -59,4 +59,4 @@ subdomains.c
 timing.c
 util.c
 
-LIB = $(FOAM_LIBBIN)/libmetis
+LIB = $(FOAM_EXT_LIBBIN)/libmetis

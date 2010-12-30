@@ -11,4 +11,4 @@ memory.c
 sort.c
 util.c
 
-LIB = $(FOAM_LIBBIN)/libIMlib
+LIB = $(FOAM_EXT_LIBBIN)/libIMlib

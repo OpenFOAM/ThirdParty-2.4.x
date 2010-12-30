@@ -24,4 +24,4 @@ $(ccmio)/ccmioversion.c
  $(cgns)/cgnslib.c
 */
 
-LIB = $(FOAM_LIBBIN)/libccmio
+LIB = $(FOAM_EXT_LIBBIN)/libccmio

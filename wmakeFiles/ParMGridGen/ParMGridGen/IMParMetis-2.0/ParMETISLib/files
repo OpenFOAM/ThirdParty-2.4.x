@@ -17,4 +17,4 @@ timer.c
 util.c
 var.c
 
-LIB = $(FOAM_LIBBIN)/libParMETISLib
+LIB = $(FOAM_EXT_LIBBIN)/libParMETISLib

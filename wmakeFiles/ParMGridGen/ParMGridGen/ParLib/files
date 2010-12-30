@@ -10,4 +10,4 @@ parmgridgen.c
 setup.c
 util.c
 
-LIB = $(FOAM_LIBBIN)/libParMGridGen
+LIB = $(FOAM_EXT_LIBBIN)/libParMGridGen

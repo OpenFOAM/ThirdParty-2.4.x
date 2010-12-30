@@ -20,4 +20,4 @@ trunk/timers.c
 trunk/tokenizer.c
 trunk/util.c
 
-LIB = $(FOAM_LIBBIN)/libGKlib
+LIB = $(FOAM_EXT_LIBBIN)/libGKlib

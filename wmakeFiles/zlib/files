@@ -13,4 +13,4 @@ trees.c
 uncompr.c
 zutil.c
 
-LIB = $(FOAM_LIBBIN)/libz
+LIB = $(FOAM_EXT_LIBBIN)/libz
