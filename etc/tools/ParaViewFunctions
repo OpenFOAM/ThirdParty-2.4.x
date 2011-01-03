@@ -22,14 +22,14 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     makeParaViewFunctions
+#     tools/ParaViewFunctions
 #
 # Description
 #     ParaView make/install helper functions
 #
 #------------------------------------------------------------------------------
 
-# buildBASE, installBASE defined from tools/makeThirdPartyFunctions
+# buildBASE, installBASE defined from tools/ThirdPartyFunctions
 
 #
 # where things are or should be put

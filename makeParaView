@@ -132,10 +132,6 @@ case "$Script" in *-qt*)     withQT=true;; esac
 # set ParaView_MAJOR based on current value of ParaView_VERSION
 setVersion
 
-# get the number of cores to build on
-getNCOMPPROCS
-
-
 #Hack: do not build documentation for plugins
 addCMakeVariable PARAVIEW_GENERATE_PROXY_DOCUMENTATION=OFF
 

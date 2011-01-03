@@ -45,7 +45,6 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 . etc/tools/ThirdPartyFunctions
 #------------------------------------------------------------------------------
 
-
 # export WM settings in a form that GNU configure recognizes
 [ -n "$WM_CC" ]         &&  export CC="$WM_CC"
 [ -n "$WM_CXX" ]        &&  export CXX="$WM_CXX"
@@ -120,8 +119,7 @@ OPENMPI)
             $mpiWith \
             ;
 
-        make
-        make install
+        make -j $WM_NCOMPPROCS && make install
         make distclean
     )
     fi
@@ -159,8 +157,7 @@ MPICH)
             --with-device=ch_p4 \
             ;
 
-        make
-        make install
+        make -j $WM_NCOMPPROCS && make install
         make distclean
 
         if [ -r $MPI_ARCH_PATH ]
@@ -253,7 +250,7 @@ else
         makeArgs="$makeArgs CC=$WM_CC CCS=$WM_CC"
     fi
 
-    make $makeArgs scotch install && \
+    make -j $WM_NCOMPPROCS $makeArgs scotch install && \
     cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
         $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
         $FOAM_EXT_LIBBIN
@@ -327,7 +324,7 @@ then
             makeArgs="$makeArgs CC=$WM_CC CCS=$WM_CC"
         fi
 
-        make $makeArgs ptscotch install && \
+        make -j $WM_NCOMPPROCS $makeArgs ptscotch install && \
         cp  $SCOTCH_MPI_LIBBIN/libptscotch.so \
             $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so \
             $FOAM_MPI_LIBBIN
@@ -428,8 +425,7 @@ else
     ./configure \
         --prefix=$prefixDIR
 
-    make
-    make install
+    make -j $WM_NCOMPPROCS && make install
     make distclean
 )
 fi

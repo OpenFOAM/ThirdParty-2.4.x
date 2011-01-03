@@ -103,9 +103,6 @@ done
 
 #------------------------------------------------------------------------------
 
-# get the number of cores to build on
-getNCOMPPROCS
-
 #
 # Build Boost
 #

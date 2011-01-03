@@ -107,9 +107,7 @@ case "$WM_ARCH_OPTION" in
 esac
 
 
-# get the number of cores to build on
-getNCOMPPROCS
-
+#------------------------------------------------------------------------------
 # build/install without compiler name
 buildBASE=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER_ARCH
 installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH
