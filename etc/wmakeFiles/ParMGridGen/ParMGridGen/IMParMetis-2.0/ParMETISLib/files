@@ -1,0 +1,20 @@
+/* NOTE: make any changes to this file in etc/wmakeFiles/ */
+
+coarsen.c
+comm.c
+debug.c
+diffuse.c
+drivers.c
+edge_refine.c
+fused.c
+grsetup.c
+iidxsort.c
+ikeysort.c
+memory.c
+remap.c
+setup.c
+timer.c
+util.c
+var.c
+
+LIB = $(FOAM_EXT_LIBBIN)/libParMETISLib

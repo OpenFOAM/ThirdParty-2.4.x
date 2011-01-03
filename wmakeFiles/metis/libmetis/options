@@ -1,5 +1,0 @@
-/* NOTE: make any changes to this file in wmakeFiles/ */
-
-EXE_INC = \
-    -I../include \
-    -I../GKlib/trunk

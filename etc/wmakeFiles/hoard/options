@@ -1,0 +1,6 @@
+/* NOTE: make any changes to this file in etc/wmakeFiles/ */
+
+EXE_INC = -DNDEBUG -D_REENTRANT=1
+
+LIB_LIBS = \
+    -ldl -lpthread

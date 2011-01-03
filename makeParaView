@@ -38,8 +38,8 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
-. tools/makeThirdPartyFunctions
-. tools/makeParaViewFunctions
+. etc/tools/ThirdPartyFunctions
+. etc/tools/ParaViewFunctions
 #------------------------------------------------------------------------------
 #
 # USER OPTIONS:

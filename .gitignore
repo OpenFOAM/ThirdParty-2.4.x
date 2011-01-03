@@ -63,8 +63,7 @@ SunOS*Gcc*/
 /*/
 
 # do not ignore these ones
-!/patches/
-!/wmakeFiles/
+!/etc/
 
 # do not ignore the first level of these ones
 !/malloc/

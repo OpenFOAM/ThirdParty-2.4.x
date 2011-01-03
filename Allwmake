@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 1991-2011 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -42,7 +42,7 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
     echo "    Check the OpenFOAM entries in your dot-files and source them."
     exit 1
 }
-. tools/makeThirdPartyFunctions
+. etc/tools/ThirdPartyFunctions
 #------------------------------------------------------------------------------
 
 
@@ -233,7 +233,7 @@ else
     make realclean 2>/dev/null
 
     # this needs generalizing
-    makeFile=../../wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
+    makeFile=../../etc/wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
 
     if [ -f $makeFile -a ! -f Makefile.inc ]
     then

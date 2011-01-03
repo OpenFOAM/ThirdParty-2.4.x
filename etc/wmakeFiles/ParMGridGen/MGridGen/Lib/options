@@ -1,0 +1,9 @@
+/* NOTE: make any changes to this file in etc/wmakeFiles/ */
+
+TYPE_REAL=
+#if defined(SP)
+TYPE_REAL=-DTYPE_REAL
+#endif
+
+EXE_INC = -I../IMlib $(TYPE_REAL)
+LIB_LIBS = -L$(FOAM_EXT_LIBBIN) -lIMlib
