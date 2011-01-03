@@ -230,8 +230,6 @@ else
     mkdir -p $FOAM_EXT_LIBBIN 2>/dev/null
     mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
 
-    make realclean 2>/dev/null
-
     # this needs generalizing
     makeFile=../../etc/wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
 
@@ -246,6 +244,8 @@ else
         exit 1
     }
 
+    make realclean 2>/dev/null  # for safety
+
     makeArgs="prefix=$SCOTCH_ARCH_PATH"
     # handle non-gcc compilers
     if [ "${WM_CC:-gcc}" != "gcc" ]
@@ -259,6 +259,13 @@ else
         $FOAM_EXT_LIBBIN
 )
 fi
+# always cleanup after scotch build
+(
+    cd $SCOTCH_VERSION/src || exit 1
+    make realclean 2>/dev/null
+    # could also remove Makefile.inc
+)
+
 # verify existence of scotch include
 [ -f $SCOTCH_ARCH_PATH/include/scotch.h ] || {
     echo
@@ -270,9 +277,13 @@ fi
 # build ptscotch if MPI (ThirdParty or system) is available
 if [ -d "$MPI_ARCH_PATH" -o "$WM_MPLIB" != "${WM_MPLIB#SYSTEM}" ]
 then
+    # mpi-qualified lib name
+    SCOTCH_MPI_LIBBIN=${SCOTCH_ARCH_PATH}/lib/${FOAM_MPI_LIBBIN##*/}
+
     echo ========================================
     echo "Build PTScotch decomposition library $SCOTCH_VERSION (uses MPI)"
     echo "    $SCOTCH_ARCH_PATH"
+    echo "    $SCOTCH_MPI_LIBBIN"
     echo
 
     if [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
@@ -282,17 +293,17 @@ then
         echo "have ptscotch shared libraries and ptscotch.h"
         echo
     elif [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
-        -a -r $SCOTCH_ARCH_PATH/lib/libptscotch.so \
-        -a -r $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so ]
+        -a -r $SCOTCH_MPI_LIBBIN/libptscotch.so \
+        -a -r $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so ]
     then
     (
         echo "have ptscotch.h in $SCOTCH_ARCH_PATH/include"
-        echo "have ptscotch shared libraries in $SCOTCH_ARCH_PATH/lib"
+        echo "have ptscotch shared libraries in $SCOTCH_MPI_LIBBIN"
         set -x
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
 
-        cp  $SCOTCH_ARCH_PATH/lib/libptscotch.so \
-            $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so \
+        cp  $SCOTCH_MPI_LIBBIN/libptscotch.so \
+            $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so \
             $FOAM_MPI_LIBBIN
     )
     else
@@ -300,14 +311,16 @@ then
         set -x
         cd $SCOTCH_VERSION/src || exit 1
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
-        mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
+        mkdir -p $SCOTCH_MPI_LIBBIN 2>/dev/null
 
         [ -f Makefile.inc ] || {
             echo " Error: scotch needs an appropriate Makefile.inc"
             exit 1
         }
 
-        makeArgs="prefix=$SCOTCH_ARCH_PATH"
+        make realclean 2>/dev/null  # for safety
+
+        makeArgs="prefix=$SCOTCH_ARCH_PATH libdir=$SCOTCH_MPI_LIBBIN"
         # handle non-gcc compilers
         if [ "${WM_CC:-gcc}" != "gcc" ]
         then
@@ -315,8 +328,8 @@ then
         fi
 
         make $makeArgs ptscotch install && \
-        cp  $SCOTCH_ARCH_PATH/lib/libptscotch.so \
-            $SCOTCH_ARCH_PATH/lib/libptscotcherrexit.so \
+        cp  $SCOTCH_MPI_LIBBIN/libptscotch.so \
+            $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so \
             $FOAM_MPI_LIBBIN
     )
     fi
@@ -327,6 +340,12 @@ then
         echo
     }
 fi
+# always cleanup after scotch build
+(
+    cd $SCOTCH_VERSION/src || exit 1
+    make realclean 2>/dev/null
+    # could also remove Makefile.inc
+)
 
 
 echo ========================================
