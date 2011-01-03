@@ -93,18 +93,15 @@ OPENMPI)
         make distclean 2>/dev/null
         rm -rf $MPI_ARCH_PATH
 
-        unset mpiWith
+        unset configOpt
         # enable GridEngine if it appears to be in use
-        if [ -n "$SGE_ROOT" ]
-        then
-            mpiWith="$mpiWith --with-sge"
-        fi
+        [ -n "$SGE_ROOT" ] && configOpt="$configOpt --with-sge"
 
         # Infiniband support
         # if [ -d /usr/local/ofed -a -d /usr/local/ofed/lib64 ]
         # then
-        #     mpiWith="$mpiWith --with-openib=/usr/local/ofed"
-        #     mpiWith="$mpiWith --with-openib-libdir=/usr/local/ofed/lib64"
+        #     configOpt="$configOpt --with-openib=/usr/local/ofed"
+        #     configOpt="$configOpt --with-openib-libdir=/usr/local/ofed/lib64"
         # fi
 
         ./configure \
@@ -116,7 +113,7 @@ OPENMPI)
             --disable-mpi-f90 \
             --disable-mpi-cxx \
             --disable-mpi-profile \
-            $mpiWith \
+            $configOpt \
             ;
 
         make -j $WM_NCOMPPROCS && make install
@@ -224,8 +221,10 @@ else
 (
     set -x
     cd $SCOTCH_VERSION/src || exit 1
-    mkdir -p $FOAM_EXT_LIBBIN 2>/dev/null
     mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
+    mkdir -p $FOAM_EXT_LIBBIN 2>/dev/null
+
+    configOpt="prefix=$SCOTCH_ARCH_PATH"
 
     # this needs generalizing
     makeFile=../../etc/wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
@@ -241,27 +240,22 @@ else
         exit 1
     }
 
+    # handle non-gcc compilers
+    unset configEnv
+    [ "${WM_CC:-gcc}" != gcc ] && configEnv="CC=$WM_CC CCS=$WM_CC"
+
     make realclean 2>/dev/null  # for safety
 
-    makeArgs="prefix=$SCOTCH_ARCH_PATH"
-    # handle non-gcc compilers
-    if [ "${WM_CC:-gcc}" != "gcc" ]
-    then
-        makeArgs="$makeArgs CC=$WM_CC CCS=$WM_CC"
-    fi
+    make -j $WM_NCOMPPROCS $configEnv scotch \
+    && make $configOpt install \
+    && cp   $SCOTCH_ARCH_PATH/lib/libscotch.so \
+            $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
+            $FOAM_EXT_LIBBIN
 
-    make -j $WM_NCOMPPROCS $makeArgs scotch install && \
-    cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
-        $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
-        $FOAM_EXT_LIBBIN
+    # cleanup, could also remove Makefile.inc
+    make realclean 2>/dev/null
 )
 fi
-# always cleanup after scotch build
-(
-    cd $SCOTCH_VERSION/src || exit 1
-    make realclean 2>/dev/null
-    # could also remove Makefile.inc
-)
 
 # verify existence of scotch include
 [ -f $SCOTCH_ARCH_PATH/include/scotch.h ] || {
@@ -307,29 +301,33 @@ then
     (
         set -x
         cd $SCOTCH_VERSION/src || exit 1
+        mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
-        mkdir -p $SCOTCH_MPI_LIBBIN 2>/dev/null
+
+        configOpt="prefix=$SCOTCH_ARCH_PATH libdir=$SCOTCH_MPI_LIBBIN"
 
         [ -f Makefile.inc ] || {
             echo " Error: scotch needs an appropriate Makefile.inc"
             exit 1
         }
 
+        # handle non-gcc compilers
+        unset configEnv
+        [ "${WM_CC:-gcc}" != gcc ] && configEnv="CC=$WM_CC CCS=$WM_CC"
+
         make realclean 2>/dev/null  # for safety
 
-        makeArgs="prefix=$SCOTCH_ARCH_PATH libdir=$SCOTCH_MPI_LIBBIN"
-        # handle non-gcc compilers
-        if [ "${WM_CC:-gcc}" != "gcc" ]
-        then
-            makeArgs="$makeArgs CC=$WM_CC CCS=$WM_CC"
-        fi
+        make -j $WM_NCOMPPROCS $configEnv ptscotch \
+        && make $configOpt install \
+        && cp   $SCOTCH_MPI_LIBBIN/libptscotch.so \
+                $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so \
+                $FOAM_MPI_LIBBIN
 
-        make -j $WM_NCOMPPROCS $makeArgs ptscotch install && \
-        cp  $SCOTCH_MPI_LIBBIN/libptscotch.so \
-            $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so \
-            $FOAM_MPI_LIBBIN
+        # cleanup, could also remove Makefile.inc
+        make realclean 2>/dev/null
     )
     fi
+
     # verify existence of scotch include
     [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h ] || {
         echo
@@ -337,12 +335,6 @@ then
         echo
     }
 fi
-# always cleanup after scotch build
-(
-    cd $SCOTCH_VERSION/src || exit 1
-    make realclean 2>/dev/null
-    # could also remove Makefile.inc
-)
 
 
 echo ========================================
