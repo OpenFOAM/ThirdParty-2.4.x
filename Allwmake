@@ -202,15 +202,17 @@ if [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
   -a -r $FOAM_EXT_LIBBIN/libscotch.so \
   -a -r $FOAM_EXT_LIBBIN/libscotcherrexit.so ]
 then
-    echo "have scotch shared libraries and scotch.h"
+    echo "    scotch header in $SCOTCH_ARCH_PATH/include"
+    echo "    scotch libs   in $FOAM_EXT_LIBBIN"
     echo
 elif [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
     -a -r $SCOTCH_ARCH_PATH/lib/libscotch.so \
     -a -r $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so ]
 then
 (
-    echo "have scotch.h in $SCOTCH_ARCH_PATH/include"
-    echo "have scotch shared libraries in $SCOTCH_ARCH_PATH/lib"
+    echo "    scotch header in $SCOTCH_ARCH_PATH/include"
+    echo "    scotch libs   in $SCOTCH_ARCH_PATH/lib"
+    echo
     set -x
     mkdir -p $FOAM_EXT_LIBBIN 2>/dev/null
     cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
@@ -268,28 +270,26 @@ fi
 # build ptscotch if MPI (ThirdParty or system) is available
 if [ -d "$MPI_ARCH_PATH" -o "$WM_MPLIB" != "${WM_MPLIB#SYSTEM}" ]
 then
-    # mpi-qualified lib name
-    SCOTCH_MPI_LIBBIN=${SCOTCH_ARCH_PATH}/lib/${FOAM_MPI_LIBBIN##*/}
-
     echo ========================================
     echo "Build PTScotch decomposition library $SCOTCH_VERSION (uses MPI)"
     echo "    $SCOTCH_ARCH_PATH"
-    echo "    $SCOTCH_MPI_LIBBIN"
     echo
 
-    if [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
+    if [ -f $SCOTCH_MPI_INCLUDE/ptscotch.h \
       -a -r $FOAM_MPI_LIBBIN/libptscotch.so \
       -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
     then
-        echo "have ptscotch shared libraries and ptscotch.h"
+        echo "    ptscotch header in $SCOTCH_MPI_INCLUDE"
+        echo "    ptscotch libs   in $FOAM_MPI_LIBBIN"
         echo
-    elif [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h \
+    elif [ -f $SCOTCH_MPI_INCLUDE/ptscotch.h \
         -a -r $SCOTCH_MPI_LIBBIN/libptscotch.so \
         -a -r $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so ]
     then
     (
-        echo "have ptscotch.h in $SCOTCH_ARCH_PATH/include"
-        echo "have ptscotch shared libraries in $SCOTCH_MPI_LIBBIN"
+        echo "    ptscotch header in $SCOTCH_MPI_INCLUDE"
+        echo "    ptscotch libs   in $SCOTCH_MPI_LIBBIN"
+        echo
         set -x
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
 
@@ -304,7 +304,9 @@ then
         mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
         mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
 
-        configOpt="prefix=$SCOTCH_ARCH_PATH libdir=$SCOTCH_MPI_LIBBIN"
+        configOpt="prefix=$SCOTCH_ARCH_PATH"
+        configOpt="$configOpt includedir=$SCOTCH_MPI_INCLUDE"
+        configOpt="$configOpt libdir=$SCOTCH_MPI_LIBBIN"
 
         [ -f Makefile.inc ] || {
             echo " Error: scotch needs an appropriate Makefile.inc"
@@ -329,7 +331,7 @@ then
     fi
 
     # verify existence of scotch include
-    [ -f $SCOTCH_ARCH_PATH/include/ptscotch.h ] || {
+    [ -f $SCOTCH_MPI_INCLUDE/ptscotch.h ] || {
         echo
         echo "    WARNING: required include file 'ptscotch.h' not found!"
         echo
