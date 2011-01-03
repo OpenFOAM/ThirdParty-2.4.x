@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2009-2011 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -117,6 +117,9 @@ USAGE
 }
 
 #------------------------------------------------------------------------------
+
+# ensure CMake gets the correct C++ compiler
+[ -n "$WM_CXX" ] && export CXX="$WM_CXX"
 
 #
 # add options based on script name:
