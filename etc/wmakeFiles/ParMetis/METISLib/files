@@ -54,4 +54,4 @@ memory.o
 mrefine.o
 checkgraph.o
 
-LIB = $(FOAM_MPI_LIBBIN)/libmetis-parmetis
+LIB = $(FOAM_EXT_LIBBIN)/$(FOAM_MPI)/libmetis-parmetis

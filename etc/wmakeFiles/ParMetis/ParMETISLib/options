@@ -7,5 +7,4 @@ EXE_INC = $(PFLAGS) $(PINC)
 
 LIB_LIBS = \
     $(PLIBS) \
-    -L$(FOAM_MPI_LIBBIN) \
-    -lmetis-parmetis
+    -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) -lmetis-parmetis

@@ -205,28 +205,18 @@ then
     echo "    scotch header in $SCOTCH_ARCH_PATH/include"
     echo "    scotch libs   in $FOAM_EXT_LIBBIN"
     echo
-elif [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
-    -a -r $SCOTCH_ARCH_PATH/lib/libscotch.so \
-    -a -r $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so ]
-then
-(
-    echo "    scotch header in $SCOTCH_ARCH_PATH/include"
-    echo "    scotch libs   in $SCOTCH_ARCH_PATH/lib"
-    echo
-    set -x
-    mkdir -p $FOAM_EXT_LIBBIN 2>/dev/null
-    cp  $SCOTCH_ARCH_PATH/lib/libscotch.so \
-        $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
-        $FOAM_EXT_LIBBIN
-)
 else
 (
     set -x
     cd $SCOTCH_VERSION/src || exit 1
-    mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
-    mkdir -p $FOAM_EXT_LIBBIN 2>/dev/null
 
-    configOpt="prefix=$SCOTCH_ARCH_PATH"
+    prefixDIR=$SCOTCH_ARCH_PATH
+    libDIR=$FOAM_EXT_LIBBIN
+
+    mkdir -p $prefixDIR 2>/dev/null
+    mkdir -p $libDIR 2>/dev/null
+
+    configOpt="prefix=$prefixDIR libdir=$libDIR"
 
     # this needs generalizing
     makeFile=../../etc/wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
@@ -249,10 +239,7 @@ else
     make realclean 2>/dev/null  # for safety
 
     make -j $WM_NCOMPPROCS $configEnv scotch \
-    && make $configOpt install \
-    && cp   $SCOTCH_ARCH_PATH/lib/libscotch.so \
-            $SCOTCH_ARCH_PATH/lib/libscotcherrexit.so \
-            $FOAM_EXT_LIBBIN
+    && make $configOpt install
 
     # cleanup, could also remove Makefile.inc
     make realclean 2>/dev/null
@@ -275,38 +262,26 @@ then
     echo "    $SCOTCH_ARCH_PATH"
     echo
 
-    if [ -f $SCOTCH_MPI_INCLUDE/ptscotch.h \
-      -a -r $FOAM_MPI_LIBBIN/libptscotch.so \
-      -a -r $FOAM_MPI_LIBBIN/libptscotcherrexit.so ]
+    if [ -f $SCOTCH_ARCH_PATH/include/$FOAM_MPI/ptscotch.h \
+      -a -r $FOAM_EXT_LIBBIN/$FOAM_MPI/libptscotch.so \
+      -a -r $FOAM_EXT_LIBBIN/$FOAM_MPI/libptscotcherrexit.so ]
     then
-        echo "    ptscotch header in $SCOTCH_MPI_INCLUDE"
-        echo "    ptscotch libs   in $FOAM_MPI_LIBBIN"
+        echo "    ptscotch header in $SCOTCH_ARCH_PATH/include/$FOAM_MPI"
+        echo "    ptscotch libs   in $FOAM_EXT_LIBBIN/$FOAM_MPI"
         echo
-    elif [ -f $SCOTCH_MPI_INCLUDE/ptscotch.h \
-        -a -r $SCOTCH_MPI_LIBBIN/libptscotch.so \
-        -a -r $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so ]
-    then
-    (
-        echo "    ptscotch header in $SCOTCH_MPI_INCLUDE"
-        echo "    ptscotch libs   in $SCOTCH_MPI_LIBBIN"
-        echo
-        set -x
-        mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
-
-        cp  $SCOTCH_MPI_LIBBIN/libptscotch.so \
-            $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so \
-            $FOAM_MPI_LIBBIN
-    )
     else
     (
         set -x
         cd $SCOTCH_VERSION/src || exit 1
-        mkdir -p $SCOTCH_ARCH_PATH 2>/dev/null
-        mkdir -p $FOAM_MPI_LIBBIN 2>/dev/null
 
-        configOpt="prefix=$SCOTCH_ARCH_PATH"
-        configOpt="$configOpt includedir=$SCOTCH_MPI_INCLUDE"
-        configOpt="$configOpt libdir=$SCOTCH_MPI_LIBBIN"
+        prefixDIR=$SCOTCH_ARCH_PATH
+        libDIR=$FOAM_EXT_LIBBIN/$FOAM_MPI
+        incDIR=$SCOTCH_ARCH_PATH/include/$FOAM_MPI
+
+        mkdir -p $prefixDIR 2>/dev/null
+        mkdir -p $libDIR 2>/dev/null
+
+        configOpt="prefix=$prefixDIR libdir=$libDIR includedir=$incDIR"
 
         [ -f Makefile.inc ] || {
             echo " Error: scotch needs an appropriate Makefile.inc"
@@ -320,10 +295,7 @@ then
         make realclean 2>/dev/null  # for safety
 
         make -j $WM_NCOMPPROCS $configEnv ptscotch \
-        && make $configOpt install \
-        && cp   $SCOTCH_MPI_LIBBIN/libptscotch.so \
-                $SCOTCH_MPI_LIBBIN/libptscotcherrexit.so \
-                $FOAM_MPI_LIBBIN
+        && make $configOpt install
 
         # cleanup, could also remove Makefile.inc
         make realclean 2>/dev/null
@@ -331,7 +303,7 @@ then
     fi
 
     # verify existence of scotch include
-    [ -f $SCOTCH_MPI_INCLUDE/ptscotch.h ] || {
+    [ -f $SCOTCH_ARCH_PATH/include/$FOAM_MPI/ptscotch.h ] || {
         echo
         echo "    WARNING: required include file 'ptscotch.h' not found!"
         echo

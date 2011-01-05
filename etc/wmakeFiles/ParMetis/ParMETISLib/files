@@ -48,4 +48,4 @@ memory.c
 weird.c
 backcompat.c
 
-LIB = $(FOAM_MPI_LIBBIN)/libparmetis
+LIB = $(FOAM_EXT_LIBBIN)/$(FOAM_MPI)/libparmetis
