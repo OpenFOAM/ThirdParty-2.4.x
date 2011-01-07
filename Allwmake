@@ -340,43 +340,6 @@ fi
 
 
 echo ========================================
-echo Build Metis decomposition
-echo
-(
-    set -x
-    cd metis-5.0pre2 || exit 1
-    cpMakeFiles metis/GKlib GKlib
-    cpMakeFiles metis/libmetis libmetis
-
-    wmake libso GKlib
-    wmake libso libmetis
-)
-
-
-# build ParMetis if MPI (ThirdParty or system) is available
-if [ -d "$MPI_ARCH_PATH" -o "$WM_MPLIB" != "${WM_MPLIB#SYSTEM}" ]
-then
-(
-    echo ========================================
-    echo "Build ParMetis decomposition (uses MPI)"
-    echo
-
-    set -x
-    cd ParMetis-3.1 || exit 1
-
-    cpMakeFiles ParMetis/METISLib METISLib
-    cpMakeFiles ParMetis/ParMETISLib ParMETISLib
-
-    # force compilation into qualified directory
-    WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
-
-    wmake libso METISLib
-    wmake libso ParMETISLib
-)
-fi
-
-
-echo ========================================
 echo Build ParMGridGen
 echo
 (
