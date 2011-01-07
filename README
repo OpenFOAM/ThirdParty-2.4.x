@@ -53,7 +53,7 @@
    + zlib        http://www.zlib.net/zlib-1.2.3.tar.gz
    + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
    + coco-cpp    http://github.com/olesenm/coco-cpp
-   + CGAL        https://gforge.inria.fr/frs/download.php/27222/CGAL-3.6.1.tar.gz
+   + CGAL        https://gforge.inria.fr/frs/download.php/27641/CGAL-3.7.tar.gz
    + boost       http://sourceforge.net/projects/boost/files/boost/1.43.0/boost_1_43_0.tar.gz/download
 
 # --------------------------------------------------------------------------
