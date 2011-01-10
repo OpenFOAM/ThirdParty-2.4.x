@@ -64,7 +64,6 @@ echo
 (
     set -x
     cd malloc || exit 1
-    ( cd hoard-371 && cpMakeFiles hoard )
 
     cpMakeFiles fbsdmalloc fbsdmalloc
 

@@ -1,5 +1,0 @@
-/* NOTE: make any changes to this file in etc/wmakeFiles/ */
-
-src/libhoard.cpp
-
-LIB = $(FOAM_EXT_LIBBIN)/libhoard
