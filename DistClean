@@ -45,7 +45,7 @@ set -x
 # gcc, clang, paraview, etc.
 rm -rf build
 
-for i in metis-5.0pre2 openmpi-1.4.1 openmpi-1.5.1
+for i in openmpi-1.4.1 openmpi-1.5.1
 do
     ( cd $i && make distclean )
 done
