@@ -42,14 +42,8 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 
 set -x
 
-# gcc and associated libraries:
-rm -rf platforms/build-*/gcc-*
-rm -rf platforms/build-*/gmp-*
-rm -rf platforms/build-*/mpfr-*
-rm -rf platforms/build-*/mpc-*
-
-# clang:
-rm -rf platforms/build-*/llvm-*
+# gcc, clang, paraview, etc.
+rm -rf build
 
 for i in metis-5.0pre2 openmpi-1.4.1 openmpi-1.5.1
 do

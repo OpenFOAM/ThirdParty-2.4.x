@@ -32,7 +32,7 @@
 #------------------------------------------------------------------------------
 
 # define the normal build and prefix directories
-buildBASE=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER
+buildBASE=$WM_THIRD_PARTY_DIR/build/$WM_ARCH$WM_COMPILER
 installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER
 
 #

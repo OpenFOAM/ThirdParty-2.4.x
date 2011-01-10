@@ -79,11 +79,11 @@ case "$WM_MPLIB" in
 OPENMPI)
     if [ -r $MPI_ARCH_PATH/lib/libmpi.so ]
     then
-        echo "have $WM_MPLIB shared library"
+        echo "    have $WM_MPLIB shared library"
         echo
     elif [ -r $MPI_ARCH_PATH/lib/libmpi.a ]
     then
-        echo "have $WM_MPLIB static library"
+        echo "    have $WM_MPLIB static library"
         echo
     else
     (
@@ -125,11 +125,11 @@ OPENMPI)
 MPICH)
     if [ -r $MPI_ARCH_PATH/lib/libmpich.so ]
     then
-        echo "have $WM_MPLIB shared library"
+        echo "    have $WM_MPLIB shared library"
         echo
     elif [ -r $MPI_ARCH_PATH/lib/libmpich.a ]
     then
-        echo "have $WM_MPLIB static library"
+        echo "    have $WM_MPLIB static library"
         echo
     else
     (
@@ -343,7 +343,7 @@ echo
 prefixDIR=$installBASE/coco-cpp
 if [ -r $prefixDIR/bin/coco-cpp ]
 then
-    echo "have coco-cpp binary"
+    echo "    have coco-cpp binary"
 else
 (
     set -x

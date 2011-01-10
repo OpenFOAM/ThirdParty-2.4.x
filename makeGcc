@@ -109,16 +109,13 @@ esac
 
 #------------------------------------------------------------------------------
 # build/install without compiler name
-buildBASE=$WM_THIRD_PARTY_DIR/platforms/build-$WM_ARCH$WM_COMPILER_ARCH
+buildBASE=$WM_THIRD_PARTY_DIR/build/$WM_ARCH$WM_COMPILER_ARCH
 installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH
 
 GCC_ARCH_PATH=$installBASE/$gccPACKAGE
 GMP_ARCH_PATH=$installBASE/$gmpPACKAGE
 MPFR_ARCH_PATH=$installBASE/$mpfrPACKAGE
 MPC_ARCH_PATH=$installBASE/$mpcPACKAGE
-
-# name of build directory
-buildDIR=build-$WM_ARCH$WM_COMPILER_ARCH
 
 # mpc is not needed for gcc older than 4.5
 case "$gccPACKAGE" in
