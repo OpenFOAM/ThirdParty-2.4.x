@@ -47,7 +47,10 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} [cmake-VERSION]
+usage: ${0##*/} [OPTION] [cmake-VERSION]
+options:
+  -gcc              force g++ instead of the value from \$WM_CXX
+  -help
 
 * build cmake
       $cmakePACKAGE
@@ -56,6 +59,9 @@ USAGE
     exit 1
 }
 
+# ensure CMake gets the correct C++ compiler
+[ -n "$WM_CXX" ] && export CXX="$WM_CXX"
+
 
 # parse options
 while [ "$#" -gt 0 ]
@@ -63,6 +69,10 @@ do
     case "$1" in
     -h | -help)
         usage
+        ;;
+    -gcc)
+        export CXX=g++   # use g++
+        shift
         ;;
     cmake-[1-9]*)
         cmakePACKAGE="${1%%/}"
@@ -74,9 +84,6 @@ do
     esac
 done
 
-
-# ensure CMake gets the correct C++ compiler
-[ -n "$WM_CXX" ] && export CXX="$WM_CXX"
 
 #------------------------------------------------------------------------------
 prefixDIR=$installBASE/$cmakePACKAGE

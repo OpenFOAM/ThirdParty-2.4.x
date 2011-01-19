@@ -85,6 +85,7 @@ options:
   -python           with python (if not already enabled)
   -qt               with extra Qt gui support (if not already enabled)
   -qmake PATH       with the Qt version corresponding to the qmake path given
+  -gcc              force g++ instead of the value from \$WM_CXX
   -verbose          verbose output in Makefiles
   -version VER      specify an alternative version (current value: $ParaView_VERSION)
   -major   VER      specify an alternative major version for special builds
@@ -151,6 +152,10 @@ do
         ;;
     [A-Z]*=*)            # cmake variables
         addCMakeVariable "$1"
+        shift
+        ;;
+    -gcc)
+        export CXX=g++   # use g++
         shift
         ;;
     -config)             # stage 1: config only
