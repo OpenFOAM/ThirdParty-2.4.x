@@ -239,6 +239,9 @@ CMAKE_OPTIONS
     set -x
     cmake \
         -DCMAKE_INSTALL_PREFIX=$CGAL_ARCH_PATH \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DWITH_examples=true \
+        -DWITH_demos=true \
         $configBoost $configGmpMpfr \
         $CGAL_SOURCE_DIR \
     && make -j $WM_NCOMPPROCS \
