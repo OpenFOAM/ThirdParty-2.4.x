@@ -254,7 +254,7 @@ fi
 
 
 # build ptscotch if MPI (ThirdParty or system) is available
-if [ -d "$MPI_ARCH_PATH" -o "$WM_MPLIB" != "${WM_MPLIB#SYSTEM}" ]
+if [ "$FOAM_MPI" != "dummy" ]
 then
     echo ========================================
     echo "Build PTScotch decomposition library $SCOTCH_VERSION (uses MPI)"
