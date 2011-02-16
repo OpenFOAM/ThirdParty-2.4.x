@@ -58,18 +58,6 @@ echo Start ThirdParty Allwmake
 echo ========================================
 echo
 
-echo ========================================
-echo Build malloc
-echo
-(
-    set -x
-    cd malloc || exit 1
-
-    cpMakeFiles fbsdmalloc fbsdmalloc
-
-    ./Allwmake
-)
-
 
 echo ========================================
 echo Build MPI libraries if required
@@ -310,9 +298,34 @@ then
 fi
 
 
+# -----------------------------------------------------------------------------
+
+
+# malloc routines are optional
+echo ========================================
+echo Build malloc
+echo
+if [ -d malloc/fbsdmalloc ]
+then
+(
+    set -x
+    cd malloc || exit 1
+
+    cpMakeFiles fbsdmalloc fbsdmalloc
+
+    ./Allwmake
+)
+else
+    echo "    optional component was not found"
+fi
+
+
+# ParMGridGen is optional
 echo ========================================
 echo Build ParMGridGen
 echo
+if [ -d ParMGridGen-1.0 ]
+then
 (
     set -x
     cd ParMGridGen-1.0 || exit 1
@@ -322,11 +335,16 @@ echo
     wmake libso MGridGen/IMlib
     wmake libso MGridGen/Lib
 )
+else
+    echo "    optional component was not found"
+fi
 
 
+# Tecio is optional
 echo ========================================
 echo Build Tecio
-echo
+if [ -d tecio ]
+then
 (
     set -x
     cd tecio || exit 1
@@ -334,29 +352,36 @@ echo
 
     wmake libso tecsrc
 )
-
-
-echo ========================================
-echo Build coco - C++ version
-echo
-prefixDIR=$installBASE/coco-cpp
-if [ -r $prefixDIR/bin/coco-cpp ]
-then
-    echo "    have coco-cpp binary"
 else
-(
-    set -x
-    cd coco-cpp || exit 1
-
-    make distclean 2>/dev/null
-
-    ./configure \
-        --prefix=$prefixDIR
-
-    make -j $WM_NCOMPPROCS && make install
-    make distclean
-)
+    echo "    optional component was not found"
 fi
+
+
+#
+# Requires customized coco-cpp
+# could be dropped or activated in the future
+
+# echo ========================================
+# echo Build coco - C++ version
+# echo
+# prefixDIR=$installBASE/coco-cpp
+# if [ -r $prefixDIR/bin/coco-cpp ]
+# then
+#     echo "    have coco-cpp binary"
+# else
+# (
+#     set -x
+#     cd coco-cpp || exit 1
+#
+#     make distclean 2>/dev/null
+#
+#     ./configure \
+#         --prefix=$prefixDIR
+#
+#     make -j $WM_NCOMPPROCS && make install
+#     make distclean
+# )
+# fi
 
 echo
 echo ========================================
