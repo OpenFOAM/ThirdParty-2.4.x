@@ -66,11 +66,11 @@ case "$WM_MPLIB" in
 OPENMPI)
     if [ -r $MPI_ARCH_PATH/lib/libmpi.so ]
     then
-        echo "    have $WM_MPLIB shared library"
+        echo "    have $WM_MPLIB shared library ($FOAM_MPI)"
         echo
     elif [ -r $MPI_ARCH_PATH/lib/libmpi.a ]
     then
-        echo "    have $WM_MPLIB static library"
+        echo "    have $WM_MPLIB static library ($FOAM_MPI)"
         echo
     else
     (
@@ -112,11 +112,12 @@ OPENMPI)
 MPICH)
     if [ -r $MPI_ARCH_PATH/lib/libmpich.so ]
     then
-        echo "    have $WM_MPLIB shared library"
+        echo "    have $WM_MPLIB shared library ($FOAM_MPI)"
+        echo
         echo
     elif [ -r $MPI_ARCH_PATH/lib/libmpich.a ]
     then
-        echo "    have $WM_MPLIB static library"
+        echo "    have $WM_MPLIB static library ($FOAM_MPI)"
         echo
     else
     (
@@ -242,7 +243,7 @@ fi
 
 
 # build ptscotch if MPI (ThirdParty or system) is available
-if [ "$FOAM_MPI" != "dummy" ]
+if [ "${FOAM_MPI:-dummy}" != dummy ]
 then
     echo ========================================
     echo "Build PTScotch decomposition library $SCOTCH_VERSION (uses MPI)"
@@ -334,23 +335,6 @@ then
 
     wmake libso MGridGen/IMlib
     wmake libso MGridGen/Lib
-)
-else
-    echo "    optional component was not found"
-fi
-
-
-# Tecio is optional
-echo ========================================
-echo Build Tecio
-if [ -d tecio ]
-then
-(
-    set -x
-    cd tecio || exit 1
-    cpMakeFiles tecio
-
-    wmake libso tecsrc
 )
 else
     echo "    optional component was not found"
