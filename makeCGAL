@@ -220,7 +220,7 @@ CMAKE_OPTIONS
 )
 
         # not using system boost either
-        if [ "$boostInc" != /usr/Include ]
+        if [ "$boostInc" != /usr/include ]
         then
             echo "    ThirdParty     : boost"
 
