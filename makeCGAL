@@ -32,7 +32,7 @@
 gmpPACKAGE=gmp-5.0.1
 mpfrPACKAGE=mpfr-2.4.2
 cgalPACKAGE=CGAL-3.7
-boostPACKAGE=boost_1_42_0
+boostPACKAGE=boost_1_45_0
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
