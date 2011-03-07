@@ -35,7 +35,7 @@
 gmpPACKAGE=gmp-5.0.1
 mpfrPACKAGE=mpfr-2.4.2
 mpcPACKAGE=mpc-0.8.1
-gccPACKAGE=gcc-4.4.3
+gccPACKAGE=gcc-4.5.1
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -244,6 +244,7 @@ fi
 #
 # Build GCC
 # might need 32-bit glibc-devel headers to compile
+# E.g. on ubuntu install g++-multilib
 #
 echo "---------------"
 if [ -d $GCC_ARCH_PATH ]
