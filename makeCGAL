@@ -28,11 +28,19 @@
 # Description
 #     Build script for CGAL
 #
+# Note
+#     Normally builds against ThirdParty boost and gmp/mpfr when possible.
+#     To override this behaviour (and use the system boost and/or gmp/mpfr),
+#     simply specify a 'system' version. For example,
+#         makeCGAL boost-system gmp-system
+#
+#     Mixing system and ThirdParty for gmp/mpfr is not supported.
+#
 #------------------------------------------------------------------------------
-gmpPACKAGE=gmp-5.0.1
-mpfrPACKAGE=mpfr-2.4.2
 cgalPACKAGE=CGAL-3.7
 boostPACKAGE=boost_1_45_0
+gmpPACKAGE=gmp-5.0.1
+mpfrPACKAGE=mpfr-2.4.2
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -50,22 +58,32 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} [OPTION] [gmp-VERSION] [mpfr-VERSION] [CGAL-VERSION] [boost-VERSION]
+usage: ${0##*/} [OPTION] [CGAL-VERSION] [boost-VERSION] [gmp-VERSION] [mpfr-VERSION]
 options:
-   -ThirdParty    use gmp/mpfr/boost from ThirdParty dirctory
+  -gcc              force g++ instead of the value from \$WM_CXX
+  -help
 
 * build CGAL with
-      $gmpPACKAGE
-      $mpfrPACKAGE
       $cgalPACKAGE
       $boostPACKAGE
+      $gmpPACKAGE
+      $mpfrPACKAGE
+
+Normally builds against ThirdParty boost and gmp/mpfr when possible.
+To override this behaviour (and use the system boost and/o gmp/mpfr),
+simply specify a 'system' version. For example,
+    ${0##*/} boost-system gmp-system
+
+Note: mixing system and ThirdParty for gmp/mpfr is not supported.
 
 USAGE
     exit 1
 }
 
 
-unset thirdPartyOpt
+# ensure CMake gets the correct C++ compiler
+[ -n "$WM_CXX" ] && export CXX="$WM_CXX"
+
 
 # parse options
 while [ "$#" -gt 0 ]
@@ -74,15 +92,15 @@ do
     -h | -help)
         usage
         ;;
-    -ThirdParty)
-        thirdPartyOpt=true
+    -gcc)
+        export CXX=g++   # use g++
         shift
         ;;
-    gmp-[4-9]*)
+    gmp-[4-9]* | gmp-sys*)
         gmpPACKAGE="${1%%/}"
         shift
         ;;
-    mpfr-[2-9]*)
+    mpfr-[2-9]* | mpfr-sys*)
         mpfrPACKAGE="${1%%/}"
         shift
         ;;
@@ -90,7 +108,7 @@ do
         cgalPACKAGE="${1%%/}"
         shift
         ;;
-    boost-[0-9]* | boost_[0-9]* )
+    boost-[0-9]* | boost_[0-9]* | boost-sys* )
         boostPACKAGE="${1%%/}"
         shift
         ;;
@@ -108,21 +126,19 @@ done
 #
 #   BOOST_SOURCE_DIR : location of the original sources
 
+BOOST_ARCH_PATH=$installBASE/$boostPACKAGE
 BOOST_SOURCE_DIR=$WM_THIRD_PARTY_DIR/$boostPACKAGE
 
-if [ -d "$BOOST_SOURCE_DIR" ]
+if [ -d "$BOOST_ARCH_PATH" ]
 then
-    BOOST_ARCH_PATH=$installBASE/$boostPACKAGE
-
+    boostInc="$BOOST_ARCH_PATH/include"
+    boostLib="$BOOST_ARCH_PATH/lib"
+elif [ -d "$BOOST_SOURCE_DIR" ]
+then
     boostInc="$BOOST_ARCH_PATH/include"
     boostLib="$BOOST_ARCH_PATH/lib"
 
-    echo "---------------"
-    if [ -d $BOOST_ARCH_PATH ]
-    then
-        echo "Already built: boost"
-    else
-        echo "Starting build: boost"
+    echo "Starting build: boost"
     (
         cd $BOOST_SOURCE_DIR || exit 1
 
@@ -137,13 +153,10 @@ then
         echo "Error building: boost"
         exit 1
     }
-    fi
 else
-    echo "---------------"
-    echo "Using system boost"
-
     boostInc="/usr/include"
 
+    # for completeness:
     # 64-bit needs lib64, but 32-bit needs lib (not lib32)
     if [ "$WM_ARCH_OPTION" = 64 ]
     then
@@ -160,6 +173,7 @@ then
     BOOST_VERSION_NO=`sed -ne 's/^#define *BOOST_VERSION *\([0-9][0-9]*\).*$/\1/p' $boostInc/boost/version.hpp`
 else
     echo "Boost does not appear to be installed"
+    echo "stopping build"
     exit 1
 fi
 
@@ -196,17 +210,32 @@ MPFR_ARCH_PATH=$installBASE/$mpfrPACKAGE
 
     cd $CGAL_BINARY_DIR || exit 1
 
+    unset configBoost configGmpMpfr
     echo "----"
     echo "Configuring $cgalPACKAGE with boost $BOOST_VERSION_NO"
     echo "    Source         : $CGAL_SOURCE_DIR"
     echo "    Build          : $CGAL_BINARY_DIR"
     echo "    Target         : $CGAL_DIR"
 
-    unset configBoost configGmpMpfr
-    if [ "${thirdPartyOpt:-false}" = true ]
+
+    if [ -d "$BOOST_ARCH_PATH" ]
+    then
+        echo "    ThirdParty     : boost"
+        configBoost=$(cat <<CMAKE_OPTIONS
+ -DBoost_INCLUDE_DIR=$boostInc
+ -DBoost_LIBRARY_DIRS=$boostLib
+ -DBoost_THREAD_LIBRARY=$boostLib/libboost_thread.so
+ -DBoost_THREAD_LIBRARY_RELEASE=$boostLib/libboost_thread.so
+ -DBoost_VERSION=$BOOST_VERSION_NO
+CMAKE_OPTIONS
+)
+    else
+        echo "    system         : boost"
+    fi
+
+    if [ -d "$GMP_ARCH_PATH" -a -d "$MPFR_ARCH_PATH" ]
     then
         echo "    ThirdParty     : gmp/mprf"
-
         configGmpMpfr=$(cat <<CMAKE_OPTIONS
  -DGMP_INCLUDE_DIR=$GMP_ARCH_PATH/include
  -DGMP_LIBRARIES_DIR=$GMP_ARCH_PATH/lib
@@ -218,21 +247,8 @@ MPFR_ARCH_PATH=$installBASE/$mpfrPACKAGE
  -DMPFR_LIBRARIES=$MPFR_ARCH_PATH/lib/libmpfr.so
 CMAKE_OPTIONS
 )
-
-        # not using system boost either
-        if [ "$boostInc" != /usr/include ]
-        then
-            echo "    ThirdParty     : boost"
-
-            configBoost=$(cat <<CMAKE_OPTIONS
- -DBoost_INCLUDE_DIR=$boostInc
- -DBoost_LIBRARY_DIRS=$boostLib
- -DBoost_THREAD_LIBRARY=$boostLib/libboost_thread.so
- -DBoost_THREAD_LIBRARY_RELEASE=$boostLib/libboost_thread.so
- -DBoost_VERSION=$BOOST_VERSION_NO
-CMAKE_OPTIONS
-)
-        fi
+    else
+        echo "    system         : gmp/mprf"
     fi
 
     echo "----"
