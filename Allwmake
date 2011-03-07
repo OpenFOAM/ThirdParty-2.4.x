@@ -341,6 +341,23 @@ else
 fi
 
 
+# Tecio is optional
+echo ========================================
+echo Build Tecio
+if [ -d tecio ]
+then
+(
+    set -x
+    cd tecio || exit 1
+    cpMakeFiles tecio
+
+    wmake libso tecsrc
+)
+else
+    echo "    optional component was not found"
+fi
+
+
 #
 # Requires customized coco-cpp
 # could be dropped or activated in the future
