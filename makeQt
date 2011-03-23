@@ -29,7 +29,7 @@
 #     Build script for qt-everywhere-opensource-src
 #
 #------------------------------------------------------------------------------
-qtVERSION=4.6.2
+qtVERSION=4.7.2
 qtTYPE=qt-everywhere-opensource-src
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -89,6 +89,27 @@ done
 qtPACKAGE=$qtTYPE-$qtVERSION
 prefixDIR=$installBASE/qt-$qtVERSION
 
+
+#
+# create a qt.conf file in the QT bin/
+# this can be modified easily if the qt installation gets relocated
+#
+createQtConf()
+{
+    echo "creating a qt.conf file:"
+    echo
+    echo "    $prefixDIR/bin/qt.conf"
+    echo
+    echo "this eases later relocation of a QT installation"
+    echo
+
+    cat<< QT_CONF > $prefixDIR/bin/qt.conf
+[Paths]
+Prefix=$prefixDIR
+QT_CONF
+}
+
+
 #
 # Build QT
 #
@@ -126,7 +147,8 @@ else
         -nomake examples \
     && time make -j $WM_NCOMPPROCS \
     && make install \
-    && echo "Built: Qt-$qtVERSION"
+    && echo "Built: Qt-$qtVERSION" \
+    && createQtConf
 ) || {
     echo "Error building: Qt-$qtVERSION"
     exit 1

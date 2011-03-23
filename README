@@ -44,12 +44,19 @@
    + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.3.tar.gz
    + Qt          http://qt.nokia.com/downloads
                  http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.2.tar.gz
-                 http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.1.tar.gz
+                 http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.2.tar.gz
    + paraview    http://www.paraview.org/files/v3.6/paraview-3.6.1.tar.gz
    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
    + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
    + coco-cpp    http://github.com/olesenm/coco-cpp
    + CGAL        https://gforge.inria.fr/frs/download.php/27641/CGAL-3.7.tar.gz
    + boost       http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download
+
+* Notes
+  If Qt is relocated after being built, these files need adjusting:
+  + QT-PATH/bin/qt.conf
+  + QT-PATH/lib/pkgconfig/*.pc
+  Normally some combination of sed/awk/perl would be used for these
+  editing operations.
 
 # --------------------------------------------------------------------------
