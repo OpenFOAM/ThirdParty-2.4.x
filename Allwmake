@@ -80,9 +80,9 @@ OPENMPI)
         make distclean 2>/dev/null
         rm -rf $MPI_ARCH_PATH
 
-        unset configOpt
-        # enable GridEngine if it appears to be in use
-        [ -n "$SGE_ROOT" ] && configOpt="$configOpt --with-sge"
+        # start with GridEngine support,
+        # it can be built without external libraries
+        configOpt="--with-sge"
 
         # Infiniband support
         # if [ -d /usr/local/ofed -a -d /usr/local/ofed/lib64 ]
