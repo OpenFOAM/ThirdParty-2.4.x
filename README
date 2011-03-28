@@ -58,7 +58,6 @@
   If Qt is relocated after being built, these files need adjusting:
   + QT-PATH/bin/qt.conf
   + QT-PATH/lib/pkgconfig/*.pc
-  Normally some combination of sed/awk/perl would be used for these
-  editing operations.
+  The etc/relocateQt script can help here.
 
 # --------------------------------------------------------------------------
