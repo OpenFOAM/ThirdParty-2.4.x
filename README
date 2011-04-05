@@ -2,9 +2,10 @@
 #
 #+TITLE:               OpenFOAM Third-Party packages dev
 #+AUTHOR:                      OpenCFD Ltd.
-#+DATE:                        January 2011
-#+LINK:                  http://www.opencfd.co.uk
+#+DATE:                         April 2011
+#+LINK:                  http://www.OpenFOAM.com
 #+OPTIONS: author:nil ^:{}
+# Copyright (c) 2011 OpenCFD Ltd.
 
 * Description
   Scripts for building third-party packages.
@@ -31,7 +32,8 @@
            http://www.multiprecision.org/mpc/download/mpc-0.8.1.tar.gz
 
 ** Parallel Processing
-   + openmpi     http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.1.tar.bz2
+   + openmpi     http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.3.tar.bz2
+                 http://www.open-mpi.org/software/ompi/v1.5/downloads/openmpi-1.5.3.tar.bz2
    + scotch      https://gforge.inria.fr/frs/download.php/28043/scotch_5.1.11.tar.gz
 
 *** Still supported, but to be dropped due to licencing issues
@@ -41,15 +43,21 @@
    + fbsdmalloc  http://www.freebsd.org/cgi/cvsweb.cgi/~checkout~/src/lib/libc/stdlib/malloc.c?rev=1.43
 
 ** Misc
-   + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.3.tar.gz
+   + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.4.tar.gz
    + Qt          http://qt.nokia.com/downloads
+                 http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.2.tar.gz
                  http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.2.tar.gz
-                 http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.1.tar.gz
-   + paraview    http://www.paraview.org/files/v3.6/paraview-3.6.1.tar.gz
+   + paraview    http://www.paraview.org/files/v3.10/ParaView-3.10.0.tar.gz
    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
    + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
    + coco-cpp    http://github.com/olesenm/coco-cpp
    + CGAL        https://gforge.inria.fr/frs/download.php/27641/CGAL-3.7.tar.gz
    + boost       http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download
+
+* Notes
+  If Qt is relocated after being built, these files need adjusting:
+  + QT-PATH/bin/qt.conf
+  + QT-PATH/lib/pkgconfig/*.pc
+  The etc/relocateQt script can help here.
 
 # --------------------------------------------------------------------------

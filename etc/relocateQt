@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2008-2011 OpenCFD Ltd.
+#   \\  /    A nd           | Copyright (C) 2011-2011 OpenCFD Ltd.
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -23,14 +23,13 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     makeQt
+#     etc/relocateQt
 #
 # Description
-#     Build script for qt-everywhere-opensource-src
+#     Change prefix when relocating qt installation
 #
 #------------------------------------------------------------------------------
 qtVERSION=4.7.2
-qtTYPE=qt-everywhere-opensource-src
 #------------------------------------------------------------------------------
 # run from third-party directory only
 wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
@@ -50,20 +49,17 @@ usage() {
 
 usage: ${0##*/} [OPTION] [VERSION]
 options:
-  -gcc              force g++ instead of the value from \$WM_CXX
+  -force            create qt.conf and edit pkgconfig to use \${prefix}
   -help
 
-* build $qtTYPE, version $qtVERSION
+* adjust relocation prefix for $qtVERSION
 
 USAGE
     exit 1
 }
 
 
-# ensure configure gets the correct C++ compiler
-[ -n "$WM_CXX" ] && export CXX="$WM_CXX"
-
-
+unset forceOpt
 # parse options
 while [ "$#" -gt 0 ]
 do
@@ -71,8 +67,8 @@ do
     -h | -help)
         usage
         ;;
-    -gcc)
-        export CXX=g++   # use g++
+    -f | -force)
+        forceOpt=true
         shift
         ;;
     [1-9]* | qt-[1-9]*)
@@ -87,54 +83,10 @@ do
 done
 
 #------------------------------------------------------------------------------
-qtPACKAGE=$qtTYPE-$qtVERSION
 prefixDIR=$installBASE/qt-$qtVERSION
 
-
-#
-# Build QT
-#
-echo "---------------"
-if [ -d "$prefixDIR" -a -r "$prefixDIR/bin/qmake" ]
-then
-    echo "Already built: Qt-$qtVERSION"
-else
-    echo "Starting build: Qt-$qtVERSION"
-(
-    sourceDIR=$WM_THIRD_PARTY_DIR/$qtPACKAGE
-    buildDIR=$buildBASE/$qtPACKAGE
-
-    cd $sourceDIR || exit 1
-    make distclean 2>/dev/null
-
-    rm -rf $buildDIR
-    mkdir -p $buildDIR
-    cd $buildDIR
-
-    # remove old junk
-    rm -rf $prefixDIR
-
-    # remove any remnants from a previous shadow build
-    rm -f "$sourceDIR/.qmake.cache" 2>/dev/null
-    rm -f "$sourceDIR/src/corelib/global/qconfig.h" 2>/dev/null
-    rm -f "$sourceDIR/src/corelib/global/qconfig.cpp" 2>/dev/null
-
-    # compile as opensource, accepting LGPL conditions
-    echo "yes" | \
-    $sourceDIR/configure \
-        --prefix=$prefixDIR \
-        -opensource \
-        -nomake demos \
-        -nomake examples \
-    && time make -j $WM_NCOMPPROCS \
-    && make install \
-    && echo "Built: Qt-$qtVERSION" \
-    && finalizeQt
-) || {
-    echo "Error building: Qt-$qtVERSION"
-    exit 1
-}
-fi
+[ "${forceOpt:-false}" = true ] && finalizeQt
+changePrefix
 
 
 # ----------------------------------------------------------------- end-of-file
