@@ -152,7 +152,7 @@ addCMakeVariable()
 #
 addVerbosity()
 {
-    [ "$withVERBOSE" = true ] && addCMakeVariable  CMAKE_VERBOSE_MAKEFILE=TRUE
+    [ "$withVERBOSE" = true ] && addCMakeVariable  "CMAKE_VERBOSE_MAKEFILE=TRUE"
 }
 
 
@@ -164,15 +164,15 @@ addMpiSupport()
     [ "${withMPI:=false}" = true ] || return
     OBJ_ADD="$OBJ_ADD-mpi"
 
-    addCMakeVariable  PARAVIEW_USE_MPI=ON VTK_USE_MPI=ON
-    addCMakeVariable  MPI_INCLUDE_PATH=$MPI_ARCH_PATH/include
-    addCMakeVariable  MPI_LIBRARY=$MPI_ARCH_PATH/lib/libmpi.so
+    addCMakeVariable  "PARAVIEW_USE_MPI=ON VTK_USE_MPI=ON"
+    addCMakeVariable  "MPI_INCLUDE_PATH=$MPI_ARCH_PATH/include"
+    addCMakeVariable  "MPI_LIBRARY=$MPI_ARCH_PATH/lib/libmpi.so"
     if [ -e $MPI_ARCH_PATH/lib/libmpi_cxx.so ]
     then
-        addCMakeVariable  MPI_EXTRA_LIBRARY=$MPI_ARCH_PATH/lib/libmpi_cxx.so
+        addCMakeVariable  "MPI_EXTRA_LIBRARY=$MPI_ARCH_PATH/lib/libmpi_cxx.so"
     fi
-    addCMakeVariable  VTK_MPIRUN_EXE=$MPI_ARCH_PATH/bin/mpirun
-    addCMakeVariable  VTK_MPI_MAX_NUMPROCS=$MPI_MAX_PROCS
+    addCMakeVariable  "VTK_MPIRUN_EXE=$MPI_ARCH_PATH/bin/mpirun"
+    addCMakeVariable  "VTK_MPI_MAX_NUMPROCS=$MPI_MAX_PROCS"
 }
 
 
@@ -222,9 +222,9 @@ addPythonSupport()
             exit 1
         }
 
-        addCMakeVariable  PARAVIEW_ENABLE_PYTHON=ON
-        addCMakeVariable  PYTHON_INCLUDE_PATH=$pythonInclude
-        addCMakeVariable  PYTHON_LIBRARY=$PYTHON_LIBRARY
+        addCMakeVariable  "PARAVIEW_ENABLE_PYTHON=ON"
+        addCMakeVariable  "PYTHON_INCLUDE_PATH=$pythonInclude"
+        addCMakeVariable  "PYTHON_LIBRARY=$PYTHON_LIBRARY"
 
         echo "----"
         echo "Python information:"
@@ -253,9 +253,9 @@ addMesaSupport()
     then
         OBJ_ADD="$OBJ_ADD-mesa"
 
-        addCMakeVariable  VTK_OPENGL_HAS_OSMESA=ON
-        addCMakeVariable  OSMESA_INCLUDE_DIR=$MESA_INCLUDE
-        addCMakeVariable  OSMESA_LIBRARY=$MESA_LIBRARY
+        addCMakeVariable  "VTK_OPENGL_HAS_OSMESA=ON"
+        addCMakeVariable  "OSMESA_INCLUDE_DIR=$MESA_INCLUDE"
+        addCMakeVariable  "OSMESA_LIBRARY=$MESA_LIBRARY"
 
     else
        echo "*** Error: no MESA information found"
@@ -304,7 +304,7 @@ addQtSupport()
     # default to using qmake from the path
     if [ -n "$qmakeExe" ]
     then
-        addCMakeVariable QT_QMAKE_EXECUTABLE:FILEPATH=$qmakeExe
+        addCMakeVariable "QT_QMAKE_EXECUTABLE:FILEPATH=$qmakeExe"
     else
         qmakeExe=qmake
     fi
@@ -434,19 +434,18 @@ unset OBJ_ADD
 
 
 # start with these general settings
-addCMakeVariable  VTK_USE_TK:BOOL=OFF
-addCMakeVariable  BUILD_SHARED_LIBS:BOOL=ON  VTK_USE_RPATH:BOOL=OFF
-addCMakeVariable  CMAKE_BUILD_TYPE:STRING=Release
+addCMakeVariable  "VTK_USE_TK:BOOL=OFF"
+addCMakeVariable  "BUILD_SHARED_LIBS:BOOL=ON  VTK_USE_RPATH:BOOL=OFF"
+addCMakeVariable  "CMAKE_BUILD_TYPE:STRING=Release"
 
 # include development files in "make install"
-addCMakeVariable  PARAVIEW_INSTALL_DEVELOPMENT:BOOL=ON
+addCMakeVariable  "PARAVIEW_INSTALL_DEVELOPMENT:BOOL=ON"
 
 # new alternative to "make HTMLDocumentation"
-addCMakeVariable  PARAVIEW_GENERATE_PROXY_DOCUMENTATION:BOOL=ON
+addCMakeVariable  "PARAVIEW_GENERATE_PROXY_DOCUMENTATION:BOOL=ON"
 
 # don't build test tree
-addCMakeVariable  BUILD_TESTING:BOOL=OFF
-
+addCMakeVariable  "BUILD_TESTING:BOOL=OFF"
 
 # remove dependency on WebKit
 # addCMakeVariable  VTK_QT_USE_WEBKIT:BOOL=OFF
