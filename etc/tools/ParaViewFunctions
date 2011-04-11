@@ -447,6 +447,9 @@ addCMakeVariable  "PARAVIEW_GENERATE_PROXY_DOCUMENTATION:BOOL=ON"
 # don't build test tree
 addCMakeVariable  "BUILD_TESTING:BOOL=OFF"
 
+# don't pull in all external depenedencies. Rely on LD_LIBRARY_PATH
+addCMakeVariable  "PARAVIEW_INSTALL_THIRD_PARTY_LIBRARIES:BOOL=OFF"
+
 # remove dependency on WebKit
 # addCMakeVariable  VTK_QT_USE_WEBKIT:BOOL=OFF
 
