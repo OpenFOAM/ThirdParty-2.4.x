@@ -37,7 +37,7 @@
 #     Mixing system and ThirdParty for gmp/mpfr is not supported.
 #
 #------------------------------------------------------------------------------
-cgalPACKAGE=CGAL-3.7
+cgalPACKAGE=CGAL-3.8
 boostPACKAGE=boost_1_45_0
 gmpPACKAGE=gmp-5.0.1
 mpfrPACKAGE=mpfr-2.4.2

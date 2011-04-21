@@ -51,7 +51,7 @@
    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
    + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
    + coco-cpp    http://github.com/olesenm/coco-cpp
-   + CGAL        https://gforge.inria.fr/frs/download.php/27641/CGAL-3.7.tar.gz
+   + CGAL        https://gforge.inria.fr/frs/download.php/28500/CGAL-3.8.tar.gz
    + boost       http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download
 
 * Notes
