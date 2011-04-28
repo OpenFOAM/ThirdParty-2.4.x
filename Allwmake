@@ -93,7 +93,6 @@ OPENMPI)
 
         ./configure \
             --prefix=$MPI_ARCH_PATH \
-            --disable-mpirun-prefix-by-default \
             --disable-orterun-prefix-by-default \
             --enable-shared --disable-static \
             --disable-mpi-f77 \
