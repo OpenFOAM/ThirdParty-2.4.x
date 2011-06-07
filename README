@@ -14,7 +14,7 @@
   + makeGcc
   + Allwmake
   + makeQt (optional)
-  + makeParaView or makeParaView-python
+  + makeParaView
 
 ** Optional
    + AllwmakeLibccmio
@@ -36,12 +36,6 @@
                  http://www.open-mpi.org/software/ompi/v1.5/downloads/openmpi-1.5.3.tar.bz2
    + scotch      https://gforge.inria.fr/frs/download.php/28043/scotch_5.1.11.tar.gz
 
-*** Still supported, but to be dropped due to licencing issues
-    + ParMGridGen http://www-users.cs.umn.edu/~moulitsa/download/ParMGridGen-1.0.tar.gz
-
-** Allocation
-   + fbsdmalloc  http://www.freebsd.org/cgi/cvsweb.cgi/~checkout~/src/lib/libc/stdlib/malloc.c?rev=1.43
-
 ** Misc
    + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.4.tar.gz
    + Qt          http://qt.nokia.com/downloads
@@ -50,7 +44,6 @@
    + paraview    http://www.paraview.org/files/v3.10/ParaView-3.10.0.tar.gz
    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
    + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
-   + coco-cpp    http://github.com/olesenm/coco-cpp
    + CGAL        https://gforge.inria.fr/frs/download.php/28500/CGAL-3.8.tar.gz
    + boost       http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download
 
