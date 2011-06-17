@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>OpenFOAM Third-Party packages 2.0.0</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="June 2011"/>
+<meta name="author" content="OpenCFD Ltd."/>
+<style type="text/css">
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color:lightblue; font-weight:normal }
+  .target { }
+  .timestamp { color: grey }
+  .timestamp-kwd { color: CadetBlue }
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; }
+  dt { font-weight: bold; }
+</style>
+</head><body>
+<h1 class="title">OpenFOAM Third-Party packages 2.0.0</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Description</a></li>
+<li><a href="#sec-2">2 The approximate order of execution:</a>
+<ul>
+<li><a href="#sec-2.1">2.1 Optional</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Versions and locations for the third party packages used</a>
+<ul>
+<li><a href="#sec-3.1">3.1 Compiler</a></li>
+<li><a href="#sec-3.2">3.2 Parallel Processing</a></li>
+<li><a href="#sec-3.3">3.3 Misc</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Notes</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">1 Description</h2>
+<div id="text-1">
+
+<p>Scripts for building third-party packages.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">2 The approximate order of execution:</h2>
+<div id="text-2">
+
+<ul>
+<li>
+makeGcc
+</li>
+<li>
+Allwmake
+</li>
+<li>
+makeQt (optional)
+</li>
+<li>
+makeParaView
+
+</li>
+</ul>
+
+</div>
+
+<div id="outline-container-2.1" class="outline-3">
+<h3 id="sec-2.1">2.1 Optional</h3>
+<div id="text-2.1">
+
+<ul>
+<li>
+AllwmakeLibccmio
+</li>
+<li>
+DistClean
+
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">3 Versions and locations for the third party packages used</h2>
+<div id="text-3">
+
+
+
+</div>
+
+<div id="outline-container-3.1" class="outline-3">
+<h3 id="sec-3.1">3.1 Compiler</h3>
+<div id="text-3.1">
+
+<ul>
+<li>
+gcc   <a href="http://gcc.gnu.org/releases.html">http://gcc.gnu.org/releases.html</a>
+</li>
+<li>
+gmp   <a href="http://gmplib.org/">http://gmplib.org/</a>
+<a href="ftp://ftp.gnu.org/gnu/gmp/gmp-5.0.1.tar.bz2">ftp://ftp.gnu.org/gnu/gmp/gmp-5.0.1.tar.bz2</a>
+</li>
+<li>
+mpfr  <a href="http://www.mpfr.org/">http://www.mpfr.org/</a>
+<a href="http://www.mpfr.org/mpfr-current/mpfr-2.4.2.tar.bz2">http://www.mpfr.org/mpfr-current/mpfr-2.4.2.tar.bz2</a>
+</li>
+<li>
+mpc   <a href="http://www.multiprecision.org/">http://www.multiprecision.org/</a>
+<a href="http://www.multiprecision.org/mpc/download/mpc-0.8.1.tar.gz">http://www.multiprecision.org/mpc/download/mpc-0.8.1.tar.gz</a>
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-3.2" class="outline-3">
+<h3 id="sec-3.2">3.2 Parallel Processing</h3>
+<div id="text-3.2">
+
+<ul>
+<li>
+openmpi     <a href="http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.3.tar.bz2">http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.3.tar.bz2</a>
+<a href="http://www.open-mpi.org/software/ompi/v1.5/downloads/openmpi-1.5.3.tar.bz2">http://www.open-mpi.org/software/ompi/v1.5/downloads/openmpi-1.5.3.tar.bz2</a>
+</li>
+<li>
+scotch      <a href="https://gforge.inria.fr/frs/download.php/28043/scotch_5.1.11.tar.gz">https://gforge.inria.fr/frs/download.php/28043/scotch_5.1.11.tar.gz</a>
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-3.3" class="outline-3">
+<h3 id="sec-3.3">3.3 Misc</h3>
+<div id="text-3.3">
+
+<ul>
+<li>
+cmake       <a href="http://www.cmake.org/files/v2.8/cmake-2.8.4.tar.gz">http://www.cmake.org/files/v2.8/cmake-2.8.4.tar.gz</a>
+</li>
+<li>
+Qt          <a href="http://qt.nokia.com/downloads">http://qt.nokia.com/downloads</a>
+<a href="http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz">http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz</a>
+<a href="http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz">http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz</a>
+</li>
+<li>
+paraview    <a href="http://www.paraview.org/files/v3.10/ParaView-3.10.1.tar.gz">http://www.paraview.org/files/v3.10/ParaView-3.10.1.tar.gz</a>
+</li>
+<li>
+libccmio    <a href="https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz">https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz</a>
+</li>
+<li>
+tecio       <a href="http://download.tecplot.com/tecio/2009/tecio2009.zip">http://download.tecplot.com/tecio/2009/tecio2009.zip</a>
+</li>
+<li>
+CGAL        <a href="https://gforge.inria.fr/frs/download.php/28500/CGAL-3.8.tar.gz">https://gforge.inria.fr/frs/download.php/28500/CGAL-3.8.tar.gz</a>
+</li>
+<li>
+boost       <a href="http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download">http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download</a>
+
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">4 Notes</h2>
+<div id="text-4">
+
+<p>If Qt is relocated after being built, these files need adjusting:
+</p><ul>
+<li>
+QT-PATH/bin/qt.conf
+</li>
+<li>
+QT-PATH/lib/pkgconfig/*.pc
+</li>
+</ul>
+
+<p>The etc/relocateQt script can help here.
+</p>
+</div>
+</div>
+<div id="postamble"><p class="date"> Date: June 2011</p>
+<p>HTML generated by org-mode 6.06b in emacs 23<p>
+</div></body>
+</html>
