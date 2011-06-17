@@ -299,26 +299,6 @@ fi
 
 # -----------------------------------------------------------------------------
 
-
-# malloc routines are optional
-echo ========================================
-echo Build malloc
-echo
-if [ -d malloc/fbsdmalloc ]
-then
-(
-    set -x
-    cd malloc || exit 1
-
-    cpMakeFiles fbsdmalloc fbsdmalloc
-
-    ./Allwmake
-)
-else
-    echo "    optional component was not found"
-fi
-
-
 # Tecio is optional
 echo ========================================
 echo Build Tecio
