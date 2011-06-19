@@ -69,7 +69,7 @@ downloadFile()
     then
         mkdir -p download
         echo "downloading $tarFile from $url"
-        ( cd download && wget --no-check-certificate $url )
+        ( cd download && wget --no-check-certificate $url -O $file )
     fi
 }
 

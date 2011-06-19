@@ -18,7 +18,7 @@
 
 ** Optional
    + AllwmakeLibccmio
-   + DistClean
+   + Allclean
 
 * Versions and locations for the third party packages used
 
@@ -27,7 +27,7 @@
    + gmp   http://gmplib.org/
            ftp://ftp.gnu.org/gnu/gmp/gmp-5.0.1.tar.bz2
    + mpfr  http://www.mpfr.org/
-           http://www.mpfr.org/mpfr-current/mpfr-2.4.2.tar.bz2
+           ftp://ftp.gnu.org/gnu/mpfr/mpfr-2.4.2.tar.bz2
    + mpc   http://www.multiprecision.org/
            http://www.multiprecision.org/mpc/download/mpc-0.8.1.tar.gz
 
