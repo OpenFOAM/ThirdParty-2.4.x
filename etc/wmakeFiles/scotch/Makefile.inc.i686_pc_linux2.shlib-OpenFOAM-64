@@ -4,14 +4,14 @@ OBJ		= .o
 
 MAKE		= make
 AR		= gcc
-ARFLAGS		= -m32 -shared -o
+ARFLAGS		= -shared -o
 CAT		= cat
 CCS		= gcc
 CCP		= mpicc
 CCD		= mpicc
-CFLAGS		= -m32 -O3 -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -DSCOTCH_RENAME_PARSER -Drestrict=__restrict
+CFLAGS		= -O3 -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -DSCOTCH_RENAME_PARSER -Drestrict=__restrict
 CLIBFLAGS	= -fPIC
-LDFLAGS		= -m32 -lz -lm -lrt
+LDFLAGS		= -lz -lm -lrt
 CP		= cp
 LEX		= flex -Pscotchyy -olex.yy.c
 LN		= ln

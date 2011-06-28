@@ -184,6 +184,9 @@ echo ========================================
 echo "Build Scotch decomposition library $SCOTCH_VERSION"
 echo "    $SCOTCH_ARCH_PATH"
 
+# this needs generalizing
+scotchMakefile=../../etc/wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM-$WM_ARCH_OPTION
+
 if [ -f $SCOTCH_ARCH_PATH/include/scotch.h \
   -a -r $FOAM_EXT_LIBBIN/libscotch.so \
   -a -r $FOAM_EXT_LIBBIN/libscotcherrexit.so ]
@@ -204,13 +207,10 @@ else
 
     configOpt="prefix=$prefixDIR libdir=$libDIR"
 
-    # this needs generalizing
-    makeFile=../../etc/wmakeFiles/scotch/Makefile.inc.i686_pc_linux2.shlib-OpenFOAM
-
-    if [ -f $makeFile -a ! -f Makefile.inc ]
+    if [ -f $scotchMakefile ]
     then
         rm -f Makefile.inc
-        ln -s $makeFile Makefile.inc
+        ln -s $scotchMakefile Makefile.inc
     fi
 
     [ -f Makefile.inc ] || {
@@ -268,6 +268,12 @@ then
         mkdir -p $libDIR 2>/dev/null
 
         configOpt="prefix=$prefixDIR libdir=$libDIR includedir=$incDIR"
+
+        if [ -f $scotchMakefile ]
+        then
+            rm -f Makefile.inc
+            ln -s $scotchMakefile Makefile.inc
+        fi
 
         [ -f Makefile.inc ] || {
             echo " Error: scotch needs an appropriate Makefile.inc"
