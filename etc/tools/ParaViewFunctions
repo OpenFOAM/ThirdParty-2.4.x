@@ -344,6 +344,38 @@ addQtSupport()
 #
 configParaView()
 {
+    unset cmakeExe
+    if [ -n "$CMAKE_PATH" ]
+    then
+        if [ -d "$CMAKE_PATH" ]
+        then
+            if [ -x "$CMAKE_PATH/cmake" ]
+            then
+                cmakeExe=$CMAKE_PATH/cmake
+            elif [ -x "$CMAKE_PATH/bin/cmake" ]
+            then
+                cmakeExe=$CMAKE_PATH/bin/cmake
+            fi
+        elif [ -x "$CMAKE_PATH" ]
+        then
+            cmakeExe=$CMAKE_PATH
+        fi
+
+        [ -n "$cmakeExe" ] || {
+            echo
+            echo "cmake not found under specified CMAKE_PATH"
+            echo "    CMAKE_PATH=$CMAKE_PATH"
+            echo "leaving unspecified"
+            echo
+        }
+    fi
+
+    # default to using cmake from the path
+    if [ ! -n "$cmakeExe" ]
+    then
+        cmakeExe=cmake
+    fi
+
     # remove any existing build folder and recreate
     if [ -d $ParaView_BINARY_DIR ]
     then
@@ -366,7 +398,7 @@ configParaView()
     echo "    Target         : $ParaView_DIR"
     echo "----"
     echo
-    echo cmake \
+    echo "$cmakeExe" \
         -DCMAKE_INSTALL_PREFIX:PATH=$ParaView_DIR \
         $CMAKE_VARIABLES \
         $ParaView_SOURCE_DIR
@@ -375,7 +407,7 @@ configParaView()
     echo
 
     # run cmake to create Makefiles
-    cmake \
+    $cmakeExe \
         -DCMAKE_INSTALL_PREFIX:PATH=$ParaView_DIR \
         $CMAKE_VARIABLES \
         $ParaView_SOURCE_DIR

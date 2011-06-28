@@ -68,6 +68,9 @@ withQT=true
 # Set the path to the Qt-4.5 (or later) qmake if the system Qt is older
 QMAKE_PATH=""
 
+# Set the path to cmake
+CMAKE_PATH=""
+
 #
 # NO FURTHER EDITING BELOW THIS LINE
 #
@@ -84,6 +87,7 @@ options:
   -mesa             with mesa (if not already enabled)
   -mpi              with mpi (if not already enabled)
   -python           with python (if not already enabled)
+  -cmake PATH       with the cmake version corresponding to the cmake path given
   -qmake PATH       with the Qt version corresponding to the qmake path given
   -qt               with extra Qt gui support (if not already enabled)
   -qt-VER           with Qt version corresponding to
@@ -231,6 +235,11 @@ do
     -python-lib)
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
         PYTHON_LIBRARY="$2"
+        shift 2
+        ;;
+    -cmake)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        CMAKE_PATH=$2
         shift 2
         ;;
     -qmake)
