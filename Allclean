@@ -23,10 +23,10 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     DistClean
+#     AllClean
 #
 # Description
-#     Distribution clean script for ThirdParty
+#     Clean script for third-party applications and libraries
 #
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -42,7 +42,7 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 
 
 # clean various packages via 'distclean'
-for i in coco-cpp openmpi-*
+for i in openmpi-*
 do
     [ -d "$i" ] && ( set -x; cd $i && make distclean )
 done
@@ -56,7 +56,7 @@ done
 
 
 # clean out-of-source build directories
-[ -d build ] && ( set -x; rm -rf build )
+[ -d platforms ] && ( set -x; rm -rf platforms/* )
 
 
 # ----------------------------------------------------------------- end-of-file

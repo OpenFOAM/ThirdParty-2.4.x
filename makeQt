@@ -29,7 +29,7 @@
 #     Build script for qt-everywhere-opensource-src
 #
 #------------------------------------------------------------------------------
-qtVERSION=4.7.2
+qtVERSION=4.7.3
 qtTYPE=qt-everywhere-opensource-src
 #------------------------------------------------------------------------------
 # run from third-party directory only

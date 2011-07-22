@@ -41,10 +41,10 @@
 #
 setDirs()
 {
-    ParaView_SOURCE_DIR=$WM_THIRD_PARTY_DIR/paraview-$ParaView_VERSION
+    ParaView_SOURCE_DIR=$WM_THIRD_PARTY_DIR/ParaView-$ParaView_VERSION
 
     [ -d "$ParaView_SOURCE_DIR" ] || {
-        echo "did not find paraview-$ParaView_VERSION in these directories:"
+        echo "did not find ParaView-$ParaView_VERSION in these directories:"
         echo "  WM_THIRD_PARTY_DIR=$WM_THIRD_PARTY_DIR"
         echo
         echo "abort build"
