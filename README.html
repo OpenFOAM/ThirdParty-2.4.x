@@ -4,11 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 lang="en" xml:lang="en">
 <head>
-<title>Compiler</title>
+<title>OpenFOAM Third-Party packages dev</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="June 2011"/>
-<meta name="author" content="OpenCFD Ltd."/>
+<meta name="generated" content="15th August 2011"/>
+<meta name="author" content="The OpenFOAM Foundation"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
 <style type="text/css">
@@ -81,7 +81,88 @@ lang="en" xml:lang="en">
 <body>
 <div id="content">
 
-<h1 class="title">Compiler</h1>
+<h1 class="title">OpenFOAM Third-Party packages dev</h1>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Description </a></li>
+<li><a href="#sec-2">2 The approximate order of execution: </a>
+<ul>
+<li><a href="#sec-2_1">2.1 Optional </a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Versions and locations for the third party packages used </a>
+<ul>
+<li><a href="#sec-3_1">3.1 Compiler </a></li>
+<li><a href="#sec-3_2">3.2 Parallel Processing </a></li>
+<li><a href="#sec-3_3">3.3 Misc </a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Notes </a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Description </h2>
+<div class="outline-text-2" id="text-1">
+
+<p>  Scripts for building third-party packages.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> The approximate order of execution: </h2>
+<div class="outline-text-2" id="text-2">
+
+<ul>
+<li>makeGcc
+</li>
+<li>Allwmake
+</li>
+<li>makeQt (optional)
+</li>
+<li>makeParaView
+</li>
+</ul>
+
+
+
+</div>
+
+<div id="outline-container-2_1" class="outline-3">
+<h3 id="sec-2_1"><span class="section-number-3">2.1</span> Optional </h3>
+<div class="outline-text-3" id="text-2_1">
+
+<ul>
+<li>AllwmakeLibccmio
+</li>
+<li>Allclean
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Versions and locations for the third party packages used </h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+</div>
+
+<div id="outline-container-3_1" class="outline-3">
+<h3 id="sec-3_1"><span class="section-number-3">3.1</span> Compiler </h3>
+<div class="outline-text-3" id="text-3_1">
+
 <ul>
 <li>gcc   <a href="http://gcc.gnu.org/releases.html">http://gcc.gnu.org/releases.html</a>
 </li>
@@ -96,8 +177,75 @@ lang="en" xml:lang="en">
 </li>
 </ul>
 
+
+</div>
+
+</div>
+
+<div id="outline-container-3_2" class="outline-3">
+<h3 id="sec-3_2"><span class="section-number-3">3.2</span> Parallel Processing </h3>
+<div class="outline-text-3" id="text-3_2">
+
+<ul>
+<li>openmpi     <a href="http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.3.tar.bz2">http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.3.tar.bz2</a>
+                 <a href="http://www.open-mpi.org/software/ompi/v1.5/downloads/openmpi-1.5.3.tar.bz2">http://www.open-mpi.org/software/ompi/v1.5/downloads/openmpi-1.5.3.tar.bz2</a>
+</li>
+<li>scotch      <a href="https://gforge.inria.fr/frs/download.php/28043/scotch_5.1.11.tar.gz">https://gforge.inria.fr/frs/download.php/28043/scotch_5.1.11.tar.gz</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3_3" class="outline-3">
+<h3 id="sec-3_3"><span class="section-number-3">3.3</span> Misc </h3>
+<div class="outline-text-3" id="text-3_3">
+
+<ul>
+<li>cmake       <a href="http://www.cmake.org/files/v2.8/cmake-2.8.4.tar.gz">http://www.cmake.org/files/v2.8/cmake-2.8.4.tar.gz</a>
+</li>
+<li>Qt          <a href="http://qt.nokia.com/downloads">http://qt.nokia.com/downloads</a>
+                 <a href="http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz">http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz</a>
+                 <a href="http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz">http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz</a>
+</li>
+<li>paraview    <a href="http://www.paraview.org/files/v3.10/ParaView-3.10.1.tar.gz">http://www.paraview.org/files/v3.10/ParaView-3.10.1.tar.gz</a>
+</li>
+<li>libccmio    <a href="https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz">https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz</a>
+</li>
+<li>tecio       <a href="http://download.tecplot.com/tecio/2009/tecio2009.zip">http://download.tecplot.com/tecio/2009/tecio2009.zip</a>
+</li>
+<li>CGAL        <a href="https://gforge.inria.fr/frs/download.php/28500/CGAL-3.8.tar.gz">https://gforge.inria.fr/frs/download.php/28500/CGAL-3.8.tar.gz</a>
+</li>
+<li>boost       <a href="http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download">http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download</a>
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Notes </h2>
+<div class="outline-text-2" id="text-4">
+
+<p>  If Qt is relocated after being built, these files need adjusting:
+</p><ul>
+<li>QT-PATH/bin/qt.conf
+</li>
+<li>QT-PATH/lib/pkgconfig/*.pc
+</li>
+</ul>
+
+<p>  The etc/relocateQt script can help here.
+</p>
+</div>
+</div>
 <div id="postamble">
-<p class="date">Date: June 2011</p>
+<p class="date">Date: 15th August 2011</p>
 <p class="creator">Org version 7.5 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
 </div>

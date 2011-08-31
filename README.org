@@ -1,11 +1,11 @@
 #                            -*- mode: org; -*-
 #
-#+TITLE:             OpenFOAM Third-Party packages 2.0.0
-#+AUTHOR:                      OpenCFD Ltd.
-#+DATE:                         June 2011
-#+LINK:                  http://www.OpenFOAM.com
+#+TITLE:       OpenFOAM Third-Party packages dev
+#+AUTHOR:                  The OpenFOAM Foundation
+#+DATE:                        15th August 2011
+#+LINK:                     http://www.openfoam.org
 #+OPTIONS: author:nil ^:{}
-# Copyright (c) 2011 OpenCFD Ltd.
+# Copyright (c) 2011 OpenFOAM Foundation.
 
 * Description
   Scripts for building third-party packages.
