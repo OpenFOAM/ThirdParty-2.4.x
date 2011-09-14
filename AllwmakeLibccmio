@@ -30,8 +30,6 @@
 #
 #------------------------------------------------------------------------------
 packageDir=libccmio-2.6.1
-tarFile=$packageDir.tar.gz
-url="https://wci.llnl.gov/codes/visit/3rd_party/$tarFile"
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -45,19 +43,32 @@ wmakeCheckPwd "$WM_THIRD_PARTY_DIR" || {
 . etc/tools/ThirdPartyFunctions
 #------------------------------------------------------------------------------
 
+usage()
+{
+    cat<<USAGE
+
+* The license of the libccmio library is proprietary:
+
+    Users wishing to make use of its functionality should contact CD-Adapco
+    for possible download and terms of use.
+
+
+Usage: ${0##*/}
+
+* This script will install the libccmio library
+* After obtaining the $packageDir library, place in folder
+
+    $WM_THIRD_PARTY_DIR/$packageDir/
+
+USAGE
+    exit 1
+}
+
 
 # get tar.gz file if required
 if [ ! -d ${packageDir} ]
 then
-    downloadFile $tarFile $url
-
-    if [ -e download/$tarFile ]
-    then
-        echo "unpack download/$tarFile"
-        tar -xzf download/$tarFile
-    else
-        echo "no download/$tarFile to unpack"
-    fi
+    usage
 fi
 
 set -x
