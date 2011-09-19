@@ -48,6 +48,13 @@
    + boost       http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download
 
 * Notes
+  If building QT
+  + set your QT_DIR/PATH/LD_LIBRARY_PATH
+    + see the README provided with the QT sources to complete your installation
+  + when building ParaView, use the -qmake option to direct the build process to
+    your new QT install
+    + for more info, see: ./makeParaView -help
+
   If Qt is relocated after being built, these files need adjusting:
   + QT-PATH/bin/qt.conf
   + QT-PATH/lib/pkgconfig/*.pc
