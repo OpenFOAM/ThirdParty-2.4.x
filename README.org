@@ -1,8 +1,8 @@
 #                            -*- mode: org; -*-
 #
-#+TITLE:       OpenFOAM Third-Party packages dev
+#+TITLE:              OpenFOAM Third-Party packages 2.1.x
 #+AUTHOR:                  The OpenFOAM Foundation
-#+DATE:                        15th August 2011
+#+DATE:                        19th December 2011
 #+LINK:                     http://www.openfoam.org
 #+OPTIONS: author:nil ^:{}
 # Copyright (c) 2011 OpenFOAM Foundation.
@@ -32,16 +32,18 @@
            http://www.multiprecision.org/mpc/download/mpc-0.9.tar.gz
 
 ** Parallel Processing
-   + openmpi     http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.3.tar.bz2
-                 http://www.open-mpi.org/software/ompi/v1.5/downloads/openmpi-1.5.3.tar.bz2
+   + openmpi
+     - http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.3.tar.bz2
+     - http://www.open-mpi.org/software/ompi/v1.5/downloads/openmpi-1.5.3.tar.bz2
    + scotch      https://gforge.inria.fr/frs/download.php/28043/scotch_5.1.11.tar.gz
 
 ** Misc
    + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.4.tar.gz
-   + Qt          http://qt.nokia.com/downloads
-                 http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz
-                 http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz
-   + paraview    http://www.paraview.org/files/v3.10/ParaView-3.10.1.tar.gz
+   + Qt
+     - http://qt.nokia.com/downloads
+     - http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz
+     - http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz
+   + paraview    http://www.paraview.org/files/v3.12/ParaView-3.12.0.tar.gz
    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
    + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
    + CGAL        https://gforge.inria.fr/frs/download.php/28500/CGAL-3.8.tar.gz
@@ -53,7 +55,7 @@
     + see the README provided with the QT sources to complete your installation
   + when building ParaView, use the -qmake option to direct the build process to
     your new QT install
-    + for more info, see: ./makeParaView -help
+    + for more info, see: =./makeParaView -help=
 
   If Qt is relocated after being built, these files need adjusting:
   + QT-PATH/bin/qt.conf
