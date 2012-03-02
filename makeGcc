@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -32,10 +32,10 @@
 #     gcc 4.3.2 is known to miscompile GMP 4.3.x on 64-bit machines
 #
 #------------------------------------------------------------------------------
-gmpPACKAGE=gmp-5.0.1
-mpfrPACKAGE=mpfr-2.4.2
-mpcPACKAGE=mpc-0.8.1
-gccPACKAGE=gcc-4.5.1
+gmpPACKAGE=gmp-5.0.4
+mpfrPACKAGE=mpfr-3.1.0
+mpcPACKAGE=mpc-0.9
+gccPACKAGE=gcc-4.6.2
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
