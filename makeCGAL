@@ -39,8 +39,8 @@
 #------------------------------------------------------------------------------
 cgalPACKAGE=CGAL-3.9
 boostPACKAGE=boost_1_45_0
-gmpPACKAGE=gmp-5.0.2
-mpfrPACKAGE=mpfr-3.0.1
+gmpPACKAGE=gmp-5.0.4
+mpfrPACKAGE=mpfr-3.1.0
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
@@ -269,8 +269,11 @@ CMAKE_OPTIONS
 
     for i in assertions.cpp io.cpp MP_Float.cpp Random.cpp
     do
-        \cp $CGAL_SOURCE_DIR/src/CGAL/$i $CGAL_ARCH_PATH/share/src/
-        echo "\${CGAL_ARCH_PATH}/share/src/$i" >> $CGAL_ARCH_PATH/share/files
+        if [ -e "$CGAL_SOURCE_DIR/src/CGAL/$i" ]
+        then
+            \cp $CGAL_SOURCE_DIR/src/CGAL/$i $CGAL_ARCH_PATH/share/src/
+            echo "\${CGAL_ARCH_PATH}/share/src/$i" >> $CGAL_ARCH_PATH/share/files
+        fi
     done
 
     echo "Done CGAL"
