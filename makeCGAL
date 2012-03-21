@@ -39,7 +39,7 @@
 #------------------------------------------------------------------------------
 
 cgalPACKAGE=CGAL-4.0
-boostPACKAGE=boost_1_48_0
+boostPACKAGE=boost_1_45_0
 gmpPACKAGE=gmp-5.0.2
 mpfrPACKAGE=mpfr-3.0.1
 
