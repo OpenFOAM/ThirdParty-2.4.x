@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -51,11 +51,11 @@ setDirs()
         exit 1
     }
 
-    # ParaView_BINARY_DIR=$buildBASE/paraview-$ParaView_VERSION-$OBJ_ADD
-    ParaView_BINARY_DIR=$buildBASE/paraview-$ParaView_VERSION
+    # ParaView_BINARY_DIR=$buildBASE/ParaView-$ParaView_VERSION-$OBJ_ADD
+    ParaView_BINARY_DIR=$buildBASE/ParaView-$ParaView_VERSION
 
-    # ParaView_DIR=$installBASE/paraview-$ParaView_VERSION-$OBJ_ADD
-    ParaView_DIR=$installBASE/paraview-$ParaView_VERSION
+    # ParaView_DIR=$installBASE/ParaView-$ParaView_VERSION-$OBJ_ADD
+    ParaView_DIR=$installBASE/ParaView-$ParaView_VERSION
 
     export ParaView_SOURCE_DIR ParaView_BINARY_DIR ParaView_DIR
 
@@ -452,6 +452,19 @@ installParaView()
 
     make install
 
+# hack for missing files after install of version 3.14.1
+    echo "Copying missing files to install folder"
+    CMAKE_SRC_DIR=$ParaView_SOURCE_DIR/CMake
+    CMAKE_INSTALL_DIR=$ParaView_DIR/lib/paraview-$ParaView_MAJOR/CMake
+    cp -f $ParaView_SOURCE_DIR/ParaViewUse.cmake $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/generate_proxydocumentation.cmake $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/smxml_to_xml.xsl $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/xml_to_html.xsl $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/xml_to_wiki.xsl.in $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/generate_qhp.cmake $CMAKE_INSTALL_DIR
+    unset CMAKE_SRC_DIR CMAKE_INSTALL_DIR
+# --- end hack
+
 cat<< INFO
     ---
     Installation complete for paraview-$ParaView_VERSION
@@ -484,14 +497,8 @@ addCMakeVariable  "CMAKE_BUILD_TYPE:STRING=Release"
 # include development files in "make install"
 addCMakeVariable  "PARAVIEW_INSTALL_DEVELOPMENT:BOOL=ON"
 
-# new alternative to "make HTMLDocumentation"
-addCMakeVariable  "PARAVIEW_GENERATE_PROXY_DOCUMENTATION:BOOL=ON"
-
 # don't build test tree
 addCMakeVariable  "BUILD_TESTING:BOOL=OFF"
-
-# don't pull in all external depenedencies. Rely on LD_LIBRARY_PATH
-addCMakeVariable  "PARAVIEW_INSTALL_THIRD_PARTY_LIBRARIES:BOOL=OFF"
 
 # remove dependency on WebKit
 # addCMakeVariable  VTK_QT_USE_WEBKIT:BOOL=OFF
