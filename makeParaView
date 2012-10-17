@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -26,7 +26,7 @@
 #     makeParaView
 #
 # Description
-#     Make and install paraview
+#     Make and install paraview for version 3.14.1 and higher
 #     - place the paraview source under $WM_THIRD_PARTY_DIR/ParaView-VERSION
 #       (note capitalisation)
 #
@@ -139,10 +139,6 @@ case "$Script" in *-qt*)     withQT=true;; esac
 
 # set ParaView_MAJOR based on current value of ParaView_VERSION
 setVersion
-
-#Hack: do not build documentation for plugins
-addCMakeVariable PARAVIEW_GENERATE_PROXY_DOCUMENTATION=OFF
-
 
 #
 # various building stages
@@ -330,4 +326,5 @@ SUMMARY
 
 echo
 echo Done
+
 #------------------------------------------------------------------------------
