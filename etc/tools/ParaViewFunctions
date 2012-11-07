@@ -192,7 +192,7 @@ addPythonSupport()
             if [ ! -e "$PYTHON_LIBRARY" ]
             then
                 echo "*** Error: libpython not found at location specified " \
-                     "by PYTHON_LIBRARY=$PYTHON_LIBRARY"
+                     "by -pythnon-lib input: PYTHON_LIBRARY=$PYTHON_LIBRARY"
             fi
         else
             # Try to get $PYTHON_LIBRARY from dynamically linked binary
@@ -205,9 +205,10 @@ addPythonSupport()
         fi
 
         [ -e "$PYTHON_LIBRARY" ] || {
-            echo "    Please set the variable PYTHON_LIBRARY to the full"
-            echo "    path to (and including) libpython, or deactivate"
-            echo "    python support by setting withPYTHON=false"
+            echo "    Please set the full path to the python library "
+            echo "    (including libpython) using the -python-lib option, "
+            echo "    or deactivate python support by not using the -python "
+            echo "    option"
             exit 1
         }
 
@@ -218,7 +219,7 @@ addPythonSupport()
         [ -d "$pythonInclude" ] || {
             echo "    No python headers found in $pythonInclude/"
             echo "    Please install python headers or deactivate "
-            echo "    python support by setting withPYTHON=false"
+            echo "    python support by not using the -python option"
             exit 1
         }
 
@@ -236,7 +237,8 @@ addPythonSupport()
         unset pythonBin pythonInclude pythonMajor
     else
         echo "*** Error: python not found"
-        echo "***        Deactivate python support by setting withPYTHON=false"
+        echo "***        Deactivate python support by not using the -python "
+        echo "***        option"
         exit 1
     fi
 }
@@ -259,10 +261,10 @@ addMesaSupport()
 
     else
        echo "*** Error: no MESA information found"
-       echo "***        Deactivate MESA support by setting withMESA=false, or"
-       echo "***        correct the paths given by:"
-       echo "***        - MESA_INCLUDE ($MESA_INCLUDE)"
-       echo "***        - MESA_LIBRARY ($MESA_LIBRARY)"
+       echo "***        Deactivate MESA support by not using the -mesa option, "
+       echo "***        or set the correct paths for:"
+       echo "***        -mesa-include ($MESA_INCLUDE)"
+       echo "***        -mesa-lib ($MESA_LIBRARY)"
        exit 1
     fi
 }
