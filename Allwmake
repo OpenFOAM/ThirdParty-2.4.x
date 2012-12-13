@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -64,11 +64,11 @@ echo Build MPI libraries if required
 echo
 case "$WM_MPLIB" in
 OPENMPI)
-    if [ -r $MPI_ARCH_PATH/lib/libmpi.so ]
+    if [ -r $MPI_ARCH_PATH/lib${WM_COMPILER_LIB_ARCH}/libmpi.so ]
     then
         echo "    have $WM_MPLIB shared library ($FOAM_MPI)"
         echo
-    elif [ -r $MPI_ARCH_PATH/lib/libmpi.a ]
+    elif [ -r $MPI_ARCH_PATH/lib${WM_COMPILER_LIB_ARCH}/libmpi.a ]
     then
         echo "    have $WM_MPLIB static library ($FOAM_MPI)"
         echo
