@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -51,11 +51,11 @@ setDirs()
         exit 1
     }
 
-    # ParaView_BINARY_DIR=$buildBASE/paraview-$ParaView_VERSION-$OBJ_ADD
-    ParaView_BINARY_DIR=$buildBASE/paraview-$ParaView_VERSION
+    # ParaView_BINARY_DIR=$buildBASE/ParaView-$ParaView_VERSION-$OBJ_ADD
+    ParaView_BINARY_DIR=$buildBASE/ParaView-$ParaView_VERSION
 
-    # ParaView_DIR=$installBASE/paraview-$ParaView_VERSION-$OBJ_ADD
-    ParaView_DIR=$installBASE/paraview-$ParaView_VERSION
+    # ParaView_DIR=$installBASE/ParaView-$ParaView_VERSION-$OBJ_ADD
+    ParaView_DIR=$installBASE/ParaView-$ParaView_VERSION
 
     export ParaView_SOURCE_DIR ParaView_BINARY_DIR ParaView_DIR
 
@@ -192,7 +192,7 @@ addPythonSupport()
             if [ ! -e "$PYTHON_LIBRARY" ]
             then
                 echo "*** Error: libpython not found at location specified " \
-                     "by PYTHON_LIBRARY=$PYTHON_LIBRARY"
+                     "by -pythnon-lib input: PYTHON_LIBRARY=$PYTHON_LIBRARY"
             fi
         else
             # Try to get $PYTHON_LIBRARY from dynamically linked binary
@@ -205,9 +205,10 @@ addPythonSupport()
         fi
 
         [ -e "$PYTHON_LIBRARY" ] || {
-            echo "    Please set the variable PYTHON_LIBRARY to the full"
-            echo "    path to (and including) libpython, or deactivate"
-            echo "    python support by setting withPYTHON=false"
+            echo "    Please set the full path to the python library "
+            echo "    (including libpython) using the -python-lib option, "
+            echo "    or deactivate python support by not using the -python "
+            echo "    option"
             exit 1
         }
 
@@ -218,7 +219,7 @@ addPythonSupport()
         [ -d "$pythonInclude" ] || {
             echo "    No python headers found in $pythonInclude/"
             echo "    Please install python headers or deactivate "
-            echo "    python support by setting withPYTHON=false"
+            echo "    python support by not using the -python option"
             exit 1
         }
 
@@ -236,7 +237,8 @@ addPythonSupport()
         unset pythonBin pythonInclude pythonMajor
     else
         echo "*** Error: python not found"
-        echo "***        Deactivate python support by setting withPYTHON=false"
+        echo "***        Deactivate python support by not using the -python "
+        echo "***        option"
         exit 1
     fi
 }
@@ -259,10 +261,10 @@ addMesaSupport()
 
     else
        echo "*** Error: no MESA information found"
-       echo "***        Deactivate MESA support by setting withMESA=false, or"
-       echo "***        correct the paths given by:"
-       echo "***        - MESA_INCLUDE ($MESA_INCLUDE)"
-       echo "***        - MESA_LIBRARY ($MESA_LIBRARY)"
+       echo "***        Deactivate MESA support by not using the -mesa option, "
+       echo "***        or set the correct paths for:"
+       echo "***        -mesa-include ($MESA_INCLUDE)"
+       echo "***        -mesa-lib ($MESA_LIBRARY)"
        exit 1
     fi
 }
@@ -452,6 +454,19 @@ installParaView()
 
     make install
 
+# hack for missing files after install of version 3.14.1
+    echo "Copying missing files to install folder"
+    CMAKE_SRC_DIR=$ParaView_SOURCE_DIR/CMake
+    CMAKE_INSTALL_DIR=$ParaView_DIR/lib/paraview-$ParaView_MAJOR/CMake
+    cp -f $ParaView_SOURCE_DIR/ParaViewUse.cmake $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/generate_proxydocumentation.cmake $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/smxml_to_xml.xsl $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/xml_to_html.xsl $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/xml_to_wiki.xsl.in $CMAKE_INSTALL_DIR
+    cp -f $CMAKE_SRC_DIR/generate_qhp.cmake $CMAKE_INSTALL_DIR
+    unset CMAKE_SRC_DIR CMAKE_INSTALL_DIR
+# --- end hack
+
 cat<< INFO
     ---
     Installation complete for paraview-$ParaView_VERSION
@@ -484,14 +499,8 @@ addCMakeVariable  "CMAKE_BUILD_TYPE:STRING=Release"
 # include development files in "make install"
 addCMakeVariable  "PARAVIEW_INSTALL_DEVELOPMENT:BOOL=ON"
 
-# new alternative to "make HTMLDocumentation"
-addCMakeVariable  "PARAVIEW_GENERATE_PROXY_DOCUMENTATION:BOOL=ON"
-
 # don't build test tree
 addCMakeVariable  "BUILD_TESTING:BOOL=OFF"
-
-# don't pull in all external depenedencies. Rely on LD_LIBRARY_PATH
-addCMakeVariable  "PARAVIEW_INSTALL_THIRD_PARTY_LIBRARIES:BOOL=OFF"
 
 # remove dependency on WebKit
 # addCMakeVariable  VTK_QT_USE_WEBKIT:BOOL=OFF
