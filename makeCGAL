@@ -148,7 +148,8 @@ then
         ./bootstrap.sh \
             --prefix=$BOOST_ARCH_PATH \
             --with-libraries=thread \
-        && ./bjam -j $WM_NCOMPPROCS install \
+            --with-libraries=system \
+        && ./bjam toolset=$WM_CC -j $WM_NCOMPPROCS install \
         && echo "Built: boost"
     ) || {
         echo "Error building: boost"
@@ -198,7 +199,6 @@ installBASE=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH
 GMP_ARCH_PATH=$installBASE/$gmpPACKAGE
 MPFR_ARCH_PATH=$installBASE/$mpfrPACKAGE
 
-
 (
     # remove any existing build folder and recreate
     if [ -d $CGAL_BINARY_DIR ]
@@ -227,6 +227,8 @@ MPFR_ARCH_PATH=$installBASE/$mpfrPACKAGE
  -DBoost_LIBRARY_DIRS=$boostLib
  -DBoost_THREAD_LIBRARY=$boostLib/libboost_thread.so
  -DBoost_THREAD_LIBRARY_RELEASE=$boostLib/libboost_thread.so
+ -DBoost_SYSTEM_LIBRARY=$boostLib/libboost_system.so
+ -DBoost_SYSTEM_LIBRARY_RELEASE=$boostLib/libboost_system.so
  -DBoost_VERSION=$BOOST_VERSION_NO
 CMAKE_OPTIONS
 )
@@ -241,8 +243,6 @@ CMAKE_OPTIONS
  -DGMP_INCLUDE_DIR=$GMP_ARCH_PATH/include
  -DGMP_LIBRARIES_DIR=$GMP_ARCH_PATH/lib
  -DGMP_LIBRARIES=$GMP_ARCH_PATH/lib/libgmp.so
- -DGMPXX_INCLUDE_DIR=$GMP_ARCH_PATH/include
- -DGMPXX_LIBRARIES=$GMP_ARCH_PATH/lib/libgmpxx.so
  -DMPFR_INCLUDE_DIR=$MPFR_ARCH_PATH/include
  -DMPFR_LIBRARIES_DIR=$MPFR_ARCH_PATH/lib
  -DMPFR_LIBRARIES=$MPFR_ARCH_PATH/lib/libmpfr.so
