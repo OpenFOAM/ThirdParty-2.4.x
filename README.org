@@ -1,11 +1,11 @@
 #                            -*- mode: org; -*-
 #
-#+TITLE:              OpenFOAM Third-Party packages 2.1.x
+#+TITLE:              OpenFOAM Third-Party packages 2.2.x
 #+AUTHOR:                  The OpenFOAM Foundation
-#+DATE:                        19th December 2011
+#+DATE:                        6th March 2013
 #+LINK:                     http://www.openfoam.org
 #+OPTIONS: author:nil ^:{}
-# Copyright (c) 2011 OpenFOAM Foundation.
+# Copyright (c) 2013 OpenFOAM Foundation.
 
 * Description
   Scripts for building third-party packages.
@@ -16,50 +16,56 @@
   + makeQt (optional)
   + makeParaView
 
-** Optional
-   + AllwmakeLibccmio
-   + Allclean
+*** Optional
+    + AllwmakeLibccmio
+    + Allclean
+
 
 * Versions and locations for the third party packages used
+*** Compiler
+    The minimum version of gcc required is 4.5.0
+    + gcc   http://gcc.gnu.org/releases.html
+    + gmp   http://gmplib.org/
+            ftp://ftp.gnu.org/gnu/gmp/gmp-5.0.4.tar.bz2
+    + mpfr  http://www.mpfr.org/
+            ftp://ftp.gnu.org/gnu/mpfr/mpfr-3.1.0.tar.bz2
+    + mpc   http://www.multiprecision.org/
+            http://www.multiprecision.org/mpc/download/mpc-0.9.tar.gz
 
-** Compiler
-   + gcc   http://gcc.gnu.org/releases.html
-   + gmp   http://gmplib.org/
-           ftp://ftp.gnu.org/gnu/gmp/gmp-5.0.2.tar.bz2
-   + mpfr  http://www.mpfr.org/
-           ftp://ftp.gnu.org/gnu/mpfr/mpfr-3.0.1.tar.bz2
-   + mpc   http://www.multiprecision.org/
-           http://www.multiprecision.org/mpc/download/mpc-0.9.tar.gz
+*** Parallel Processing
+    + openmpi
+      - http://www.open-mpi.org/software/ompi/v1.6/downloads/openmpi-1.6.3.tar.bz2
+    + scotch      https://gforge.inria.fr/frs/download.php/31831/scotch_6.0.0.tar.gz
 
-** Parallel Processing
-   + openmpi
-     - http://www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.3.tar.bz2
-     - http://www.open-mpi.org/software/ompi/v1.5/downloads/openmpi-1.5.3.tar.bz2
-   + scotch      https://gforge.inria.fr/frs/download.php/28043/scotch_5.1.11.tar.gz
+*** Misc
+    + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.4.tar.gz
+    + Qt
+      - http://qt-project.org/downloads
+      - ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz
+      - ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz
+    + paraview    http://www.paraview.org/files/v3.12/ParaView-3.12.0.tar.gz
+    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
+    + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
+    + CGAL        https://gforge.inria.fr/frs/download.php/31175/CGAL-4.0.2.tar.gz
+    + boost       http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download
 
-** Misc
-   + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.4.tar.gz
-   + Qt
-     - http://qt.nokia.com/downloads
-     - http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz
-     - http://get.qt.nokia.com/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz
-   + paraview    http://www.paraview.org/files/v3.12/ParaView-3.12.0.tar.gz
-   + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
-   + tecio       http://download.tecplot.com/tecio/2009/tecio2009.zip
-   + CGAL        https://gforge.inria.fr/frs/download.php/29125/CGAL-3.9.tar.gz
-   + boost       http://sourceforge.net/projects/boost/files/boost/1.45.0/boost_1_45_0.tar.bz2/download
 
 * Notes
-  If building QT
-  + set your QT_DIR/PATH/LD_LIBRARY_PATH
-    + see the README provided with the QT sources to complete your installation
-  + when building ParaView, use the -qmake option to direct the build process to
-    your new QT install
-    + for more info, see: =./makeParaView -help=
+*** Buiding ParaView
+    The ParaView sources included in this pack include a minor change compared
+    to the official version 3.12 distribution, based on the VTK mantis report:
+    + http://vtk.org/Bug/view.php?id=12881
 
-  If Qt is relocated after being built, these files need adjusting:
-  + QT-PATH/bin/qt.conf
-  + QT-PATH/lib/pkgconfig/*.pc
-  The etc/relocateQt script can help here.
+*** Building QT
+    + set your QT_DIR/PATH/LD_LIBRARY_PATH
+      + see the README provided with the QT sources to complete your installation
+    + when building ParaView, use the -qmake option to direct the build process to
+      your new QT install
+      + for more info, see: =./makeParaView -help=
+
+    If Qt is relocated after being built, these files need adjusting:
+    + QT-PATH/bin/qt.conf
+    + QT-PATH/lib/pkgconfig/*.pc
+    The etc/relocateQt script can help here.
 
 # --------------------------------------------------------------------------
