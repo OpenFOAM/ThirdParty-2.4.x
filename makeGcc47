@@ -35,7 +35,7 @@
 gmpPACKAGE=gmp-5.0.2
 mpfrPACKAGE=mpfr-3.0.1
 mpcPACKAGE=mpc-0.9
-gccPACKAGE=gcc-4.7.1
+gccPACKAGE=gcc-4.7.2
 
 #------------------------------------------------------------------------------
 # run from third-party directory only
