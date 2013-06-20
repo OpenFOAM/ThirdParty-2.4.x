@@ -37,6 +37,7 @@
 #     Mixing system and ThirdParty for gmp/mpfr is not supported.
 #
 #------------------------------------------------------------------------------
+set -x
 
 cgalPACKAGE=CGAL-4.0
 boostPACKAGE=boost_1_45_0
@@ -234,6 +235,10 @@ CMAKE_OPTIONS
 )
     else
         echo "    system         : boost"
+        configBoost=$(cat <<CMAKE_OPTIONS
+ -DBOOST_LIBRARYDIR=$boostLib
+CMAKE_OPTIONS
+)
     fi
 
     if [ -d "$GMP_ARCH_PATH" -a -d "$MPFR_ARCH_PATH" ]
