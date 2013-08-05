@@ -306,6 +306,35 @@ fi
 
 # -----------------------------------------------------------------------------
 
+# Metis is optional
+echo ========================================
+echo Build Metis decomposition
+
+# get METIS_VERSION, METIS_ARCH_PATH
+if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config/metis.sh`
+then
+    . $settings
+fi
+if [ -d "$METIS_VERSION" ]
+then
+
+    if [ -f $METIS_ARCH_PATH/include/metis.h \
+      -a -r $METIS_ARCH_PATH/lib/libmetis.so ]
+    then
+        echo "    metis header in $METIS_ARCH_PATH/include"
+        echo "    metis libs   in $METIS_ARCH_PATH/lib"
+        echo
+    else
+        set -x
+        cd $METIS_VERSION  || exit 1
+        make config shared=1 prefix=$METIS_ARCH_PATH
+        make -j $WM_NCOMPPROCS install
+    fi
+else
+    echo "    optional component Metis was not found"
+fi
+
+
 # Tecio is optional
 echo ========================================
 echo Build Tecio
