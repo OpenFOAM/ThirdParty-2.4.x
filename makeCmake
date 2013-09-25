@@ -72,7 +72,8 @@ do
         usage
         ;;
     -gcc)
-        export CXX=g++   # use g++
+        export CC=gcc   # use gcc
+        export CXX=g++  # use g++
         shift
         ;;
     cmake-[1-9]*)
