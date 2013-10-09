@@ -128,6 +128,7 @@ USAGE
 
 # ensure CMake gets the correct C++ compiler
 [ -n "$WM_CXX" ] && export CXX="$WM_CXX"
+[ -n "$WM_CC" ] && export CC="$WM_CC"
 
 #
 # add options based on script name:
