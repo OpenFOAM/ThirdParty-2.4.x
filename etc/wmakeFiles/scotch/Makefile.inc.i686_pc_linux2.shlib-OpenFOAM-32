@@ -11,7 +11,7 @@ CCP		= mpicc
 CCD		= mpicc
 CFLAGS		= -m32 -O3 -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -Drestrict=__restrict
 CLIBFLAGS	= -shared -fPIC
-LDFLAGS		= -L$MPI_ARCH_PATH/lib -m32 -lz -lm -lrt
+LDFLAGS		= -Xlinker --no-as-needed -L$MPI_ARCH_PATH/lib -m32 -lz -lm -lrt
 CP		= cp
 LEX		= flex -Pscotchyy -olex.yy.c
 LN		= ln
