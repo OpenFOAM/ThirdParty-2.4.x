@@ -13,6 +13,7 @@
 * The approximate order of execution:
   + makeGcc
   + Allwmake
+  + makeCmake (if the system cmake version is < 2.8.8)
   + makeQt (optional)
   + makeParaView4
 
