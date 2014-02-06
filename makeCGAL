@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -39,10 +39,10 @@
 #------------------------------------------------------------------------------
 set -x
 
-cgalPACKAGE=CGAL-4.0
-boostPACKAGE=boost_1_45_0
-gmpPACKAGE=gmp-5.0.2
-mpfrPACKAGE=mpfr-3.0.1
+cgalPACKAGE=CGAL-4.3
+boostPACKAGE=boost-system
+gmpPACKAGE=gmp-system
+mpfrPACKAGE=mpfr-system
 
 #------------------------------------------------------------------------------
 # run from third-party directory only

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -336,17 +336,19 @@ else
 fi
 
 
-# Tecio is optional
+# CGAL is optional
 echo ========================================
-echo Build Tecio
-if [ -d tecio ]
+echo Build CGAL
+if [ -n "$CGAL_ARCH_PATH" ]
 then
 (
-    set -x
-    cd tecio || exit 1
-    cpMakeFiles tecio
-
-    wmake libso tecsrc
+    if [ -r $CGAL_ARCH_PATH/lib/libCGAL.so ]
+    then
+        echo "    CGAL headers in $CGAL_ARCH_PATH/include"
+        echo "    CGAL libs    in $CGAL_ARCH_PATH/lib"
+    else
+        ./makeCGAL
+    fi
 )
 else
     echo "    optional component was not found"
