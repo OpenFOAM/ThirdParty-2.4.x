@@ -14,7 +14,7 @@
   + makeGcc
   + Allwmake
   + makeQt (optional)
-  + makeParaView
+  + makeParaView4
 
 *** Optional
     + AllwmakeLibccmio
