@@ -1,0 +1,71 @@
+#                            -*- mode: org; -*-
+#
+#+TITLE:              OpenFOAM Third-Party packages 2.3.0
+#+AUTHOR:                  The OpenFOAM Foundation
+#+DATE:                       9th February 2014
+#+LINK:                     http://www.openfoam.org
+#+OPTIONS: author:nil ^:{}
+# Copyright (c) 2014 OpenFOAM Foundation.
+
+* Description
+  Scripts for building third-party packages.
+
+* The approximate order of execution:
+  + makeGcc
+  + Allwmake
+  + makeCmake (if the system cmake version is < 2.8.8)
+  + makeQt (optional)
+  + makeParaView4
+
+*** Optional
+    + AllwmakeLibccmio
+    + Allclean
+
+* Versions and locations for the third party packages used
+*** Compiler
+    The minimum version of gcc required is 4.5.0
+    + gcc   http://gcc.gnu.org/releases.html
+    + gmp   http://gmplib.org/
+            ftp://ftp.gnu.org/gnu/gmp/gmp-5.1.2.tar.bz2
+    + mpfr  http://www.mpfr.org/
+            ftp://ftp.gnu.org/gnu/mpfr/mpfr-3.1.2.tar.bz2
+    + mpc   http://www.multiprecision.org/
+            http://www.multiprecision.org/mpc/download/mpc-1.0.1.tar.gz
+
+*** Parallel Processing
+    + openmpi
+      - http://www.open-mpi.org/software/ompi/v1.6/downloads/openmpi-1.6.5.tar.bz2
+    + scotch
+      - https://gforge.inria.fr/frs/download.php/31831/scotch_6.0.0.tar.gz
+
+*** Misc
+    + cmake       http://www.cmake.org/files/v2.8/cmake-2.8.12.1.tar.gz
+    + Qt
+      - http://qt-project.org/downloads
+      - ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz
+      - ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz
+    + paraview    http://www.paraview.org/files/v4.1/ParaView-v4.1.0-source.tar.gz
+    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
+    + CGAL        https://gforge.inria.fr/frs/download.php/31175/CGAL-4.3.tar.gz
+    + boost       http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download
+
+* Notes
+*** Buiding ParaView
+    The ParaView sources included in this pack includes minor changes compared
+    to the official version 4.1.0 distribution to enable building on
+    OpenSuSE-11.4.
+
+*** Building QT
+    + set your QT_DIR/PATH/LD_LIBRARY_PATH
+      + see the README provided with the QT sources to complete your
+        installation
+    + when building ParaView, use the -qmake option to direct the build process
+      to your new QT install
+      + for more info, see: =./makeParaView -help=
+
+    If Qt is relocated after being built, these files need adjusting:
+    + QT-PATH/bin/qt.conf
+    + QT-PATH/lib/pkgconfig/*.pc
+    The etc/relocateQt script can help here.
+
+# --------------------------------------------------------------------------

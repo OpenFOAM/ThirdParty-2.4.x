@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>OpenFOAM Third-Party packages 2.3.0</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="title" content="OpenFOAM Third-Party packages 2.3.0"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="9th February 2014"/>
+<meta name="author" content="The OpenFOAM Foundation"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">OpenFOAM Third-Party packages 2.3.0</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Description</a></li>
+<li><a href="#sec-2">2 The approximate order of execution:</a>
+<ul>
+<li><a href="#sec-2-1">2.1 Optional</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Versions and locations for the third party packages used</a>
+<ul>
+<li><a href="#sec-3-1">3.1 Compiler</a></li>
+<li><a href="#sec-3-2">3.2 Parallel Processing</a></li>
+<li><a href="#sec-3-3">3.3 Misc</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Notes</a>
+<ul>
+<li><a href="#sec-4-1">4.1 Buiding ParaView</a></li>
+<li><a href="#sec-4-2">4.2 Building QT</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Description</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>  Scripts for building third-party packages.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> The approximate order of execution:</h2>
+<div class="outline-text-2" id="text-2">
+
+<ul>
+<li>makeGcc
+</li>
+<li>Allwmake
+</li>
+<li>makeCmake (if the system cmake version is &lt; 2.8.8)
+</li>
+<li>makeQt (optional)
+</li>
+<li>makeParaView4
+</li>
+</ul>
+
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Optional</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<ul>
+<li>AllwmakeLibccmio
+</li>
+<li>Allclean
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Versions and locations for the third party packages used</h2>
+<div class="outline-text-2" id="text-3">
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Compiler</h3>
+<div class="outline-text-3" id="text-3-1">
+
+<p>    The minimum version of gcc required is 4.5.0
+</p><ul>
+<li>gcc   <a href="http://gcc.gnu.org/releases.html">http://gcc.gnu.org/releases.html</a>
+</li>
+<li>gmp   <a href="http://gmplib.org/">http://gmplib.org/</a>
+            <a href="ftp://ftp.gnu.org/gnu/gmp/gmp-5.1.2.tar.bz2">ftp://ftp.gnu.org/gnu/gmp/gmp-5.1.2.tar.bz2</a>
+</li>
+<li>mpfr  <a href="http://www.mpfr.org/">http://www.mpfr.org/</a>
+            <a href="ftp://ftp.gnu.org/gnu/mpfr/mpfr-3.1.2.tar.bz2">ftp://ftp.gnu.org/gnu/mpfr/mpfr-3.1.2.tar.bz2</a>
+</li>
+<li>mpc   <a href="http://www.multiprecision.org/">http://www.multiprecision.org/</a>
+            <a href="http://www.multiprecision.org/mpc/download/mpc-1.0.1.tar.gz">http://www.multiprecision.org/mpc/download/mpc-1.0.1.tar.gz</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Parallel Processing</h3>
+<div class="outline-text-3" id="text-3-2">
+
+<ul>
+<li>openmpi
+<ul>
+<li><a href="http://www.open-mpi.org/software/ompi/v1.6/downloads/openmpi-1.6.5.tar.bz2">http://www.open-mpi.org/software/ompi/v1.6/downloads/openmpi-1.6.5.tar.bz2</a>
+</li>
+</ul>
+
+</li>
+<li>scotch
+<ul>
+<li><a href="https://gforge.inria.fr/frs/download.php/31831/scotch_6.0.0.tar.gz">https://gforge.inria.fr/frs/download.php/31831/scotch_6.0.0.tar.gz</a>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Misc</h3>
+<div class="outline-text-3" id="text-3-3">
+
+<ul>
+<li>cmake       <a href="http://www.cmake.org/files/v2.8/cmake-2.8.12.1.tar.gz">http://www.cmake.org/files/v2.8/cmake-2.8.12.1.tar.gz</a>
+</li>
+<li>Qt
+<ul>
+<li><a href="http://qt-project.org/downloads">http://qt-project.org/downloads</a>
+</li>
+<li><a href="ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz">ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz</a>
+</li>
+<li><a href="ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz">ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz</a>
+</li>
+</ul>
+
+</li>
+<li>paraview    <a href="http://www.paraview.org/files/v4.1/ParaView-v4.1.0-source.tar.gz">http://www.paraview.org/files/v4.1/ParaView-v4.1.0-source.tar.gz</a>
+</li>
+<li>libccmio    <a href="https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz">https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz</a>
+</li>
+<li>CGAL        <a href="https://gforge.inria.fr/frs/download.php/31175/CGAL-4.3.tar.gz">https://gforge.inria.fr/frs/download.php/31175/CGAL-4.3.tar.gz</a>
+</li>
+<li>boost       <a href="http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download">http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download</a>
+</li>
+</ul>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Notes</h2>
+<div class="outline-text-2" id="text-4">
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Buiding ParaView</h3>
+<div class="outline-text-3" id="text-4-1">
+
+<p>    The ParaView sources included in this pack includes minor changes compared
+    to the official version 4.1.0 distribution to enable building on
+    OpenSuSE-11.4.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Building QT</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<ul>
+<li>set your QT_DIR/PATH/LD_LIBRARY_PATH
+<ul>
+<li>see the README provided with the QT sources to complete your
+        installation
+</li>
+</ul>
+
+</li>
+<li>when building ParaView, use the -qmake option to direct the build process
+      to your new QT install
+<ul>
+<li>for more info, see: <code>./makeParaView -help</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+<p>
+    If Qt is relocated after being built, these files need adjusting:
+</p><ul>
+<li>QT-PATH/bin/qt.conf
+</li>
+<li>QT-PATH/lib/pkgconfig/*.pc
+</li>
+</ul>
+
+<p>    The etc/relocateQt script can help here.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 9th February 2014</p>
+<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.3f with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>
