@@ -325,11 +325,13 @@ then
         echo "    metis libs   in $FOAM_EXT_LIBBIN"
         echo
     else
+    (
         set -x
         cd $METIS_VERSION  || exit 1
         make config shared=1 prefix=$METIS_ARCH_PATH
         make -j $WM_NCOMPPROCS install
         cp $METIS_ARCH_PATH/lib/libmetis.so $FOAM_EXT_LIBBIN
+    )
     fi
 else
     echo "    optional component Metis was not found"
