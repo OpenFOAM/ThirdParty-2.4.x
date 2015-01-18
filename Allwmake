@@ -142,7 +142,12 @@ MPICH)
             --with-device=ch_p4 \
             ;
 
+        # For MPICH2 below 1.5a1 uncomment this line and comment next
+        # make && make install
+
+        # For MPICH2 1.5a1 or above
         make -j $WM_NCOMPPROCS && make install
+
         make distclean
 
         if [ -r $MPI_ARCH_PATH ]
