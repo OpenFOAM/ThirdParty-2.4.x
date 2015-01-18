@@ -45,7 +45,7 @@
       - ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.7.3.tar.gz
       - ftp://ftp.qt-project.org/qt/source/qt-everywhere-opensource-src-4.6.3.tar.gz
     + paraview    http://www.paraview.org/files/v4.1/ParaView-v4.1.0-source.tar.gz
-    + libccmio    https://wci.llnl.gov/codes/visit/3rd_party/libccmio-2.6.1.tar.gz
+    + libccmio    http://portal.nersc.gov/svn/visit/trunk/third_party/libccmio-2.6.1.tar.gz
     + CGAL        https://gforge.inria.fr/frs/download.php/31175/CGAL-4.3.tar.gz
     + boost       http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.bz2/download
 
