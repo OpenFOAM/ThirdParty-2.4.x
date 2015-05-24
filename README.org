@@ -39,9 +39,17 @@
 *** Miscellaneous
     + libccmio    http://portal.nersc.gov/svn/visit/trunk/third_party/libccmio-2.6.1.tar.gz
 * Notes
-*** Buiding ParaView
+*** Buiding ParaView-4.1.0
     The ParaView sources included in this pack includes minor changes compared
     to the official version 4.1.0 distribution to enable building on
     OpenSuSE-11.4.
+
+    On Ubuntu 14.10 and higher and OpenSuSE Tumbleweed there is also an issue in
+    the GL libraries requiring a change to the vtkXOpenGLRenderWindow.cxx file
+    in ParaView: Uncomment line 30
+
+    #define GLX_GLXEXT_LEGACY
+
+    This is required for both 32bit and 64bit.
 
 # --------------------------------------------------------------------------
