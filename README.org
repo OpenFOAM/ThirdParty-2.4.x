@@ -1,11 +1,11 @@
 #                            -*- mode: org; -*-
 #
-#+TITLE:              OpenFOAM Third-Party packages 2.3.x
+#+TITLE:              OpenFOAM Third-Party packages 2.4.x
 #+AUTHOR:                  The OpenFOAM Foundation
-#+DATE:                       19th May 2015
+#+DATE:                       24th May 2015
 #+LINK:                     http://www.openfoam.org
 #+OPTIONS: author:nil ^:{}
-# Copyright (c) 2014-2015 OpenFOAM Foundation.
+# Copyright (c) 2015 OpenFOAM Foundation.
 
 * Description
   Scripts for building third-party packages.
