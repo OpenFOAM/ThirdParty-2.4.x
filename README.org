@@ -39,7 +39,7 @@
 *** Miscellaneous
     + libccmio    http://portal.nersc.gov/svn/visit/trunk/third_party/libccmio-2.6.1.tar.gz
 * Notes
-*** Buiding ParaView-4.1.0
+*** Building ParaView-4.1.0
     The ParaView sources included in this pack includes minor changes compared
     to the official version 4.1.0 distribution to enable building on
     OpenSuSE-11.4.
